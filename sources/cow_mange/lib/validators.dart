@@ -148,7 +148,7 @@ class Validators {
     };
   }
 
-  static FormFieldValidator<String> contains_4text(String contains,
+  static FormFieldValidator<String> contains_3text(String contains,
       String contains2, String contains3, String errorMessage) {
     return (value) {
       if (value == null) return errorMessage;
@@ -156,6 +156,19 @@ class Validators {
       if (contains.contains(value) ||
           contains2.contains(value) ||
           contains3.contains(value)) {
+        return errorMessage;
+      } else {
+        return null;
+      }
+    };
+  }
+
+  static FormFieldValidator<String> contains_1text(
+      String contains, String errorMessage) {
+    return (value) {
+      if (value == null) return errorMessage;
+
+      if (contains.contains(value)) {
         return errorMessage;
       } else {
         return null;

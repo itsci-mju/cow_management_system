@@ -482,7 +482,7 @@ class _AddVaccineState extends State<AddVaccine> {
                         child: TextFormField(
                           controller: date_vaccine_c,
                           readOnly: true,
-                          validator: Validators.contains_4text(
+                          validator: Validators.contains_3text(
                               "ไม่สามารถฉีดวัคซีนได้เนืองจากอายุ น้อย",
                               "วัคซีนสามารถฉีดได้ครั้งเดียวเท่านั้น",
                               "วัคซีนสามารถฉีดได้วันละครั้งเดียวเท่านั้น",
