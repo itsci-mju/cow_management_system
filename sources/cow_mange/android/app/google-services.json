@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "864333706879",
+    "project_id": "projectcowmange",
+    "storage_bucket": "projectcowmange.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:864333706879:android:e388cbcfe773760386714a",
+        "android_client_info": {
+          "package_name": "com.example.cow_mange"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "864333706879-gkkhqtu3t0bs58sksvoqu5p1pbhh7p0m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDu6VCbmGUQVrgQdGgJQmXdQ1P6vo3otiQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "864333706879-gkkhqtu3t0bs58sksvoqu5p1pbhh7p0m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
