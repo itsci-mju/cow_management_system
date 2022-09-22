@@ -196,7 +196,7 @@ class _AddProgressState extends State<AddProgress> {
                 margin: const EdgeInsets.symmetric(vertical: 10),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                width: size.width * 0.8,
+                width: size.width * 0.93,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
                     color: Colors.lightGreen.withAlpha(50)),
@@ -243,7 +243,7 @@ class _AddProgressState extends State<AddProgress> {
                 margin: const EdgeInsets.symmetric(vertical: 10),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                width: size.width * 0.8,
+                width: size.width * 0.93,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
                     color: Colors.lightGreen.withAlpha(50)),
@@ -271,7 +271,7 @@ class _AddProgressState extends State<AddProgress> {
                 margin: const EdgeInsets.symmetric(vertical: 10),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                width: size.width * 0.8,
+                width: size.width * 0.93,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
                     color: Colors.lightGreen.withAlpha(50)),
@@ -333,7 +333,7 @@ class _AddProgressState extends State<AddProgress> {
                 margin: const EdgeInsets.symmetric(vertical: 10),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                width: size.width * 0.8,
+                width: size.width * 0.93,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
                     color:

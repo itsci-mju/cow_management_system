@@ -9,7 +9,6 @@ import 'package:cow_mange/class/food.dart';
 import 'package:cow_mange/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:http/http.dart' as http;
 import 'package:cow_mange/url/URL.dart';
 import 'package:cow_mange/class/Cow.dart';

@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:cow_mange/DetailCow.dart';
@@ -32,20 +31,23 @@ class _AddHybridizationState extends State<AddHybridization> {
   Cow? co = Cow();
   Hybridization? hyb = Hybridization();
 
-  String id_bul_cow = "";
+//String
+  String id_bull_cow = "";
   String id_cow_cow = "";
   String text_result = "";
-  List<String> listcow = [];
-  DateTime? progress_date;
   String name_typeHybridization = "";
 
-  // list_id_cow
-  List<String> listcow_id = [];
+// datetime
+  DateTime? progress_date;
+  DateTime? dute_to_Brith;
+  DateTime? date_Hybirdzation;
 
+//controller
   final birth = TextEditingController();
   final result = TextEditingController();
   final date_Hybirdzation_controller = TextEditingController();
-  //  button clear
+
+//  button clear
   final bool _showClearButton_date = false;
   final bool _showClearButton_weight = false;
   final bool _showClearButton_height = false;
@@ -54,88 +56,16 @@ class _AddHybridizationState extends State<AddHybridization> {
   List<dynamic>? list;
   Map? mapResponse;
 
-  DateTime? dute_to_Brith;
-  DateTime? date_Hybirdzation;
-
-  List<String> typeHybridization = [];
-
   //class
   List<Cow> cow = [];
 
-  //List
+  //List String
+  List<String> listcow = [];
   List<String> list_cow = [""];
   List<String> list_bull = [""];
   List<String> Result = ["สำเร็จ", "ไม่สำเร็จ"];
-
-  Future listMaincow(Employee emp) async {
-    final JsonlistMaincow = emp.toJsoncow();
-
-    final response = await http.post(
-      Uri.parse(url.URL.toString() + url.URL_Listmaincow),
-      body: jsonEncode({"Farm_id_Farm": emp.farm!.id_Farm}),
-      headers: <String, String>{
-        "Accept": "application/json",
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    );
-
-    String? stringResponse;
-    List? list;
-    Map<String, dynamic> mapResponse = json.decode(response.body);
-
-    if (response.statusCode == 200) {
-      mapResponse = json.decode(response.body);
-      list = mapResponse['result'];
-      return list!.map((e) => Cow.fromJson(e)).toList();
-    }
-  }
-
-  Future AddHybridization(Hybridization hybridization) async {
-    final response = await http.post(
-      Uri.parse(url.URL.toString() + url.URL_hybridization_add.toString()),
-      body: jsonEncode(hybridization.tojson_Hybridization()),
-      headers: <String, String>{
-        "Accept": "application/json",
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    );
-
-    String? stringResponse;
-    List? list;
-    Map<String, dynamic> mapResponse = json.decode(response.body);
-
-    if (response.statusCode == 200) {
-      dynamic progress = mapResponse['result'];
-
-      return Hybridization.fromJson(progress);
-    } else {
-      throw Exception('Failed to load album');
-    }
-  }
-
-  Future list_typehybridization() async {
-    final response = await http.post(
-      Uri.parse(url.URL.toString() + url.URL_list_typehybridization.toString()),
-    );
-
-    String? stringResponse;
-    List? list;
-    Map<String, dynamic> mapResponse = json.decode(response.body);
-
-    if (response.statusCode == 200) {
-      Map<String, dynamic> map = json.decode(response.body);
-
-      mapResponse = json.decode(response.body);
-
-      list = map['result'];
-
-      for (dynamic l in list!) {
-        typeHybridization.add(l['name_typehybridization']);
-      }
-
-      return typeHybridization;
-    }
-  }
+  List<String> typeHybridization = [];
+  List<String> listcow_id = [];
 
   Future init() async {
     if (widget.cow.gender == "เมีย") {
@@ -174,7 +104,7 @@ class _AddHybridizationState extends State<AddHybridization> {
       }
     }
 
-    final typehybrid = await list_typehybridization();
+    final typehybrid = await typehybridization_data().list_typehybridization();
 
     setState(() {
       typeHybridization = typehybrid;
@@ -188,8 +118,8 @@ class _AddHybridizationState extends State<AddHybridization> {
     //clean_number();
   }
 
-  @override
   final _formKey = GlobalKey<FormState>();
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
@@ -277,46 +207,86 @@ class _AddHybridizationState extends State<AddHybridization> {
                         child: Container(
                           child: const Text(
                             " พ่อพันธุ์ ",
+                            style: TextStyle(fontSize: 15),
                           ),
                         ))
                   ],
                 )),
-            const SizedBox(height: 10),
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 10),
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              width: size.width * 0.8,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  color: Colors.lightGreen.withAlpha(50)),
-              child: Column(children: [
-                DropdownButtonFormField(
-                  items: list_bull.map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      id_bul_cow = newValue!;
-                    });
-                  },
-                  validator:
-                      Validators.contains_1text("----", "กรุณาเลือกพ่อพันธุ์"),
-                  decoration: InputDecoration(
-                    hintText: list_bull[0].toString(),
-                    hintStyle: const TextStyle(color: Colors.black),
-                    icon: const Icon(
-                      FontAwesomeIcons.cow,
-                      color: Color(0XFF397D54),
-                      size: 20,
+            if (list_bull[0] == "----")
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                width: size.width * 0.93,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    color: Colors.lightGreen.withAlpha(50)),
+                child: Column(children: [
+                  DropdownButtonFormField(
+                    items: list_bull.map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        id_bull_cow = newValue!;
+                      });
+                    },
+                    validator: Validators.compose([
+                      Validators.required__dropdown("1"),
+                      Validators.required_isnull("2"),
+                    ]),
+                    decoration: InputDecoration(
+                      hintText: list_bull[0].toString(),
+                      hintStyle: const TextStyle(color: Colors.black),
+                      icon: const Icon(
+                        FontAwesomeIcons.cow,
+                        color: Color(0XFF397D54),
+                        size: 20,
+                      ),
+                      border: InputBorder.none,
                     ),
-                    border: InputBorder.none,
                   ),
-                ),
-              ]),
-            ),
+                ]),
+              )
+            else
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                width: size.width * 0.93,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    color: Colors.lightGreen.withAlpha(50)),
+                child: Column(children: [
+                  DropdownButtonFormField(
+                    items: list_bull.map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        id_bull_cow = newValue!;
+                      });
+                    },
+                    validator: Validators.required__dropdown("1"),
+                    decoration: InputDecoration(
+                      hintText: list_bull[0].toString(),
+                      hintStyle: const TextStyle(color: Colors.black),
+                      icon: const Icon(
+                        FontAwesomeIcons.cow,
+                        color: Color(0XFF397D54),
+                        size: 20,
+                      ),
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ]),
+              ),
             Container(
                 margin: const EdgeInsets.symmetric(horizontal: 30),
                 child: Row(
@@ -332,49 +302,90 @@ class _AddHybridizationState extends State<AddHybridization> {
                         child: Container(
                           child: const Text(
                             "แม่พันธุ์ ",
+                            style: TextStyle(fontSize: 15),
                           ),
                         ))
                   ],
                 )),
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 10),
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              width: size.width * 0.8,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  color: Colors.lightGreen.withAlpha(50)),
-              child: Column(children: [
-                DropdownButtonFormField(
-                  items: list_cow.map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      id_cow_cow = newValue!;
-                    });
-                  },
-                  validator:
-                      Validators.contains_1text("----", "กรุณาเลือกแม่พันธุ์"),
-                  decoration: InputDecoration(
-                    hintText: list_cow[0].toString(),
-                    hintStyle: const TextStyle(color: Colors.black),
-                    icon: const Icon(
-                      FontAwesomeIcons.cow,
-                      color: Color(0XFF397D54),
-                      size: 20,
+            if (list_cow[0] == "----")
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                width: size.width * 0.93,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    color: Colors.lightGreen.withAlpha(50)),
+                child: Column(children: [
+                  DropdownButtonFormField(
+                    items: list_cow.map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        id_cow_cow = newValue!;
+                      });
+                    },
+                    validator: Validators.compose([
+                      Validators.required__dropdown("1"),
+                      Validators.required_isnull("2"),
+                    ]),
+                    decoration: InputDecoration(
+                      hintText: list_cow[0].toString(),
+                      hintStyle: const TextStyle(color: Colors.black),
+                      icon: const Icon(
+                        FontAwesomeIcons.cow,
+                        color: Color(0XFF397D54),
+                        size: 20,
+                      ),
+                      border: InputBorder.none,
                     ),
-                    border: InputBorder.none,
                   ),
-                ),
-              ]),
-            ),
+                ]),
+              )
+            else
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                width: size.width * 0.93,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    color: Colors.lightGreen.withAlpha(50)),
+                child: Column(children: [
+                  DropdownButtonFormField(
+                    items: list_cow.map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        id_cow_cow = newValue!;
+                      });
+                    },
+                    validator: Validators.required__dropdown("1"),
+                    decoration: InputDecoration(
+                      hintText: list_cow[0].toString(),
+                      hintStyle: const TextStyle(color: Colors.black),
+                      icon: const Icon(
+                        FontAwesomeIcons.cow,
+                        color: Color(0XFF397D54),
+                        size: 20,
+                      ),
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ]),
+              ),
             Container(
               margin: const EdgeInsets.symmetric(vertical: 10),
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              width: size.width * 0.8,
+              width: size.width * 0.93,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
                   color: Colors.lightGreen.withAlpha(50)),
@@ -391,7 +402,8 @@ class _AddHybridizationState extends State<AddHybridization> {
                       text_result = newValue!;
                     });
                   },
-                  decoration: const InputDecoration(
+                  validator: Validators.required_isnull("กรุณาเลือกผลลัพธ์"),
+                  decoration: InputDecoration(
                     hintText: 'ผลลัพธ์',
                     hintStyle: TextStyle(color: Colors.black),
                     icon: Icon(
@@ -409,13 +421,14 @@ class _AddHybridizationState extends State<AddHybridization> {
                 margin: const EdgeInsets.symmetric(vertical: 10),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                width: size.width * 0.8,
+                width: size.width * 0.93,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
                     color: Colors.lightGreen.withAlpha(50)),
-                child: TextField(
+                child: TextFormField(
                   controller: date_Hybirdzation_controller,
                   readOnly: true,
+                  validator: Validators.required_isempty("กรุณาเลือกวันเกิดโค"),
                   decoration: InputDecoration(
                       label: const Text(
                         "เลือกวันผสมพันธุ์  ",
@@ -454,7 +467,7 @@ class _AddHybridizationState extends State<AddHybridization> {
             Container(
               margin: const EdgeInsets.symmetric(vertical: 10),
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              width: size.width * 0.8,
+              width: size.width * 0.93,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
                   color: Colors.lightGreen.withAlpha(50)),
@@ -471,6 +484,8 @@ class _AddHybridizationState extends State<AddHybridization> {
                       name_typeHybridization = newValue!;
                     });
                   },
+                  validator: Validators.required_isnull(
+                      "กรุณาเลือกประเภทการผสมพันธุ์"),
                   decoration: const InputDecoration(
                     hintText: 'ประเภทการผสมพันธุ์',
                     hintStyle: TextStyle(color: Colors.black),
@@ -486,34 +501,69 @@ class _AddHybridizationState extends State<AddHybridization> {
             ),
             InkWell(
               onTap: () async {
-                setState(() {
+                bool validate = _formKey.currentState!.validate();
+
+                if (validate == false) {
+                } else {
                   if (dute_to_Brith != null) {
                     hyb!.date_of_birthday = dute_to_Brith;
                     hyb!.date_Hybridization = date_Hybirdzation;
                     hyb!.result = text_result;
                     hyb!.typebridization = Typebridization.nameTypebridization(
                         name_typebridization: name_typeHybridization);
+                    if (list_cow[0].toString() != "----") {
+                      setState(() {
+                        id_cow_cow = widget.cow.cow_id.toString();
+                      });
+                    } else {
+                      if (list_bull[0].toString() != "----") {
+                        setState(() {
+                          id_bull_cow = widget.cow.cow_id.toString();
+                        });
+                      }
+                    }
 
-                    hyb?.bull_cow = Cow.Idcow(cow_id: id_bul_cow);
+                    hyb?.bull_cow = Cow.Idcow(cow_id: id_bull_cow);
                     hyb?.cow_cow = Cow.Idcow(cow_id: id_cow_cow);
                   } else {
+                    if (list_cow[0].toString() != "----") {
+                      setState(() {
+                        id_cow_cow = widget.cow.cow_id.toString();
+                      });
+                    } else {
+                      if (list_bull[0].toString() != "----") {
+                        setState(() {
+                          id_bull_cow = widget.cow.cow_id.toString();
+                        });
+                      }
+                    }
                     hyb!.date_Hybridization = date_Hybirdzation;
                     hyb!.result = text_result;
                     hyb!.typebridization = Typebridization.nameTypebridization(
                         name_typebridization: name_typeHybridization);
-                    hyb?.bull_cow = Cow.Idcow(cow_id: id_bul_cow);
+                    hyb?.bull_cow = Cow.Idcow(cow_id: id_bull_cow);
                     hyb?.cow_cow = Cow.Idcow(cow_id: id_cow_cow);
                   }
-                });
-                final hybridization = await AddHybridization(hyb!);
-                if (hybridization != null) {
-                  Navigator.of(context)
-                      .pushReplacement(MaterialPageRoute(builder: ((context) {
-                    return DetailCow(
-                      cow: widget.cow,
-                      fm: widget.fm,
-                    );
-                  })));
+
+                  final hybridization =
+                      await Hybridization_data().AddHybridization(hyb!);
+                  if (hybridization != null && widget.emp != null) {
+                    Navigator.of(context)
+                        .pushReplacement(MaterialPageRoute(builder: ((context) {
+                      return DetailCow(
+                        cow: widget.cow,
+                        emp: widget.emp,
+                      );
+                    })));
+                  } else if (hybridization != null && widget.emp != null) {
+                    Navigator.of(context)
+                        .pushReplacement(MaterialPageRoute(builder: ((context) {
+                      return DetailCow(
+                        cow: widget.cow,
+                        fm: widget.fm,
+                      );
+                    })));
+                  }
                 }
               },
               borderRadius: BorderRadius.circular(30),
@@ -521,7 +571,7 @@ class _AddHybridizationState extends State<AddHybridization> {
                 margin: const EdgeInsets.symmetric(vertical: 10),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                width: size.width * 0.8,
+                width: size.width * 0.93,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
                     color:
@@ -562,9 +612,10 @@ class _AddHybridizationState extends State<AddHybridization> {
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(30),
               color: Colors.lightGreen.withAlpha(50)),
-          child: TextField(
+          child: TextFormField(
             controller: birth,
             readOnly: true,
+            validator: Validators.required_isempty("กรุณาเลือกวันที่คลอด"),
             decoration: InputDecoration(
                 label: const Text(
                   "เลือกวันที่คลอด",

@@ -7,6 +7,7 @@ import 'package:cow_mange/class/ExpendType.dart';
 import 'package:cow_mange/class/Expendfarm.dart';
 import 'package:cow_mange/class/Farm.dart';
 import 'package:cow_mange/class/Feeding.dart';
+import 'package:cow_mange/class/Hybridization.dart';
 import 'package:cow_mange/class/Progress.dart';
 import 'package:cow_mange/class/Vaccine.dart';
 import 'package:cow_mange/class/vaccination.dart';
@@ -409,6 +410,29 @@ class Vaccine_data {
 }
 
 class Hybridization_data {
+  Future AddHybridization(Hybridization hybridization) async {
+    final response = await http.post(
+      Uri.parse(url.URL.toString() + url.URL_hybridization_add.toString()),
+      body: jsonEncode(hybridization.tojson_Hybridization()),
+      headers: <String, String>{
+        "Accept": "application/json",
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    String? stringResponse;
+    List? list;
+    Map<String, dynamic> mapResponse = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      dynamic progress = mapResponse['result'];
+
+      return Hybridization.fromJson(progress);
+    } else {
+      throw Exception('Failed to load album');
+    }
+  }
+
   Future listMainCow_has_Hybridization(cowId) async {
     final response = await http.post(
       Uri.parse(url.URL.toString() +
@@ -794,6 +818,33 @@ class ExpendType_data {
       return ExpendType.fromJson(expendType);
     } else {
       throw Exception('Failed to load album');
+    }
+  }
+}
+
+class typehybridization_data {
+  List<String> typeHybridization = [];
+  Future list_typehybridization() async {
+    final response = await http.post(
+      Uri.parse(url.URL.toString() + url.URL_list_typehybridization.toString()),
+    );
+
+    String? stringResponse;
+    List? list;
+    Map<String, dynamic> mapResponse = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> map = json.decode(response.body);
+
+      mapResponse = json.decode(response.body);
+
+      list = map['result'];
+
+      for (dynamic l in list!) {
+        typeHybridization.add(l['name_typehybridization']);
+      }
+
+      return typeHybridization;
     }
   }
 }

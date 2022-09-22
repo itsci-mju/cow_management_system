@@ -21,6 +21,15 @@ class Validators {
     };
   }
 
+  static FormFieldValidator<String> required__dropdown(String errorMessage) {
+    return (value) {
+      if (value == "----") {
+        return errorMessage;
+      }
+      return null;
+    };
+  }
+
   static FormFieldValidator<String> required_isnull_and_isempty(
       String errorMessage) {
     return (value) {
