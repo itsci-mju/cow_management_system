@@ -235,8 +235,8 @@ class _AddHybridizationState extends State<AddHybridization> {
                       });
                     },
                     validator: Validators.compose([
-                      Validators.required__dropdown("1"),
-                      Validators.required_isnull("2"),
+                      Validators.required__dropdown("กรุณาเลือกพ่อพันธุ์"),
+                      Validators.required_isnull("กรุณาเลือกพ่อพันธุ์"),
                     ]),
                     decoration: InputDecoration(
                       hintText: list_bull[0].toString(),
@@ -330,8 +330,8 @@ class _AddHybridizationState extends State<AddHybridization> {
                       });
                     },
                     validator: Validators.compose([
-                      Validators.required__dropdown("1"),
-                      Validators.required_isnull("2"),
+                      Validators.required__dropdown("กรุณาเลือกแม่พันธุ์"),
+                      Validators.required_isnull("กรุณาเลือกแม่พันธุ์"),
                     ]),
                     decoration: InputDecoration(
                       hintText: list_cow[0].toString(),
@@ -608,7 +608,7 @@ class _AddHybridizationState extends State<AddHybridization> {
       return Container(
           margin: const EdgeInsets.symmetric(vertical: 10),
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-          width: size.width * 0.8,
+          width: size.width * 0.93,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(30),
               color: Colors.lightGreen.withAlpha(50)),

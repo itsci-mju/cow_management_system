@@ -8,6 +8,7 @@ import 'package:cow_mange/Drawer/hamberg_guest.dart';
 import 'package:cow_mange/class/Farm.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:cow_mange/url/URL.dart';
 
@@ -86,6 +87,7 @@ class _MainguestState extends State<Mainguest> {
 
   @override
   Widget build(BuildContext context) {
+    print(listcow);
     return Scaffold(
       key: globalKey,
       endDrawer: Drawer_Filter(
@@ -112,7 +114,8 @@ class _MainguestState extends State<Mainguest> {
                       child: TextFormField(
                         cursorColor: const Color.fromARGB(255, 0, 0, 0),
                         controller: inputSearch,
-                        style: const TextStyle(color: Color.fromARGB(255, 8, 96, 12)),
+                        style: const TextStyle(
+                            color: Color.fromARGB(255, 8, 96, 12)),
                         decoration: InputDecoration(
                           hintText: "ค้นหาโค",
                           floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -190,37 +193,37 @@ class _MainguestState extends State<Mainguest> {
                                                         .toString(),
                                                     style: const TextStyle(
                                                         fontSize: 20))),
-                                          Card(
-                                              color: (Colors.green),
-                                              child: ListTile(
-                                                leading: _buildLeadingTile(),
-                                                onTap: (() {
-                                                  Navigator.of(context).push(
-                                                      MaterialPageRoute(
-                                                          builder: ((context) {
-                                                    return DetailCow_guest(
-                                                        cow: listcow[index]);
-                                                  })));
-                                                }),
-                                                title: Text(
-                                                  "รหัสโค : ${listcow[index]
-                                                          .cow_id}",
-                                                  style:
-                                                      const TextStyle(fontSize: 20),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                                subtitle: Text(
-                                                    "สายพันธุ์ :${listcow[index]
-                                                            .species!
-                                                            .species_breed}\nเพศ :${listcow[index]
-                                                            .gender}  || ชื่อฟาร์ม :${listcow[index]
-                                                            .farm!
-                                                            .name_Farm}",
-                                                    style: const TextStyle(
-                                                        fontSize: 17)),
-                                                isThreeLine: true,
-                                              ))
+                                          Container(
+                                            child: Card(
+                                                color: (Color.fromARGB(
+                                                    255, 37, 202, 62)),
+                                                child: ListTile(
+                                                  leading: _buildLeadingTile(
+                                                      listcow[index].picture),
+                                                  onTap: (() {
+                                                    Navigator.of(context).push(
+                                                        MaterialPageRoute(
+                                                            builder:
+                                                                ((context) {
+                                                      return DetailCow_guest(
+                                                          cow: listcow[index]);
+                                                    })));
+                                                  }),
+                                                  title: Text(
+                                                    "รหัสโค : ${listcow[index].cow_id}",
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                    ),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                  subtitle: Text(
+                                                      "สายพันธุ์ :${listcow[index].species!.species_breed}\nเพศ :${listcow[index].gender}  || ชื่อฟาร์ม :${listcow[index].farm!.name_Farm}",
+                                                      style: TextStyle(
+                                                          fontSize: 17)),
+                                                  isThreeLine: true,
+                                                )),
+                                          )
                                         ],
                                       ),
                                     );
@@ -251,56 +254,14 @@ class _MainguestState extends State<Mainguest> {
         });
   }
 
-  Widget? _title(Cow listcow) {
-    List<Cow> test = [];
-    for (int i = 0; i < listfarm.length; i++) {
-      ListTile(title: Text(listfarm[i].name_Farm.toString()));
-      if (listcow.farm!.name_Farm == listfarm[i].name_Farm) {
-        return Column(
-          children: [
-            Card(
-                color: (Colors.green),
-                child: ListTile(
-                  leading: _buildLeadingTile(),
-                  onTap: (() {
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: ((context) {
-                      return DetailCow_guest(cow: listcow);
-                    })));
-                  }),
-                  title: Text(
-                    "รหัสโค : ${listcow.cow_id}",
-                    style: const TextStyle(fontSize: 20),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  subtitle: Text(
-                      "สายพันธุ์ :${listcow.species!.species_breed}\nเพศ :${listcow.gender}  || ชื่อฟาร์ม :${listcow.farm!.name_Farm}",
-                      style: const TextStyle(fontSize: 17)),
-                  isThreeLine: true,
-                ))
-          ],
-        );
-      }
-    }
-    return null;
-  }
-
-  Widget _buildLeadingTile() {
+  Widget _buildLeadingTile(String? picture) {
     return Container(
-      padding: const EdgeInsets.only(right: 10.0),
       width: 80,
-      alignment: Alignment.center,
-      decoration: const BoxDecoration(
-          border: Border(
-              right: BorderSide(width: 1.0, color: Colors.black))),
-      child: Container(
-        width: 75,
-        height: 75,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: ExactAssetImage("images/cow-01.png"),
-            fit: BoxFit.fill,
-          ),
+      height: 100,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: NetworkImage(picture.toString()),
+          fit: BoxFit.fill,
         ),
       ),
     );

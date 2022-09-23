@@ -237,6 +237,30 @@ class Progress_data {
     }
   }
 
+  Future listMainprogress_DESC(cowId) async {
+    final response = await http.post(
+      Uri.parse(
+          url.URL.toString() + url.URL_list_progress_id_cow_DESC.toString()),
+      body: jsonEncode({
+        "cow": cowId,
+      }),
+      headers: <String, String>{
+        "Accept": "application/json",
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    String? stringResponse;
+    List? list;
+    Map<String, dynamic> mapResponse = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      mapResponse = json.decode(response.body);
+      list = mapResponse['result'];
+      return list!.map((e) => Progress.fromJson(e)).toList();
+    }
+  }
+
   Future DeleteProgress(idProgress) async {
     final response = await http.post(
       Uri.parse(url.URL.toString() + url.URL_progress_delete.toString()),
@@ -267,6 +291,30 @@ class Feeding_data {
   Future listMainFedding(cowId) async {
     final response = await http.post(
       Uri.parse(url.URL.toString() + url.URL_list_feeding_id_cow.toString()),
+      body: jsonEncode({
+        "cow": cowId,
+      }),
+      headers: <String, String>{
+        "Accept": "application/json",
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    String? stringResponse;
+    List? list;
+    Map<String, dynamic> mapResponse = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      mapResponse = json.decode(response.body);
+      list = mapResponse['result'];
+      return list!.map((e) => Feeding.fromJson(e)).toList();
+    }
+  }
+
+  Future listMainFedding_DESC(cowId) async {
+    final response = await http.post(
+      Uri.parse(
+          url.URL.toString() + url.URL_list_feeding_id_cow_DESC.toString()),
       body: jsonEncode({
         "cow": cowId,
       }),

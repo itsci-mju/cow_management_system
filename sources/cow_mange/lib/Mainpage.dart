@@ -154,7 +154,7 @@ class MainpageEmployeeState extends State<MainpageEmployee> {
                             const Padding(
                               padding: EdgeInsets.only(left: 20),
                               child: Text(
-                                "สวัสดี คุณ ",
+                                "สวัสดี ",
                                 style: TextStyle(
                                     fontSize: 20, color: Colors.white),
                               ),
@@ -504,17 +504,11 @@ class MainpageEmployeeState extends State<MainpageEmployee> {
 
   Widget _buildLeadingTile(Cow listcow) {
     return Container(
-      padding: const EdgeInsets.only(right: 10.0),
-      width: 80,
-      alignment: Alignment.center,
-      decoration: const BoxDecoration(
-          border: Border(right: BorderSide(width: 1.0, color: Colors.black))),
+      width: 100,
       child: SizedBox(
-        width: 75,
-        height: 75,
         child: Image.network(
           listcow.picture.toString(),
-          fit: BoxFit.cover,
+          fit: BoxFit.fitWidth,
         ),
       ),
     );
@@ -537,22 +531,6 @@ class MainpageEmployeeState extends State<MainpageEmployee> {
           fit: BoxFit.contain,
         ),
       ),
-    );
-  }
-
-  image_cow(Cow c) {
-    return Image.network(
-      c.picture.toString(),
-      fit: BoxFit.cover,
-    );
-  }
-
-  image_cow_df() {
-    return Image.asset(
-      "images/cow-01.png",
-      width: 250.0,
-      height: 250.0,
-      fit: BoxFit.contain,
     );
   }
 

@@ -583,7 +583,7 @@ class _AddVaccineState extends State<AddVaccine> {
                             FilteringTextInputFormatter.allow(
                                 RegExp(r'[0-9.]')),
                             FilteringTextInputFormatter.deny(RegExp(r'[,]')),
-                            MaskedInputFormatter('#.#')
+                            MaskedInputFormatter('###.##')
                           ],
                           decoration: const InputDecoration(
                               label: Text("จำนวนวัคซีน (มิลลิลิตร)"),

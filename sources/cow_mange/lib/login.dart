@@ -1,4 +1,3 @@
-
 import 'package:cow_mange/Function/Function.dart';
 import 'package:cow_mange/Mainpage.dart';
 import 'package:cow_mange/class/Employee.dart';
@@ -71,11 +70,8 @@ class _LoginScreenState extends State<LoginScreen>
             key: _formKey,
             child: Column(
               children: [
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(32, 20, 0, 0),
+                  padding: const EdgeInsets.fromLTRB(15, 20, 0, 0),
                   child: Row(
                     children: [
                       GestureDetector(

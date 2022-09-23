@@ -97,10 +97,10 @@ class _DetailCowState extends State<DetailCow> {
       });
     }
 
-    final listPg =
-        await Progress_data().listMainprogress(widget.cow.cow_id.toString());
+    final listPg = await Progress_data()
+        .listMainprogress_DESC(widget.cow.cow_id.toString());
     final listFd =
-        await Feeding_data().listMainFedding(widget.cow.cow_id.toString());
+        await Feeding_data().listMainFedding_DESC(widget.cow.cow_id.toString());
     final listVc = await Vaccination_data()
         .listMainVaccination(widget.cow.cow_id.toString());
     final list_c__list_hz = await Hybridization_data()
@@ -268,7 +268,7 @@ class _DetailCowState extends State<DetailCow> {
                         Column(
                           children: [
                             const Icon(
-                              FontAwesomeIcons.user,
+                              FontAwesomeIcons.userLarge,
                               color: Colors.black,
                               size: 55,
                             ),
@@ -636,7 +636,7 @@ class _DetailCowState extends State<DetailCow> {
                                   Align(
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                          "ส่วนสูง : ${widget.cow.height} กิโลกรัม",
+                                          "ส่วนสูง : ${widget.cow.height} เซนติเมตร",
                                           style: const TextStyle(
                                               fontSize: 20.0,
                                               color:
@@ -680,7 +680,7 @@ class _DetailCowState extends State<DetailCow> {
                                     const EdgeInsets.symmetric(vertical: 10),
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 20, vertical: 5),
-                                width: size.width * 0.8,
+                                width: size.width * 0.93,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(30),
                                     color:
@@ -756,7 +756,7 @@ class _DetailCowState extends State<DetailCow> {
                                         builder: (BuildContext context) =>
                                             CupertinoAlertDialog(
                                           title: Text(
-                                              'qqqq ${Listprogress[index].cow!.cow_id}'),
+                                              'รหัสโค : ${Listprogress[index].cow!.cow_id}'),
                                           content: const Text(
                                               'เช็คข้อมูลการลบข้อมูลทุกครั้ง'),
                                           actions: <CupertinoDialogAction>[
@@ -807,7 +807,6 @@ class _DetailCowState extends State<DetailCow> {
                               child: ListTile(
                                   tileColor: Colors.white54,
                                   leading: _buildLeadingTile(widget.cow),
-                                  onTap: (() {}),
                                   title: Progress_date(Listprogress[index]),
                                   subtitle:
                                       _subtitleprogress(Listprogress[index])
@@ -815,9 +814,6 @@ class _DetailCowState extends State<DetailCow> {
                                   ),
                             ),
                           ),
-                          const SizedBox(
-                            height: 5,
-                          )
                         ],
                       );
                     },
@@ -858,7 +854,7 @@ class _DetailCowState extends State<DetailCow> {
                                         builder: (BuildContext context) =>
                                             CupertinoAlertDialog(
                                           title: Text(
-                                              'qqqq ${ListFeeding[index].cow!.cow_id}'),
+                                              'รหัสโค : ${ListFeeding[index].cow!.cow_id}'),
                                           content: const Text(
                                               'เช็คข้อมูลการลบข้อมูลทุกครั้ง'),
                                           actions: <CupertinoDialogAction>[
@@ -901,14 +897,15 @@ class _DetailCowState extends State<DetailCow> {
                                         const Color.fromARGB(255, 192, 73, 67),
                                     foregroundColor: Colors.white,
                                     icon: Icons.delete,
-                                    label: "ลบข้อมูลการพัฒนาโค",
+                                    label: "ลบข้อมูลการให้อาหารโค",
                                   ),
                                 ]),
                             child: Card(
                               color: (Colors.green),
                               child: ListTile(
                                   tileColor: Colors.white54,
-                                  leading: _buildLeadingTile(widget.cow),
+                                  leading:
+                                      _buildLeadingTile_feeding(widget.cow),
                                   onTap: (() {}),
                                   // title: Progress_date(widget.cow),
                                   subtitle: _subtitlefeeding(ListFeeding[index])
@@ -1003,7 +1000,7 @@ class _DetailCowState extends State<DetailCow> {
                                         const Color.fromARGB(255, 192, 73, 67),
                                     foregroundColor: Colors.white,
                                     icon: Icons.delete,
-                                    label: "ลบข้อมูลการพัฒนาโค",
+                                    label: "ลบข้อมูลการฉีดวัคซีน",
                                   ),
                                 ]),
                             child: Card(
@@ -1062,7 +1059,7 @@ class _DetailCowState extends State<DetailCow> {
                                         builder: (BuildContext context) =>
                                             CupertinoAlertDialog(
                                           title: Text(
-                                              'qqqq ${List_Cow_has_Hybridization[index].cow!.cow_id}'),
+                                              'รหัสโค : ${List_Cow_has_Hybridization[index].cow!.cow_id}'),
                                           content: const Text(
                                               'เช็คข้อมูลการลบข้อมูลทุกครั้ง'),
                                           actions: <CupertinoDialogAction>[
@@ -1111,7 +1108,7 @@ class _DetailCowState extends State<DetailCow> {
                                         const Color.fromARGB(255, 192, 73, 67),
                                     foregroundColor: Colors.white,
                                     icon: Icons.delete,
-                                    label: "ลบข้อมูลการพัฒนาโค",
+                                    label: "ลบข้อมูลการผสมพันธุ์โค",
                                   ),
                                 ]),
                             child: Card(
@@ -1149,6 +1146,7 @@ class _DetailCowState extends State<DetailCow> {
   }
 
   Widget _buildLeadingTile(Cow c) {
+    /*
     if (c.picture != null || c.picture != "-") {
       return Container(
         padding: const EdgeInsets.only(right: 10.0),
@@ -1165,7 +1163,29 @@ class _DetailCowState extends State<DetailCow> {
           ),
         ),
       );
-    } else {
+    } else {*/
+    return Container(
+      padding: const EdgeInsets.only(right: 10.0),
+      width: 80,
+      alignment: Alignment.center,
+      decoration: const BoxDecoration(
+          border: Border(right: BorderSide(width: 1.0, color: Colors.black))),
+      child: SizedBox(
+        width: 75,
+        height: 75,
+        child: Image.asset(
+          "images/cow-01.png",
+          width: 250.0,
+          height: 250.0,
+          fit: BoxFit.contain,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLeadingTile_feeding(Cow c) {
+    /*
+    if (c.picture != null || c.picture != "-") {
       return Container(
         padding: const EdgeInsets.only(right: 10.0),
         width: 80,
@@ -1175,15 +1195,31 @@ class _DetailCowState extends State<DetailCow> {
         child: SizedBox(
           width: 75,
           height: 75,
-          child: Image.asset(
-            "images/cow-01.png",
-            width: 250.0,
-            height: 250.0,
-            fit: BoxFit.contain,
+          child: Image.network(
+            c.picture.toString(),
+            fit: BoxFit.cover,
           ),
         ),
       );
-    }
+    } else {*/
+    return Container(
+      padding: EdgeInsets.only(right: 10.0),
+      width: 80,
+      alignment: Alignment.center,
+      decoration: const BoxDecoration(
+          border: Border(right: BorderSide(width: 1.0, color: Colors.black))),
+      child: SizedBox(
+        width: 75,
+        height: 75,
+        child: Image.asset(
+          "images/cow-01.png",
+          //"images/cow-03.jpg",
+          width: 500.0,
+
+          fit: BoxFit.contain,
+        ),
+      ),
+    );
   }
 
   image_cow(Cow c) {
@@ -1249,7 +1285,7 @@ class _DetailCowState extends State<DetailCow> {
     return Align(
         alignment: Alignment.centerLeft,
         child: Text(
-            "อาหาร : ${f.food!.food_name}\n${f.amount} จำนวน (กิโลกรัม)",
+            "วันให้อาหาร : ${f.record_date!.day}/${f.record_date!.month}/${f.record_date!.year}\nช่วงเวลาให้อาหาร : ตอน${f.time}\nอาหาร : ${f.food!.food_name}\nจำนวน : ${f.amount}  (กิโลกรัม)",
             style: const TextStyle(
                 fontSize: 20.0,
                 color: Color.fromARGB(255, 12, 2, 2),
@@ -1260,7 +1296,7 @@ class _DetailCowState extends State<DetailCow> {
     return Align(
         alignment: Alignment.centerLeft,
         child: Text(
-            "ชื่อวัคซีน : ${v.vaccine!.name_vaccine} จำนวนที่ฉีด : ${v.countvaccine} มิลลิลิตร",
+            "วันฉีดวัคซีน : ${v.dateVaccination!.day}/${v.dateVaccination!.month}/${v.dateVaccination!.year}\nชื่อวัคซีน : ${v.vaccine!.name_vaccine} จำนวนที่ฉีด : ${v.countvaccine} มิลลิลิตร\nชื่อหมอ : ${v.doctorname}",
             style: const TextStyle(
                 fontSize: 20.0,
                 color: Color.fromARGB(255, 12, 2, 2),
@@ -1268,13 +1304,25 @@ class _DetailCowState extends State<DetailCow> {
   }
 
   _subtitleCow_has_Hybridization(Cow_has_Hybridization cH) {
-    return Align(
-        alignment: Alignment.centerLeft,
-        child: Text("วันที่ผสมพันธุ์ :  ผลลัพธ์ : ${cH.hybridization!.result}",
-            style: const TextStyle(
-                fontSize: 20.0,
-                color: Color.fromARGB(255, 12, 2, 2),
-                fontWeight: FontWeight.w600)));
+    if (cH.hybridization!.result == "สำเร็จ") {
+      return Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+              "วันที่ผสมพันธุ์ :${cH.hybridization!.date_Hybridization!.year}/${cH.hybridization!.date_Hybridization!.month}/${cH.hybridization!.date_Hybridization!.day} \n\nผลลัพธ์ : ${cH.hybridization!.result}\nประเภทการผสมพันธุ์ :${cH.hybridization!.typebridization!.name_typebridization}",
+              style: const TextStyle(
+                  fontSize: 20.0,
+                  color: Color.fromARGB(255, 12, 2, 2),
+                  fontWeight: FontWeight.w600)));
+    } else {
+      return Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+              "วันที่ผสมพันธุ์ :${cH.hybridization!.date_Hybridization!.year}/${cH.hybridization!.date_Hybridization!.month}/${cH.hybridization!.date_Hybridization!.day}  ผลลัพธ์ : ${cH.hybridization!.result.toString()}",
+              style: const TextStyle(
+                  fontSize: 20.0,
+                  color: Color.fromARGB(255, 12, 2, 2),
+                  fontWeight: FontWeight.w600)));
+    }
   }
 
   _birthdayCow(Cow cow) {

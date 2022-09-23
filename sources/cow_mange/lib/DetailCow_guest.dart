@@ -49,6 +49,7 @@ class _DetailCow_guestState extends State<DetailCow_guest> {
   @override
   Widget build(BuildContext context) {
     String gender = " ${cow.gender}";
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: SingleChildScrollView(
@@ -75,31 +76,20 @@ class _DetailCow_guestState extends State<DetailCow_guest> {
                   ],
                 ),
               ),
-              Image.asset(
-                "images/cow-01.png",
-                width: 250.0,
-                height: 250.0,
-                fit: BoxFit.contain,
-              ),
+              widget.cow.picture == "-"
+                  ? image_cow_df()
+                  : image_cow(widget.cow),
               Container(
                 width: MediaQuery.of(context).size.width,
-                margin: const EdgeInsets.only(top: 28.0),
                 padding: const EdgeInsets.symmetric(vertical: 28.0),
                 decoration: const BoxDecoration(
                     color: Color(0XFF397D54),
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(50.0),
-                      topRight: Radius.circular(50.0),
+                      topLeft: Radius.circular(0.0),
+                      topRight: Radius.circular(0.0),
                     )),
                 child: Column(
                   children: [
-                    Container(
-                      height: 4.0,
-                      width: 28.0,
-                      margin: const EdgeInsets.only(bottom: 32.0),
-                      decoration: const BoxDecoration(
-                          color: Color.fromARGB(255, 4, 16, 6)),
-                    ),
                     Container(
                       child: Text(
                         "รหัสประจำตัวโค : ${widget.cow.cow_id}",
@@ -158,7 +148,7 @@ class _DetailCow_guestState extends State<DetailCow_guest> {
                     ),
                     selectIndex == 0
                         ? Container(
-                            height: 320,
+                            height: 350,
                             width: 370,
                             margin:
                                 const EdgeInsets.symmetric(horizontal: 16.0),
@@ -168,6 +158,7 @@ class _DetailCow_guestState extends State<DetailCow_guest> {
                                 color: const Color.fromARGB(255, 212, 248, 226),
                                 borderRadius: BorderRadius.circular(24.0)),
                             child: SingleChildScrollView(
+                              physics: const NeverScrollableScrollPhysics(),
                               child: Column(
                                 children: <Widget>[
                                   Align(
@@ -205,8 +196,8 @@ class _DetailCow_guestState extends State<DetailCow_guest> {
                                           "ชื่อฟาร์ม : ${widget.cow.farm!.name_Farm}",
                                           style: const TextStyle(
                                               fontSize: 20.0,
-                                              color: Color.fromARGB(
-                                                  255, 12, 2, 2),
+                                              color:
+                                                  Color.fromARGB(255, 12, 2, 2),
                                               fontWeight: FontWeight.w600))),
                                   const SizedBox(
                                     height: 5,
@@ -217,8 +208,8 @@ class _DetailCow_guestState extends State<DetailCow_guest> {
                                           "สายพันธุ์ : ${widget.cow.species!.species_breed}",
                                           style: const TextStyle(
                                               fontSize: 20.0,
-                                              color: Color.fromARGB(
-                                                  255, 12, 2, 2),
+                                              color:
+                                                  Color.fromARGB(255, 12, 2, 2),
                                               fontWeight: FontWeight.w600))),
                                   const SizedBox(
                                     height: 5,
@@ -229,8 +220,8 @@ class _DetailCow_guestState extends State<DetailCow_guest> {
                                           "ประเทศ : ${widget.cow.species!.country}",
                                           style: const TextStyle(
                                               fontSize: 20.0,
-                                              color: Color.fromARGB(
-                                                  255, 12, 2, 2),
+                                              color:
+                                                  Color.fromARGB(255, 12, 2, 2),
                                               fontWeight: FontWeight.w600))),
                                   const SizedBox(
                                     height: 5,
@@ -241,8 +232,8 @@ class _DetailCow_guestState extends State<DetailCow_guest> {
                                           "น้ำหนัก : ${widget.cow.weight} กิโลกรัม",
                                           style: const TextStyle(
                                               fontSize: 20.0,
-                                              color: Color.fromARGB(
-                                                  255, 12, 2, 2),
+                                              color:
+                                                  Color.fromARGB(255, 12, 2, 2),
                                               fontWeight: FontWeight.w600))),
                                   const SizedBox(
                                     height: 5,
@@ -253,8 +244,8 @@ class _DetailCow_guestState extends State<DetailCow_guest> {
                                           "ส่วนสูง : ${widget.cow.height} กิโลกรัม",
                                           style: const TextStyle(
                                               fontSize: 20.0,
-                                              color: Color.fromARGB(
-                                                  255, 12, 2, 2),
+                                              color:
+                                                  Color.fromARGB(255, 12, 2, 2),
                                               fontWeight: FontWeight.w600))),
                                   const SizedBox(
                                     height: 5,
@@ -301,6 +292,28 @@ class _DetailCow_guestState extends State<DetailCow_guest> {
         ));
   }
 
+  image_cow(Cow c) {
+    Size size = MediaQuery.of(context).size;
+    return Padding(
+        padding: EdgeInsets.all(0),
+        child: Container(
+          width: size.width,
+          height: size.height * 0.5,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                image: NetworkImage(
+                  c.picture.toString(),
+                ),
+                fit: BoxFit.fill),
+          ),
+        ));
+    /*
+    return Image.network(
+      c.picture.toString(),
+      fit: BoxFit.cover,
+    );*/
+  }
+
   Widget _AgeCow() {
     String b = widget.cow.birthday!.year.toString();
     var birthday = int.parse(b);
@@ -316,6 +329,15 @@ class _DetailCow_guestState extends State<DetailCow_guest> {
                 fontSize: 20.0,
                 color: Color.fromARGB(255, 12, 2, 2),
                 fontWeight: FontWeight.w600)));
+  }
+
+  image_cow_df() {
+    return Image.asset(
+      "images/cow-01.png",
+      width: 250.0,
+      height: 250.0,
+      fit: BoxFit.contain,
+    );
   }
 
   _birthdayCow(Cow cow) {
