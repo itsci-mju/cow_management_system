@@ -76,6 +76,7 @@ class _AddFeedingcowState extends State<AddFeedingcow> {
 
   String error_text = "";
   String error_text_2 = "";
+  double doubleWeight = 0;
 
   //textweight
   String weight = "0";
@@ -140,23 +141,23 @@ class _AddFeedingcowState extends State<AddFeedingcow> {
       // cow = listcow;
     });
     List<double> weight = [];
-    double doubleWeight = 0;
 
     for (int i = 0; i < Listprogress.length; i++) {
       setState(() {
         weight.add(Listprogress[i].weight!.toDouble());
       });
     }
-    /*
+
     if (weight.isNotEmpty) {
       weight.sort();
-
-      doubleWeight = weight[weight.length - 1];
-      weight = doubleWeight.toString();
+      setState(() {
+        doubleWeight = weight[weight.length - 1];
+      });
     } else {
-      weight = cow!.weight.toString();
+      setState(() {
+        doubleWeight = cow!.weight!.toDouble();
+      });
     }
-    */
   }
 
   @override
@@ -274,7 +275,7 @@ class _AddFeedingcowState extends State<AddFeedingcow> {
             ),
             const SizedBox(height: 20),
             Text(
-              "โค : ${cow!.cow_id} มีน้ำหนัก $weight กิโลกรัม",
+              "โค : ${cow!.cow_id} มีน้ำหนัก $doubleWeight กิโลกรัม",
               style: const TextStyle(color: Colors.red, fontSize: 20),
             ),
             const SizedBox(
@@ -541,9 +542,6 @@ class _AddFeedingcowState extends State<AddFeedingcow> {
                         error_ = 1;
                         date_fedding.text = "เลือกวันให้ถูกต้อง";
                       });
-                    } else {
-                      date_fedding.text = "เลือกวันให้ถูกต้อง";
-                      error_ = 1;
                     }
                   }
                   if (error_ == 0) {

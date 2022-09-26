@@ -317,7 +317,15 @@ class _AddProgressState extends State<AddProgress> {
 
                   final progress = await Progress_data().AddProgresscow(pg!);
 
-                  if (progress != null) {
+                  if (progress != null && widget.emp != null) {
+                    Navigator.of(context)
+                        .pushReplacement(MaterialPageRoute(builder: ((context) {
+                      return DetailCow(
+                        cow: widget.cow,
+                        emp: widget.emp,
+                      );
+                    })));
+                  } else if (progress != null && widget.emp != null) {
                     Navigator.of(context)
                         .pushReplacement(MaterialPageRoute(builder: ((context) {
                       return DetailCow(

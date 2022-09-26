@@ -1,5 +1,5 @@
 class url {
-  static const String URL = "http://172.16.1.39:8081/project_cowmanage";
+  static const String URL = "http://192.168.1.7:8081/project_cowmanage";
 
 //employee
   static const String URL_Login = "/employee/login";
@@ -50,6 +50,9 @@ class url {
 
   static const String URL_list_progress_id_cow = "/progress_cow/list_id_cow";
 
+  static const String URL_list_progress_id_cow_DESC =
+      "/progress_cow/list_id_cow_DESC";
+
   static const String URL_progress_delete = "/progress/delete";
 
 //food
@@ -59,6 +62,9 @@ class url {
   static const String URL_feeding_add = "/feeding/add";
 
   static const String URL_list_feeding_id_cow = "/feeding/list_id_cow";
+
+  static const String URL_list_feeding_id_cow_DESC =
+      "/feeding/list_id_cow_DESC";
 
   static const String URL_feeding_delete = "/feeding/delete";
 
@@ -79,6 +85,8 @@ class url {
 
 //hybridization
   static const String URL_hybridization_add = "/Hybridization/add";
+
+  static const String URL_hybridization_list_id = "/hybridization/list_id";
 
 //Cow_has_Hybridization
   static const String URL_list_Cow_has_Hybridization_id_cow =

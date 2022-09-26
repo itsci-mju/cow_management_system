@@ -11,6 +11,7 @@ import 'package:cow_mange/class/Species.dart';
 import 'package:cow_mange/firebase/storage.dart';
 import 'package:cow_mange/url/URL.dart';
 import 'package:cow_mange/validators.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -77,6 +78,7 @@ class _Register_CowState extends State<Register_Cow> {
   //file
   String fileName = "";
   String filePath = "";
+  UploadTask? task;
 
   //error text
   String texterror = "";
@@ -238,6 +240,26 @@ class _Register_CowState extends State<Register_Cow> {
     }
 
     //fileName = file!.path.split('/').last;
+  }
+
+  Future uploadFile(file, Cow? cow) async {
+    if (file == null) return;
+
+    final fileName = file!.path;
+    final fileExtension = fileName.split(".").last;
+    final name = fileExtension;
+    final namecow = cow!.cow_id;
+    final destination = 'Cow/$namecow';
+
+    task = Storage.uploadFile2(destination, file!);
+
+    if (task == null) return;
+
+    final snapshot = await task!.whenComplete(() {});
+    final urlDownload = await snapshot.ref.getDownloadURL();
+    String textUrldownload = urlDownload;
+
+    return textUrldownload;
   }
 
   /// text Controller
@@ -485,6 +507,8 @@ class _Register_CowState extends State<Register_Cow> {
                       child: TextFormField(
                         controller: birth,
                         readOnly: true,
+                        validator:
+                            Validators.required_isempty("กรุณาเลือกวันเกิดโค"),
                         decoration: InputDecoration(
                             label: const Text(
                               "เลือกวันเกิดโค",
@@ -531,6 +555,7 @@ class _Register_CowState extends State<Register_Cow> {
                         color: Colors.lightGreen.withAlpha(50)),
                     child: Column(children: [
                       DropdownButtonFormField(
+                        validator: Validators.required_isnull("กรุณาเลือกเพศ"),
                         items: ['ผู ้', 'เมีย'].map((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
@@ -1019,62 +1044,62 @@ class _Register_CowState extends State<Register_Cow> {
                         setState(() {
                           texterror = "";
                         });
-                        var imageCow = "";
-                        if (file == null) {
+
+                        co?.species = Species.Newid_Specie2(
+                            id_species: id_species,
+                            species_breed: species,
+                            country: country);
+
+                        co?.species =
+                            Species.Newid_Species(id_species: species);
+
+                        co?.cow_id = cow_id.text;
+
+                        co?.namecow = namecow.text;
+                        co?.birthday = birthday;
+
+                        if (gender == "ผู ้") {
+                          gender = "ผู้";
+                          co?.gender = gender;
                         } else {
-                          imageCow = await Storage().uploadFile(file, null);
+                          co?.gender = gender;
                         }
-                        setState(() {
-                          co?.species = Species.Newid_Specie2(
-                              id_species: id_species,
-                              species_breed: species,
-                              country: country);
+                        var imageCow = "";
+                        if (file != null) {
+                          imageCow = await uploadFile(file, co);
+                        }
+                        if (imageCow == null) {
+                          co?.picture = "-";
+                        } else {
+                          co?.picture = imageCow;
+                        }
 
-                          co?.species =
-                              Species.Newid_Species(id_species: species);
-                          co?.cow_id = cow_id.text;
-                          co?.namecow = namecow.text;
-                          co?.birthday = birthday;
+                        co?.weight = double.parse(weight.text);
+                        co?.height = double.parse(height.text);
+                        co?.registration_date = registration_date;
+                        co?.caretaker = listcaretaker[0];
+                        co?.status = "มีชีวิต";
+                        co?.color = color;
+                        co?.species!.country = country;
+                        co?.species!.species_breed = species;
 
-                          if (gender == "ผู ้") {
-                            gender = "ผู้";
-                            co?.gender = gender;
-                          } else {
-                            co?.gender = gender;
-                          }
-                          if (imageCow == null) {
-                            co?.picture = "-";
-                          } else {
-                            co?.picture = imageCow;
-                          }
+                        co?.farm =
+                            Farm.Newid_farm(id_Farm: widget.emp!.farm!.id_Farm);
 
-                          co?.weight = double.parse(weight.text);
-                          co?.height = double.parse(height.text);
-                          co?.registration_date = registration_date;
-                          co?.caretaker = caretaker;
-                          co?.status = "มีชีวิต";
-                          co?.color = color;
-                          co?.species!.country = country;
-                          co?.species!.species_breed = species;
-
-                          co?.farm = Farm.Newid_farm(
-                              id_Farm: widget.emp!.farm!.id_Farm);
-                        });
                         final querysp = await queryspecies(
                             species_breed: species, country: country);
-                        setState(() {
-                          sp = querysp;
-                          co?.species = Species.Newid_Species(
-                              id_species: sp!.id_species.toString());
-                        });
+
+                        sp = querysp;
+                        co?.species = Species.Newid_Species(
+                            id_species: sp!.id_species.toString());
 
                         final querybd =
                             await querybreeder(f: father, m: mother);
-                        setState(() {
-                          bd = querybd;
-                          co?.breeder = Breeder.New_idBreeder(
-                              idBreeder: bd!.idBreeder.toString());
-                        });
+
+                        bd = querybd;
+                        co?.breeder = Breeder.New_idBreeder(
+                            idBreeder: bd!.idBreeder.toString());
+
                         final cow2 = await registercow(co!);
                         final lc = await Cow_data().listMaincow(widget.emp!);
 
