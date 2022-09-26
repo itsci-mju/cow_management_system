@@ -1149,6 +1149,46 @@ class _DetailCowState extends State<DetailCow> {
     }
   }
 
+  _birthdayCow(Cow cow) {
+    int textYear = 0;
+    String textMonth = " ";
+    String textDay = " ";
+
+    String colros = "";
+    String nameSpecies = "";
+    String gender = "";
+
+    DateTime birthday = DateTime.now();
+    DateDuration duration;
+
+//Age
+    var numY = int.parse(cow.birthday!.year.toString());
+    textYear = numY + 543;
+
+    var numM = int.parse(cow.birthday!.month.toString());
+
+    var numD = int.parse(cow.birthday!.day.toString());
+
+    DateTime dateBirthday = DateTime(numY, numM, numD);
+
+    birthday = dateBirthday;
+    duration = AgeCalculator.age(dateBirthday);
+//colors
+    colros = cow.color.toString();
+//name_species
+    nameSpecies = cow.species!.species_breed.toString();
+//gender
+    gender = cow.gender.toString();
+
+    return Align(
+        alignment: Alignment.centerLeft,
+        child: Text("อายุ : $duration",
+            style: const TextStyle(
+                fontSize: 20.0,
+                color: Color.fromARGB(255, 12, 2, 2),
+                fontWeight: FontWeight.w600)));
+  }
+
   Widget _buildLeadingTile(Cow c) {
     /*
     if (c.picture != null || c.picture != "-") {
@@ -1181,7 +1221,7 @@ class _DetailCowState extends State<DetailCow> {
     );
   }
 
-  Widget _buildLeadingTile_vaccine(Cow c) {
+  Widget _buildLeadingTile_feeding(Cow c) {
     /*
     if (c.picture != null || c.picture != "-") {
       return Container(
@@ -1213,31 +1253,12 @@ class _DetailCowState extends State<DetailCow> {
     );
   }
 
-  Widget _buildLeadingTile_feeding(Cow c) {
-    /*
-    if (c.picture != null || c.picture != "-") {
-      return Container(
-        padding: const EdgeInsets.only(right: 10.0),
-        width: 80,
-        alignment: Alignment.center,
-        decoration: const BoxDecoration(
-            border: Border(right: BorderSide(width: 1.0, color: Colors.black))),
-        child: SizedBox(
-          width: 75,
-          height: 75,
-          child: Image.network(
-            c.picture.toString(),
-            fit: BoxFit.cover,
-          ),
-        ),
-      );
-    } else {*/
+  Widget _buildLeadingTile_vaccine(Cow c) {
     return Container(
-      width: 100,
+      width: 81,
       height: 100,
       child: Image.asset(
-        "images/cow-05.png",
-        //"images/cow-03.jpg",
+        "images/cow-06.png",
         width: 100,
         height: 100,
         fit: BoxFit.fitWidth,
@@ -1333,10 +1354,12 @@ class _DetailCowState extends State<DetailCow> {
 
     hybridization = list_hybridization;
     print(hybridization.typebridization!.name_typebridization);
+
     if (cH.hybridization!.result == "สำเร็จ") {
       return Align(
           alignment: Alignment.centerLeft,
           child: Text(
+
               //"วันที่ผสมพันธุ์ :${cH.hybridization!.date_Hybridization!.year}/${cH.hybridization!.date_Hybridization!.month}/${cH.hybridization!.date_Hybridization!.day} \nผลลัพธ์ : ${cH.hybridization!.result}\n :${cH.hybridization!.date_of_birthday!.year}/${cH.hybridization!.date_of_birthday!.month}/${cH.hybridization!.date_of_birthday!.day}\nประเภทการผสมพันธุ์ :${cH.hybridization!.typebridization!.id_typebridization}",
               "",
               style: const TextStyle(
@@ -1353,45 +1376,5 @@ class _DetailCowState extends State<DetailCow> {
                   color: Color.fromARGB(255, 12, 2, 2),
                   fontWeight: FontWeight.w600)));
     }
-  }
-
-  _birthdayCow(Cow cow) {
-    int textYear = 0;
-    String textMonth = " ";
-    String textDay = " ";
-
-    String colros = "";
-    String nameSpecies = "";
-    String gender = "";
-
-    DateTime birthday = DateTime.now();
-    DateDuration duration;
-
-//Age
-    var numY = int.parse(cow.birthday!.year.toString());
-    textYear = numY + 543;
-
-    var numM = int.parse(cow.birthday!.month.toString());
-
-    var numD = int.parse(cow.birthday!.day.toString());
-
-    DateTime dateBirthday = DateTime(numY, numM, numD);
-
-    birthday = dateBirthday;
-    duration = AgeCalculator.age(dateBirthday);
-//colors
-    colros = cow.color.toString();
-//name_species
-    nameSpecies = cow.species!.species_breed.toString();
-//gender
-    gender = cow.gender.toString();
-
-    return Align(
-        alignment: Alignment.centerLeft,
-        child: Text("อายุ : $duration",
-            style: const TextStyle(
-                fontSize: 20.0,
-                color: Color.fromARGB(255, 12, 2, 2),
-                fontWeight: FontWeight.w600)));
   }
 }
