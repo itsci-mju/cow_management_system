@@ -399,7 +399,6 @@ class _AddEmployeeState extends State<AddEmployee> {
                 onTap: () async {
                   bool validate = _formKey.currentState!.validate();
                   if (validate == false) {
-                    print("object");
                   } else {
                     emp.username = username.text;
                     emp.password = password.text;

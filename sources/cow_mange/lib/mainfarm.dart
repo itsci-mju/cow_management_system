@@ -930,6 +930,16 @@ Widget _buildLeadingTile_df(Cow listcow) {
 
 Widget _buildLeadingTile_user(Employee listemp) {
   return Container(
+    width: 81,
+    height: 100,
+    child: Image.asset(
+      "images/user.jpg",
+      width: 100,
+      height: 100,
+      fit: BoxFit.fitWidth,
+    ),
+  );
+  return Container(
     width: 80.0,
     height: 200.0,
     decoration: const BoxDecoration(
