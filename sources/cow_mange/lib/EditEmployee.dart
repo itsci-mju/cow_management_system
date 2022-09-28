@@ -36,9 +36,51 @@ class _EditEmployeeState extends State<EditEmployee> {
   final tel = TextEditingController();
   String name = "";
 
+  Future clean_number() async {
+    firstname.addListener(() {
+      setState(() {
+        _showClearButton_firstname = firstname.text.isNotEmpty;
+      });
+    });
+    lastname.addListener(() {
+      setState(() {
+        _showClearButton_lastname = lastname.text.isNotEmpty;
+      });
+    });
+    username.addListener(() {
+      setState(() {
+        _showClearButton_username = username.text.isNotEmpty;
+      });
+    });
+    password.addListener(() {
+      setState(() {
+        _showClearButton_password = password.text.isNotEmpty;
+      });
+    });
+    email.addListener(() {
+      setState(() {
+        _showClearButton_email = email.text.isNotEmpty;
+      });
+    });
+    tel.addListener(() {
+      setState(() {
+        _showClearButton_tel = tel.text.isNotEmpty;
+      });
+    });
+  }
+
+  //  button clear
+  bool _showClearButton_firstname = false;
+  bool _showClearButton_lastname = false;
+  bool _showClearButton_username = false;
+  bool _showClearButton_password = false;
+  bool _showClearButton_email = false;
+  bool _showClearButton_tel = false;
+
   @override
   void initState() {
     super.initState();
+    clean_number();
     setState(() {
       lastname.text = widget.e.lastname.toString();
       username.text = widget.e.username.toString();
@@ -200,8 +242,9 @@ class _EditEmployeeState extends State<EditEmployee> {
                           Validators.maxLength(
                               30, "กรุณากรอกไม่เกิน 30 ตัวอักษร")
                         ]),
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           label: Text("ชื่อ"),
+                          suffixIcon: _getClearButton_firstname(),
                           hintStyle: TextStyle(color: Colors.black),
                           border: InputBorder.none,
                         ),
@@ -227,7 +270,8 @@ class _EditEmployeeState extends State<EditEmployee> {
                           Validators.maxLength(
                               30, "กรุณากรอกไม่เกิน 30 ตัวอักษร")
                         ]),
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
+                          suffixIcon: _getClearButton_lastname(),
                           label: Text("นามสกุล"),
                           hintStyle: TextStyle(color: Colors.black),
                           border: InputBorder.none,
@@ -254,8 +298,9 @@ class _EditEmployeeState extends State<EditEmployee> {
                           Validators.text_eng_only(
                               "กรุณาชื่อผู้ใช้เป็นภาษาอังกฤษและตัวเลขเท่านั้น"),
                         ]),
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           label: Text("ชื่อผู้ใช้"),
+                          suffixIcon: _getClearButton_username(),
                           hintStyle: TextStyle(color: Colors.black),
                           border: InputBorder.none,
                         ),
@@ -275,8 +320,9 @@ class _EditEmployeeState extends State<EditEmployee> {
                           Validators.text_eng_only(
                               "กรุณาชื่อรหัสผ่านให้ถูกต้อง"),
                         ]),
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           label: Text("รหัสผู้ใช้"),
+                          suffixIcon: _getClearButton_password(),
                           hintStyle: TextStyle(color: Colors.black),
                           border: InputBorder.none,
                         ),
@@ -301,8 +347,9 @@ class _EditEmployeeState extends State<EditEmployee> {
                       Validators.minLength(6, "กรุณากรอกอย่างน้อย 6 ตัวอักษร"),
                       Validators.maxLength(30, "กรุณากรอกไม่เกิน 30 ตัวอักษร")
                     ]),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                         label: Text("อีเมล์"),
+                        suffixIcon: _getClearButton_email(),
                         hintStyle: TextStyle(color: Colors.black),
                         border: InputBorder.none,
                         icon: Icon(
@@ -335,10 +382,10 @@ class _EditEmployeeState extends State<EditEmployee> {
                       FilteringTextInputFormatter.deny(RegExp(r'[,]')),
                       MaskedInputFormatter('###-###-####')
                     ],
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                         label: Text("เบอร์โทร"),
+                        suffixIcon: _getClearButton_tel(),
                         hintStyle: TextStyle(color: Colors.black),
-                        //suffixIcon: _getClearButton_weight(),
                         border: InputBorder.none,
                         icon: Icon(
                           FontAwesomeIcons.phone,
@@ -383,7 +430,9 @@ class _EditEmployeeState extends State<EditEmployee> {
               const SizedBox(height: 10),
               InkWell(
                 onTap: () async {
-                  setState(() {
+                  bool validate = _formKey.currentState!.validate();
+                  if (validate == false) {
+                  } else {
                     emp.username = username.text;
                     emp.password = password.text;
                     String firstnameTitle = name_title! + firstname.text;
@@ -394,15 +443,15 @@ class _EditEmployeeState extends State<EditEmployee> {
                     emp.position = text_position;
                     Farm idFarm = Farm(id_Farm: widget.fm.id_Farm);
                     emp.farm = idFarm;
-                  });
 
-                  final employee = Employee_data().EditEmployee(emp);
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: ((context) {
-                    return Mainfarm(
-                      fm: widget.fm,
-                    );
-                  })));
+                    final employee = Employee_data().EditEmployee(emp);
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: ((context) {
+                      return Mainfarm(
+                        fm: widget.fm,
+                      );
+                    })));
+                  }
                 },
                 borderRadius: BorderRadius.circular(30),
                 child: Container(
@@ -424,5 +473,89 @@ class _EditEmployeeState extends State<EditEmployee> {
         )),
       ),
     );
+  }
+
+  Widget? _getClearButton_firstname() {
+    if (!_showClearButton_firstname) {
+      return null;
+    }
+    return GestureDetector(
+        child: const Icon(
+          Icons.cancel,
+          color: Colors.red,
+        ),
+        onTap: () {
+          firstname.clear();
+        });
+  }
+
+  Widget? _getClearButton_lastname() {
+    if (!_showClearButton_lastname) {
+      return null;
+    }
+    return GestureDetector(
+        child: const Icon(
+          Icons.cancel,
+          color: Colors.red,
+        ),
+        onTap: () {
+          lastname.clear();
+        });
+  }
+
+  Widget? _getClearButton_username() {
+    if (!_showClearButton_username) {
+      return null;
+    }
+    return GestureDetector(
+        child: const Icon(
+          Icons.cancel,
+          color: Colors.red,
+        ),
+        onTap: () {
+          username.clear();
+        });
+  }
+
+  Widget? _getClearButton_password() {
+    if (!_showClearButton_password) {
+      return null;
+    }
+    return GestureDetector(
+        child: const Icon(
+          Icons.cancel,
+          color: Colors.red,
+        ),
+        onTap: () {
+          password.clear();
+        });
+  }
+
+  Widget? _getClearButton_email() {
+    if (!_showClearButton_email) {
+      return null;
+    }
+    return GestureDetector(
+        child: const Icon(
+          Icons.cancel,
+          color: Colors.red,
+        ),
+        onTap: () {
+          email.clear();
+        });
+  }
+
+  Widget? _getClearButton_tel() {
+    if (!_showClearButton_tel) {
+      return null;
+    }
+    return GestureDetector(
+        child: const Icon(
+          Icons.cancel,
+          color: Colors.red,
+        ),
+        onTap: () {
+          tel.clear();
+        });
   }
 }
