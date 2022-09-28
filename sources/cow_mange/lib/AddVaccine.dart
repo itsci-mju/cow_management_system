@@ -4,7 +4,6 @@ import 'package:age_calculator/age_calculator.dart';
 import 'package:cow_mange/DetailCow.dart';
 import 'package:cow_mange/Function/Function.dart';
 import 'package:cow_mange/class/Cow.dart';
-import 'package:cow_mange/class/Date.dart';
 import 'package:cow_mange/class/Employee.dart';
 import 'package:cow_mange/class/Farm.dart';
 import 'package:cow_mange/class/Vaccine.dart';
@@ -647,7 +646,8 @@ class _AddVaccineState extends State<AddVaccine> {
                             break;
                           }
                         }
-                        if (int_month >= 3 && isFirst == true) {
+                        if (int_month >= 3 && isFirst == true ||
+                            int_year >= 1) {
                           setState(() {
                             int_countvaccine = 2;
                           });
@@ -864,7 +864,7 @@ class _AddVaccineState extends State<AddVaccine> {
                             );
                           })));
                         } else if (vaccination != null &&
-                            widget.emp != null &&
+                            widget.fm != null &&
                             vaccination != 0) {
                           Navigator.of(context).pushReplacement(
                               MaterialPageRoute(builder: ((context) {

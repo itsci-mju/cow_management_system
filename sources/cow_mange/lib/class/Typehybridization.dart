@@ -12,7 +12,7 @@ class Typebridization {
   Typebridization.nameTypebridization({this.name_typebridization});
 
   Typebridization.fromJson(Map<String, dynamic> json) {
-    id_typebridization = json["id_typebridization"];
-    name_typebridization = json["name_typebridization"];
+    id_typebridization = json["id_Typehybridization"];
+    name_typebridization = json["name_typehybridization"];
   }
 }

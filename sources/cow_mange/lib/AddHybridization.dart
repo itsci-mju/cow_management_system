@@ -555,7 +555,7 @@ class _AddHybridizationState extends State<AddHybridization> {
                         emp: widget.emp,
                       );
                     })));
-                  } else if (hybridization != null && widget.emp != null) {
+                  } else if (hybridization != null && widget.fm != null) {
                     Navigator.of(context)
                         .pushReplacement(MaterialPageRoute(builder: ((context) {
                       return DetailCow(

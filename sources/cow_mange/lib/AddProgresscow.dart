@@ -325,7 +325,7 @@ class _AddProgressState extends State<AddProgress> {
                         emp: widget.emp,
                       );
                     })));
-                  } else if (progress != null && widget.emp != null) {
+                  } else if (progress != null && widget.fm != null) {
                     Navigator.of(context)
                         .pushReplacement(MaterialPageRoute(builder: ((context) {
                       return DetailCow(

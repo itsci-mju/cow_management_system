@@ -50,6 +50,7 @@ class _DetailCowState extends State<DetailCow> {
   List<Cow> listcow = [];
   Cow breeder_cow = Cow();
   Cow breeder_bull = Cow();
+  Hybridization hy = Hybridization();
 
   String cow_id = "";
 
@@ -1120,7 +1121,9 @@ class _DetailCowState extends State<DetailCow> {
                               child: ListTile(
                                   tileColor: Colors.white54,
                                   leading: _buildLeadingTile(widget.cow),
-                                  onTap: (() {}),
+                                  onTap: (() {
+                                    print(hy);
+                                  }),
                                   //title: Progress_date(widget.cow),
                                   subtitle: _subtitleCow_has_Hybridization(
                                       List_Cow_has_Hybridization[index])
@@ -1347,21 +1350,13 @@ class _DetailCowState extends State<DetailCow> {
                 fontWeight: FontWeight.w600)));
   }
 
-  _subtitleCow_has_Hybridization(Cow_has_Hybridization cH) async {
-    final list_hybridization = await Hybridization_data()
-        .mainCow_Hybridization_id(cH.hybridization!.id_Hybridization);
-    Hybridization hybridization = Hybridization();
-
-    hybridization = list_hybridization;
-    print(hybridization.typebridization!.name_typebridization);
-
+  _subtitleCow_has_Hybridization(Cow_has_Hybridization cH) {
     if (cH.hybridization!.result == "สำเร็จ") {
       return Align(
           alignment: Alignment.centerLeft,
           child: Text(
-
-              //"วันที่ผสมพันธุ์ :${cH.hybridization!.date_Hybridization!.year}/${cH.hybridization!.date_Hybridization!.month}/${cH.hybridization!.date_Hybridization!.day} \nผลลัพธ์ : ${cH.hybridization!.result}\n :${cH.hybridization!.date_of_birthday!.year}/${cH.hybridization!.date_of_birthday!.month}/${cH.hybridization!.date_of_birthday!.day}\nประเภทการผสมพันธุ์ :${cH.hybridization!.typebridization!.id_typebridization}",
-              "",
+              "วันที่ผสมพันธุ์ :${cH.hybridization!.date_Hybridization!.year}/${cH.hybridization!.date_Hybridization!.month}/${cH.hybridization!.date_Hybridization!.day} \nผลลัพธ์ : ${cH.hybridization!.result}\n :${cH.hybridization!.date_of_birthday!.year}/${cH.hybridization!.date_of_birthday!.month}/${cH.hybridization!.date_of_birthday!.day}\nประเภทการผสมพันธุ์ :${cH.hybridization!.typebridization!.id_typebridization}",
+              /* "",*/
               style: const TextStyle(
                   fontSize: 20.0,
                   color: Color.fromARGB(255, 12, 2, 2),
@@ -1370,7 +1365,8 @@ class _DetailCowState extends State<DetailCow> {
       return Align(
           alignment: Alignment.centerLeft,
           child: Text(
-              "วันที่ผสมพันธุ์ :${cH.hybridization!.date_Hybridization!.year}/${cH.hybridization!.date_Hybridization!.month}/${cH.hybridization!.date_Hybridization!.day} \nผลลัพธ์ : ${cH.hybridization!.result}",
+              "วันที่ผสมพันธุ์ :${cH.hybridization!.date_Hybridization!.year}/${cH.hybridization!.date_Hybridization!.month}/${cH.hybridization!.date_Hybridization!.day} \nผลลัพธ์ : ${cH.hybridization!.result} \nประเภทผสมพันธุ์ :\n${cH.hybridization!.typebridization!.name_typebridization}",
+              /*"",*/
               style: const TextStyle(
                   fontSize: 20.0,
                   color: Color.fromARGB(255, 12, 2, 2),

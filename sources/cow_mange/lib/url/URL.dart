@@ -1,5 +1,5 @@
 class url {
-  static const String URL = "http://192.168.1.7:8081/project_cowmanage";
+  static const String URL = "http://10.0.1.32:8081/project_cowmanage";
 
 //employee
   static const String URL_Login = "/employee/login";

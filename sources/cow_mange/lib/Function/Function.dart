@@ -473,9 +473,9 @@ class Hybridization_data {
     Map<String, dynamic> mapResponse = json.decode(response.body);
 
     if (response.statusCode == 200) {
-      dynamic progress = mapResponse['result'];
+      dynamic hybridization = mapResponse['result'];
 
-      return Hybridization.fromJson(progress);
+      return Hybridization.fromJson(hybridization);
     } else {
       throw Exception('Failed to load album');
     }
@@ -505,7 +505,7 @@ class Hybridization_data {
     }
   }
 
-  Future mainCow_Hybridization_id(id_hybridization) async {
+  Future<Hybridization> mainCow_Hybridization_id(id_hybridization) async {
     final response = await http.post(
       Uri.parse(url.URL.toString() + url.URL_hybridization_list_id.toString()),
       body: jsonEncode({
@@ -524,6 +524,8 @@ class Hybridization_data {
     if (response.statusCode == 200) {
       dynamic hybridization = mapResponse['result'];
       return Hybridization.fromJson(hybridization);
+    } else {
+      return Hybridization();
     }
   }
 

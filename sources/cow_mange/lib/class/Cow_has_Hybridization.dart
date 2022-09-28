@@ -11,4 +11,9 @@ class Cow_has_Hybridization {
     cow = Cow.fromJson(json["cow"]);
     hybridization = Hybridization.fromJson(json["hybridization"]);
   }
+
+  Map<String, dynamic> toJson() => {
+        "cow": cow!.tocow(),
+        "Hybridization": hybridization!.tojson_Hybridization(),
+      };
 }

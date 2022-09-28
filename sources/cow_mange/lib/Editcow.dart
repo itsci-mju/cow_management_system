@@ -9,6 +9,7 @@ import 'package:cow_mange/class/Employee.dart';
 import 'package:cow_mange/class/Farm.dart';
 import 'package:cow_mange/class/Species.dart';
 import 'package:cow_mange/firebase/storage.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
@@ -100,8 +101,10 @@ class _EditCowState extends State<EditCow> {
 
 //cow
   Cow? co = Cow();
+  Farm? fm = Farm();
   Species? sp = Species();
   Breeder? bd = Breeder();
+  UploadTask? task;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -111,6 +114,7 @@ class _EditCowState extends State<EditCow> {
 
     setState(() {
       cow = widget.cow;
+      fm = widget.fm;
     });
 
     init();
@@ -161,6 +165,26 @@ class _EditCowState extends State<EditCow> {
     }
 
     //fileName = file!.path.split('/').last;
+  }
+
+  Future uploadFile(file, Cow? cow) async {
+    if (file == null) return;
+
+    final fileName = file!.path;
+    final fileExtension = fileName.split(".").last;
+    final name = fileExtension;
+    final namecow = cow!.cow_id;
+    final destination = 'Cow/$namecow';
+
+    task = Storage.uploadFile2(destination, file!);
+
+    if (task == null) return;
+
+    final snapshot = await task!.whenComplete(() {});
+    final urlDownload = await snapshot.ref.getDownloadURL();
+    String textUrldownload = urlDownload;
+
+    return textUrldownload;
   }
 
   Future fetchbull(idfarm, cowid) async {
@@ -269,7 +293,71 @@ class _EditCowState extends State<EditCow> {
         //breeder_cow
         textcow_cow = cow!.breeder!.mother.toString();
       });
-    } else {}
+    } else {
+      final farm = await Employee_data().List_employee(fm!);
+      setState(() {
+        listemployee = [];
+        listemployee = farm;
+
+        //set_caretaker
+        listcaretaker = [];
+        for (int i = 0; i < listemployee.length; i++) {
+          listcaretaker
+              .add("${listemployee[i].firstname} ${listemployee[i].lastname}");
+        }
+        //set_defultcaretaker
+        listcaretaker_defult = [];
+        listcaretaker_defult.add(cow!.caretaker.toString());
+        //cow_id
+
+        econ_cowid.text = cow!.cow_id.toString();
+        //cow_name
+        econ_cowname.text = cow!.namecow.toString();
+        // birthday
+        var outputFormat = DateFormat('dd/MM/yyyy');
+        DateTime d = DateTime(cow!.birthday!.year + 543, cow!.birthday!.month,
+            cow!.birthday!.day);
+        var Date = "";
+        econ_birth = TextEditingController()
+          ..text = Date = outputFormat.format(d);
+        //gender
+        textgender = cow!.gender.toString();
+        gender = ["เมีย", "ผู ้"];
+
+        birthday = cow!.birthday;
+
+        //weight
+        econ_cow_weight.text = cow!.weight.toString();
+        //height
+        econ_cow_height.text = cow!.height.toString();
+        //status
+        textstatus = cow!.status.toString();
+        status = ["เสียชีวิต", "มีชีวิต"];
+        //colors
+        textcolor = cow!.color.toString();
+        color = ["ดำ", "แดง"];
+
+        textspecies = cow!.species!.species_breed.toString();
+        species = ["Beefmaster", "brahman", "Brangus", "Gyr", "Wagyu"];
+        textcountry = cow!.species!.country.toString();
+        country = [
+          "Australia",
+          "New Zealand",
+          "South Africa",
+          "Namibia",
+          "United Kingdom",
+          "Canada",
+          "USA",
+          "Argentina"
+        ];
+
+        // breeder_bull
+        textcow_bull = cow!.breeder!.father.toString();
+
+        //breeder_cow
+        textcow_cow = cow!.breeder!.mother.toString();
+      });
+    }
   }
 
   Future clean_number() async {
@@ -445,36 +533,71 @@ class _EditCowState extends State<EditCow> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Container(
-                      margin: const EdgeInsets.symmetric(vertical: 10),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 5),
-                      width: size.width * 0.9,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: Colors.lightGreen.withAlpha(50)),
-                      child: TextFormField(
-                          controller: econ_cowid,
-                          decoration: InputDecoration(
-                              label: const Text("รหัสประจำตัวโค"),
-                              suffixIcon: _getClearButton_econ_cowid(),
-                              hintStyle: const TextStyle(color: Colors.black),
-                              border: InputBorder.none,
-                              icon: const Icon(
-                                FontAwesomeIcons.cow,
-                                color: Color(0XFF397D54),
-                                size: 20,
-                              )),
-                          validator: Validators.compose([
-                            Validators.required_isempty("กรุณากรอก รหัสโค"),
-                            Validators.text(
-                                "กรอกรหัสโค เป็นภาษาไทย อังกฤษ และตัวเลขเท่านั้น"),
-                            Validators.minLength(
-                                5, "กรุณากรอกรหัสโคให้มากกว่า 5 ตัว"),
-                            Validators.maxLength(
-                                10, "กรุณากรอกรหัสโคให้น้อยกว่า 10 ตัว"),
-                          ])),
-                    ),
+                    widget.emp == null
+                        ? Container(
+                            margin: const EdgeInsets.symmetric(vertical: 10),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 5),
+                            width: size.width * 0.9,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                color: Colors.lightGreen.withAlpha(50)),
+                            child: TextFormField(
+                                controller: econ_cowid,
+                                decoration: InputDecoration(
+                                    label: const Text("รหัสประจำตัวโค"),
+                                    suffixIcon: _getClearButton_econ_cowid(),
+                                    hintStyle:
+                                        const TextStyle(color: Colors.black),
+                                    border: InputBorder.none,
+                                    icon: const Icon(
+                                      FontAwesomeIcons.cow,
+                                      color: Color(0XFF397D54),
+                                      size: 20,
+                                    )),
+                                validator: Validators.compose([
+                                  Validators.required_isempty(
+                                      "กรุณากรอก รหัสโค"),
+                                  Validators.text(
+                                      "กรอกรหัสโค เป็นภาษาไทย อังกฤษ และตัวเลขเท่านั้น"),
+                                  Validators.minLength(
+                                      5, "กรุณากรอกรหัสโคให้มากกว่า 5 ตัว"),
+                                  Validators.maxLength(
+                                      10, "กรุณากรอกรหัสโคให้น้อยกว่า 10 ตัว"),
+                                ])),
+                          )
+                        : Container(
+                            margin: const EdgeInsets.symmetric(vertical: 10),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 5),
+                            width: size.width * 0.9,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                color: Colors.lightGreen.withAlpha(50)),
+                            child: TextFormField(
+                                controller: econ_cowid,
+                                decoration: InputDecoration(
+                                    label: const Text("รหัสประจำตัวโค"),
+                                    suffixIcon: _getClearButton_econ_cowid(),
+                                    hintStyle:
+                                        const TextStyle(color: Colors.black),
+                                    border: InputBorder.none,
+                                    icon: const Icon(
+                                      FontAwesomeIcons.cow,
+                                      color: Color(0XFF397D54),
+                                      size: 20,
+                                    )),
+                                validator: Validators.compose([
+                                  Validators.required_isempty(
+                                      "กรุณากรอก รหัสโค"),
+                                  Validators.text(
+                                      "กรอกรหัสโค เป็นภาษาไทย อังกฤษ และตัวเลขเท่านั้น"),
+                                  Validators.minLength(
+                                      5, "กรุณากรอกรหัสโคให้มากกว่า 5 ตัว"),
+                                  Validators.maxLength(
+                                      10, "กรุณากรอกรหัสโคให้น้อยกว่า 10 ตัว"),
+                                ])),
+                          ),
                     Container(
                         margin: const EdgeInsets.symmetric(vertical: 10),
                         padding: const EdgeInsets.symmetric(
@@ -682,7 +805,7 @@ class _EditCowState extends State<EditCow> {
                           ),
                           OutlinedButton(
                               onPressed: chooseImage,
-                              child: const Text(
+                              child: Text(
                                 "เลือกรูปภาพโค",
                                 style: TextStyle(
                                     color: Color.fromARGB(255, 0, 0, 0)),
@@ -713,7 +836,41 @@ class _EditCowState extends State<EditCow> {
                           ],
                         )),
                     widget.emp == null
-                        ? Container()
+                        ? Container(
+                            margin: const EdgeInsets.symmetric(vertical: 10),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 5),
+                            width: size.width * 0.9,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                color: Colors.lightGreen.withAlpha(50)),
+                            child: Column(children: [
+                              DropdownButtonFormField(
+                                items: listcaretaker.map((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    caretaker = newValue;
+                                  });
+                                },
+                                decoration: InputDecoration(
+                                  hintText: listcaretaker_defult[0],
+                                  hintStyle:
+                                      const TextStyle(color: Colors.black),
+                                  icon: const Icon(
+                                    FontAwesomeIcons.userLarge,
+                                    color: Color(0XFF397D54),
+                                    size: 20,
+                                  ),
+                                  border: InputBorder.none,
+                                ),
+                              ),
+                            ]),
+                          )
                         : Container(
                             margin: const EdgeInsets.symmetric(vertical: 10),
                             padding: const EdgeInsets.symmetric(
@@ -1031,7 +1188,7 @@ class _EditCowState extends State<EditCow> {
                               co?.picture = "-";
                             }
                           } else {
-                            imageCow = await Storage().uploadFile(file, cow);
+                            imageCow = await uploadFile(file, cow);
                             co?.picture = imageCow;
                           }
 

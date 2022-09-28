@@ -569,7 +569,7 @@ class _AddFeedingcowState extends State<AddFeedingcow> {
                           emp: widget.emp,
                         );
                       })));
-                    } else if (feeding != null && widget.emp != null) {
+                    } else if (feeding != null && widget.fm != null) {
                       Navigator.of(context).pushReplacement(
                           MaterialPageRoute(builder: ((context) {
                         return DetailCow(

@@ -86,6 +86,21 @@ class Validators {
     };
   }
 
+  static FormFieldValidator<String> number(String errorMessage) {
+    return (value) {
+      if (value!.isEmpty) {
+        return null;
+      } else {
+        final numberRegex = RegExp(r"^[0-9]");
+        if (numberRegex.hasMatch(value)) {
+          return null;
+        } else {
+          return errorMessage;
+        }
+      }
+    };
+  }
+
   static FormFieldValidator<String> text_eng_only(String errorMessage) {
     return (value) {
       if (value!.isEmpty) {
@@ -106,7 +121,22 @@ class Validators {
       if (value!.isEmpty) {
         return null;
       } else {
-        final usernameRegex = RegExp(r"^[ก-ฮa-zA-Z0-9]");
+        final usernameRegex = RegExp(r"^[ก-์a-zA-Z0-9]");
+        if (usernameRegex.hasMatch(value)) {
+          return null;
+        } else {
+          return errorMessage;
+        }
+      }
+    };
+  }
+
+  static FormFieldValidator<String> text_eng_thai(String errorMessage) {
+    return (value) {
+      if (value!.isEmpty) {
+        return null;
+      } else {
+        final usernameRegex = RegExp(r"^[ก-์a-zA-Z]");
         if (usernameRegex.hasMatch(value)) {
           return null;
         } else {
@@ -121,7 +151,7 @@ class Validators {
       if (value!.isEmpty) {
         return null;
       } else {
-        final usernameRegex = RegExp(r"^[ก-ฮa-zA-Z0-9.()]");
+        final usernameRegex = RegExp(r"^[ก-์a-zA-Z0-9.()]");
         if (usernameRegex.hasMatch(value)) {
           return null;
         } else {

@@ -205,8 +205,6 @@ class _MainfarmState extends State<Mainfarm> {
     final listexp = await Expend_data().ListExpend();
 
     setState(() {
-      //listcow = co;
-
       listemployee = emp;
       listemployee = listEmp;
       listexpendfarm = exp;
@@ -463,10 +461,9 @@ class _MainfarmState extends State<Mainfarm> {
           child: Container(
               transform: Matrix4.translationValues(0.0, -10.0, 0.0),
               child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: listcow.length,
-                itemBuilder: (BuildContext context, int index) {
-                  if (listcow[index].picture == "-") {
+                  shrinkWrap: true,
+                  itemCount: listcow.length,
+                  itemBuilder: (BuildContext context, int index) {
                     return Card(
                         color: (Colors.green),
                         child: ListTile(
@@ -566,11 +563,7 @@ class _MainfarmState extends State<Mainfarm> {
                           subtitle: _birthdayCow(listcow[index]),
                           // isThreeLine: true,
                         ));
-                  } else {
-                    return const Card();
-                  }
-                },
-              )));
+                  })));
     } else if (_currentIndex == 1) {
       return Expanded(
           child: Container(
@@ -687,7 +680,9 @@ class _MainfarmState extends State<Mainfarm> {
                                 context: context,
                                 builder: (BuildContext context) =>
                                     CupertinoAlertDialog(
-                                  title: Text('ลบข้อมูลค่าใช้จ่าย  ' "\n" "รหัสคำสั่งซื้อ : " +
+                                  title: Text('ลบข้อมูลค่าใช้จ่าย  '
+                                          "\n"
+                                          "รหัสคำสั่งซื้อ : " +
                                       listexpendfarm[index].id_list.toString()),
                                   content: const Text(
                                       'เช็คข้อมูลการลบข้อมูลทุกครั้ง'),
@@ -901,8 +896,7 @@ Widget _buildLeadingTile(Cow listcow) {
     width: 80,
     alignment: Alignment.center,
     decoration: const BoxDecoration(
-        border:
-            Border(right: BorderSide(width: 1.0, color: Colors.black))),
+        border: Border(right: BorderSide(width: 1.0, color: Colors.black))),
     child: SizedBox(
       width: 75,
       height: 75,
@@ -920,8 +914,7 @@ Widget _buildLeadingTile_df(Cow listcow) {
     width: 80,
     alignment: Alignment.center,
     decoration: const BoxDecoration(
-        border:
-            Border(right: BorderSide(width: 1.0, color: Colors.black))),
+        border: Border(right: BorderSide(width: 1.0, color: Colors.black))),
     child: SizedBox(
       width: 75,
       height: 75,
