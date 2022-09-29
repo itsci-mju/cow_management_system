@@ -1248,7 +1248,7 @@ class _DetailCowState extends State<DetailCow> {
       width: 80,
       height: 100,
       child: Image.asset(
-        "images/cow-06.png",
+        "images/cow-05.png",
         width: 100,
         height: 100,
         fit: BoxFit.fitWidth,
