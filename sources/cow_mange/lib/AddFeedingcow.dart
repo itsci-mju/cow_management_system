@@ -334,7 +334,7 @@ class _AddFeedingcowState extends State<AddFeedingcow> {
                         "เลือกวันให้อาหาร",
                         style: TextStyle(color: Colors.black),
                       ),
-                      hintText: "Date is not selected",
+                      hintText: "กรุณาเลือกวันให้อาหาร",
                       suffixIcon: _getClearButton_date_fedding(),
                       hintStyle: TextStyle(color: Colors.black),
                       border: InputBorder.none,
@@ -497,86 +497,100 @@ class _AddFeedingcowState extends State<AddFeedingcow> {
                   final afternoon =
                       (date_time_input.isAfter(afternoon_start)) &&
                           (date_time_input.isBefore(afternoon_end));
-                  print(date_time_input);
-                  print(afternoon_start);
-                  print(afternoon_end);
-                  for (int i = 0; i < Listfeeding.length; i++) {
-                    if (Listfeeding[i].record_date == date_input &&
-                        morning == true &&
-                        Listfeeding[i].time == "เช้า") {
-                      DateTime date = DateTime(
-                        text_date!.year + 543,
-                        text_date!.month,
-                        text_date!.day,
-                      );
-                      setState(() {
-                        error_text_2 = "***";
-                        error_text = "วันที่ " +
-                            date.day.toString() +
-                            "-" +
-                            date.month.toString() +
-                            "-" +
-                            date.year.toString() +
-                            "มีการเพิ่มข้อมูล ในช่วงเช้า ไปแล้ว";
-
-                        error_ = 1;
-                        date_fedding.text = "เลือกวันให้ถูกต้อง";
-                      });
-                    } else if ((Listfeeding[i].record_date == date_input &&
-                        afternoon == true &&
-                        Listfeeding[i].time == "เย็น")) {
-                      DateTime date = DateTime(
-                        text_date!.year + 543,
-                        text_date!.month,
-                        text_date!.day,
-                      );
-                      setState(() {
-                        error_text_2 = "***";
-                        error_text = "วันที่ " +
-                            date.day.toString() +
-                            "-" +
-                            date.month.toString() +
-                            "-" +
-                            date.year.toString() +
-                            "มีการเพิ่มข้อมูล ในช่วงเย็น ไปแล้ว";
-                        error_ = 1;
-                        date_fedding.text = "เลือกวันให้ถูกต้อง";
-                      });
-                    }
-                  }
-                  if (error_ == 0) {
+                  if (morning == false || afternoon == false) {
                     setState(() {
-                      error_text_2 = "";
-                      error_text = "";
+                      error_text_2 = "***";
+                      error_text =
+                          "เลือกช่วงเวลาให้ถูกต้อง\nช่วงเช้า 6:00-12:00 ช่วงเย็น 12:01-18:00";
+                      error_ = 1;
+                      date_fedding.text = "เลือกวันให้ถูกต้อง";
                     });
-                    fd?.record_date = birthday;
-                    fd?.amount = double.parse(count_c.text);
-                    fd?.cow = Cow.Idcow(cow_id: widget.cow.cow_id);
-                    if (morning == true && afternoon == false) {
-                      fd?.time = "เช้า";
-                    } else if (morning == false && afternoon == true) {
-                      fd?.time = "เย็น";
+                  } else {
+                    for (int i = 0; i < Listfeeding.length; i++) {
+                      if (Listfeeding[i].record_date == date_input &&
+                          morning == true &&
+                          Listfeeding[i].time == "เช้า") {
+                        DateTime date = DateTime(
+                          text_date!.year + 543,
+                          text_date!.month,
+                          text_date!.day,
+                        );
+                        setState(() {
+                          error_text_2 = "***";
+                          error_text = "วันที่ " +
+                              date.day.toString() +
+                              "-" +
+                              date.month.toString() +
+                              "-" +
+                              date.year.toString() +
+                              "มีการเพิ่มข้อมูล ในช่วงเช้า ไปแล้ว";
+
+                          error_ = 1;
+                          date_fedding.text = "เลือกวันให้ถูกต้อง";
+                        });
+                      } else if ((Listfeeding[i].record_date == date_input &&
+                          afternoon == true &&
+                          Listfeeding[i].time == "เย็น")) {
+                        DateTime date = DateTime(
+                          text_date!.year + 543,
+                          text_date!.month,
+                          text_date!.day,
+                        );
+                        setState(() {
+                          error_text_2 = "***";
+                          error_text = "วันที่ " +
+                              date.day.toString() +
+                              "-" +
+                              date.month.toString() +
+                              "-" +
+                              date.year.toString() +
+                              "มีการเพิ่มข้อมูล ในช่วงเย็น ไปแล้ว";
+                          error_ = 1;
+                          date_fedding.text = "เลือกวันให้ถูกต้อง";
+                        });
+                      } else {
+                        setState(() {
+                          error_text_2 = "222";
+                          error_text = "";
+                          error_ = 1;
+                          date_fedding.text = "เลือกวันให้ถูกต้อง";
+                        });
+                      }
                     }
+                    if (error_ == 0) {
+                      setState(() {
+                        error_text_2 = "";
+                        error_text = "";
+                      });
+                      fd?.record_date = birthday;
+                      fd?.amount = double.parse(count_c.text);
+                      fd?.cow = Cow.Idcow(cow_id: widget.cow.cow_id);
+                      if (morning == true && afternoon == false) {
+                        fd?.time = "เช้า";
+                      } else if (morning == false && afternoon == true) {
+                        fd?.time = "เย็น";
+                      }
 
-                    fd?.food = Food.Idfood(foodid: name_food);
+                      fd?.food = Food.Idfood(foodid: name_food);
 
-                    final feeding = await AddFeedingcow(fd!);
-                    if (feeding != null && widget.emp != null) {
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: ((context) {
-                        return DetailCow(
-                          cow: widget.cow,
-                          emp: widget.emp,
-                        );
-                      })));
-                    } else if (feeding != null && widget.fm != null) {
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: ((context) {
-                        return DetailCow(
-                          cow: widget.cow,
-                          fm: widget.fm,
-                        );
-                      })));
+                      final feeding = await AddFeedingcow(fd!);
+                      if (feeding != null && widget.emp != null) {
+                        Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: ((context) {
+                          return DetailCow(
+                            cow: widget.cow,
+                            emp: widget.emp,
+                          );
+                        })));
+                      } else if (feeding != null && widget.fm != null) {
+                        Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: ((context) {
+                          return DetailCow(
+                            cow: widget.cow,
+                            fm: widget.fm,
+                          );
+                        })));
+                      }
                     }
                   }
                 }

@@ -467,7 +467,7 @@ class _MainfarmState extends State<Mainfarm> {
                     return Card(
                         color: (Colors.green),
                         child: ListTile(
-                          leading: _buildLeadingTile_df(listcow[index]),
+                          leading: _buildLeadingTile(listcow[index]),
                           onTap: (() {
                             Navigator.of(context)
                                 .push(MaterialPageRoute(builder: ((context) {
@@ -892,17 +892,11 @@ class _MainfarmState extends State<Mainfarm> {
 
 Widget _buildLeadingTile(Cow listcow) {
   return Container(
-    padding: const EdgeInsets.only(right: 10.0),
-    width: 80,
-    alignment: Alignment.center,
-    decoration: const BoxDecoration(
-        border: Border(right: BorderSide(width: 1.0, color: Colors.black))),
+    width: 100,
     child: SizedBox(
-      width: 75,
-      height: 75,
       child: Image.network(
-        listcow.picture!,
-        fit: BoxFit.cover,
+        listcow.picture.toString(),
+        fit: BoxFit.fitWidth,
       ),
     ),
   );
@@ -1018,12 +1012,12 @@ _expenseFarm_date(Expendfarm expendfarm) {
 
   var numD = int.parse(expendfarm.expendFarmDate!.day.toString());
 
-  DateTime dateBirthday = DateTime(numY + 543, numM + 1, numD);
+  DateTime dateBirthday = DateTime(numY + 543, numM, numD);
   var formatter = DateFormat('dd/MM/yyyy');
   String formattedDate = formatter.format(dateBirthday);
 
   return Text(
-      "ชื่อ :${expendfarm.name} ราคา : ${expendfarm.price} บาท\nวันที่ซื้อ : $formattedDate\nประเภทสินค้า : ${expendfarm.expendType!.expendType_name}",
+      "ชื่อ :${expendfarm.name} ราคา : ${expendfarm.price} บาท \nจำนวน : ${expendfarm.amount} ชิ้น\nวันที่ซื้อ : $formattedDate\nประเภทสินค้า : ${expendfarm.expendType!.expendType_name}",
       style:
           const TextStyle(fontSize: 16, color: Color.fromARGB(255, 12, 2, 2)));
 }

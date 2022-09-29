@@ -34,7 +34,7 @@ class Expendfarm {
   Map<String, dynamic> toJson_edit_Expendfarm() {
     return <String, dynamic>{
       'id_list': id_list,
-      'expendFarmDate': expendFarmDate?.toIso8601String().split("T")[0],
+      'expendFarmDate': expendFarmDate!.toIso8601String().split("T")[0],
       'name': name,
       'amount': amount,
       'price': price,

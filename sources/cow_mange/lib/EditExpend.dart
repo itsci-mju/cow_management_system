@@ -224,8 +224,6 @@ class _EditExpendState extends State<EditExpend> {
                       Validators.required_isempty(
                         "กรุณากรอก ชื่อรายการสินค้า",
                       ),
-                      Validators.minLength(1, "กรุณากรอก ราคา"),
-                      Validators.maxLength(7, "กรุณากรอก ราคา")
                     ]),
                     decoration: InputDecoration(
                         suffixIcon: _getClearButton_name(),
@@ -250,6 +248,7 @@ class _EditExpendState extends State<EditExpend> {
                           color: Colors.lightGreen.withAlpha(50)),
                       child: TextFormField(
                         controller: amount,
+                        keyboardType: TextInputType.number,
                         validator: Validators.compose([
                           Validators.required_isempty(
                             "กรุณากรอก จำนวน",
@@ -274,6 +273,7 @@ class _EditExpendState extends State<EditExpend> {
                           color: Colors.lightGreen.withAlpha(50)),
                       child: TextFormField(
                         controller: price,
+                        keyboardType: TextInputType.number,
                         validator: Validators.compose([
                           Validators.required_isempty(
                             "กรุณากรอก ราคา",
@@ -318,8 +318,8 @@ class _EditExpendState extends State<EditExpend> {
                     decoration: InputDecoration(
                       hintText: expend.expendType_name,
                       hintStyle: const TextStyle(color: Colors.black),
-                      icon: const Icon(
-                        FontAwesomeIcons.venusMars,
+                      icon: Icon(
+                        FontAwesomeIcons.bowlFood,
                         color: Color(0XFF397D54),
                         size: 20,
                       ),
@@ -336,6 +336,7 @@ class _EditExpendState extends State<EditExpend> {
                   } else {
                     exd_f.id_list = widget.ex.id_list;
                     exd_f.expendFarmDate = expendFarmDate;
+                    print(exd_f.expendFarmDate);
                     exd_f.name = name.text;
                     exd_f.amount = int.parse(amount.text);
                     exd_f.price = double.parse(price.text);

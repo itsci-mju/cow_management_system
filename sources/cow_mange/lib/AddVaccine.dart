@@ -567,6 +567,7 @@ class _AddVaccineState extends State<AddVaccine> {
                     ),
                   //if (startDate!.compareTo(DateTime(2023, 03, 21)) <= 0)
                   if (startDate!.compareTo(DateTime.now()) <= 0)
+                    /*
                     Container(
                         margin: const EdgeInsets.symmetric(vertical: 10),
                         padding: const EdgeInsets.symmetric(
@@ -598,305 +599,324 @@ class _AddVaccineState extends State<AddVaccine> {
                   else if (check_text == 0)
                     SizedBox()
                   else
-                    SizedBox(),
+                    SizedBox(),*/
+                    if (startDate!.compareTo(DateTime.now()) <= 0)
+                      //if (startDate!.compareTo(DateTime(2023, 03, 21)) <= 0)
+                      Container(
+                          margin: const EdgeInsets.symmetric(vertical: 10),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 5),
+                          width: size.width * 0.93,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              color: Colors.lightGreen.withAlpha(50)),
+                          child: TextFormField(
+                            controller: doctorname,
+                            validator:
+                                Validators.required_isempty("กรุณากรอกชื่อหมอ"),
+                            decoration: InputDecoration(
+                                suffixIcon: _getClearButton_name_doctor(),
+                                label: Text("ชื่อหมอ"),
+                                hintStyle: TextStyle(color: Colors.black),
+                                border: InputBorder.none,
+                                icon: Icon(
+                                  FontAwesomeIcons.userDoctor,
+                                  color: Color(0XFF397D54),
+                                  size: 20,
+                                )),
+                          ))
+                    else if (check_text == 0)
+                      SizedBox()
+                    else
+                      SizedBox(),
                   if (startDate!.compareTo(DateTime.now()) <= 0)
-                    //if (startDate!.compareTo(DateTime(2023, 03, 21)) <= 0)
-                    Container(
-                        margin: const EdgeInsets.symmetric(vertical: 10),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 5),
-                        width: size.width * 0.93,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            color: Colors.lightGreen.withAlpha(50)),
-                        child: TextFormField(
-                          controller: doctorname,
-                          validator:
-                              Validators.required_isempty("กรุณากรอกชื่อหมอ"),
-                          decoration: InputDecoration(
-                              suffixIcon: _getClearButton_name_doctor(),
-                              label: Text("ชื่อหมอ"),
-                              hintStyle: TextStyle(color: Colors.black),
-                              border: InputBorder.none,
-                              icon: Icon(
-                                FontAwesomeIcons.userDoctor,
-                                color: Color(0XFF397D54),
-                                size: 20,
-                              )),
-                        ))
-                  else if (check_text == 0)
-                    SizedBox()
-                  else
-                    SizedBox(),
+                    InkWell(
+                      onTap: () async {
+                        bool validate = _formKey.currentState!.validate();
 
-                  InkWell(
-                    onTap: () async {
-                      bool validate = _formKey.currentState!.validate();
+                        var int_year = int.parse(year);
+                        var int_month = int.parse(month);
+                        var int_day = int.parse(day);
 
-                      var int_year = int.parse(year);
-                      var int_month = int.parse(month);
-                      var int_day = int.parse(day);
-
-                      if (name_vaccine == listvaccine[0].name_vaccine) {
-                        bool isFirst = true;
-                        for (Vaccination v in listVaccination) {
-                          if (v.cow!.cow_id == co.cow_id &&
-                              v.vaccine!.name_vaccine == name_vaccine) {
-                            isFirst = false;
-                            break;
+                        if (name_vaccine == listvaccine[0].name_vaccine) {
+                          bool isFirst = true;
+                          for (Vaccination v in listVaccination) {
+                            if (v.cow!.cow_id == co.cow_id &&
+                                v.vaccine!.name_vaccine == name_vaccine) {
+                              isFirst = false;
+                              break;
+                            }
                           }
-                        }
-                        if (int_month >= 3 && isFirst == true ||
-                            int_year >= 1) {
-                          setState(() {
-                            int_countvaccine = 2;
-                          });
-                        } else if (isFirst == false) {
-                          DateTime d = DateTime(
-                              listVaccination.last.dateVaccination!.year,
-                              listVaccination.last.dateVaccination!.month,
-                              listVaccination.last.dateVaccination!.day);
-                          if (d.compareTo(DateTime.now()) == 0) {
-                            setState(() {
-                              date_vaccine_c.text =
-                                  "วัคซีนสามารถฉีดได้วันละครั้งเดียวเท่านั้น";
-                            });
-                          }
-                        } else {
-                          setState(() {
-                            date_vaccine_c.text = isFirst == true
-                                ? "ไม่สามารถฉีดวัคซีนได้เนืองจากอายุ น้อย"
-                                : "วัคซีนสามารถฉีดได้ครั้งเดียวเท่านั้น";
-                          });
-                        }
-                      } else if (name_vaccine == listvaccine[1].name_vaccine) {
-                        bool isFirst = true;
-                        for (Vaccination v in listVaccination) {
-                          if (v.cow!.cow_id == co.cow_id &&
-                              v.vaccine!.name_vaccine == name_vaccine) {
-                            isFirst = false;
-                            break;
-                          }
-                        }
-                        if (int_year < 1 && int_month >= 4 && isFirst == true) {
-                          setState(() {
-                            int_countvaccine = 5;
-                          });
-                        } else if (isFirst == false) {
-                          DateTime d = DateTime(
-                              listVaccination.last.dateVaccination!.year,
-                              listVaccination.last.dateVaccination!.month,
-                              listVaccination.last.dateVaccination!.day);
-
-                          if (d.year < 1 && d.month >= 10) {
-                            setState(() {
-                              int_countvaccine = 5;
-                            });
-                          } else if ((d.year > 0 && d.month > 0)) {
-                            setState(() {
-                              int_countvaccine = 5;
-                            });
-                          } else if (d.compareTo(DateTime.now()) == 0) {
-                            setState(() {
-                              date_vaccine_c.text =
-                                  "ัคซีนสามารถฉีดได้วันละครั้งเดียวเท่านั้น";
-                            });
-                          } else {
-                            setState(() {
-                              date_vaccine_c.text = "กรุณาตรวจสอบวันฉีดวัคซีน";
-                            });
-                          }
-                        } else {
-                          setState(() {
-                            date_vaccine_c.text =
-                                "ไม่สามารถฉีดวัคซีนได้เนืองจากอายุ น้อย";
-                          });
-                        }
-                      } else if (name_vaccine == listvaccine[2].name_vaccine) {
-                        bool isFirst = true;
-                        for (Vaccination v in listVaccination) {
-                          if (v.cow!.cow_id == co.cow_id &&
-                              v.vaccine!.name_vaccine == name_vaccine) {
-                            isFirst = false;
-                            break;
-                          }
-                        }
-                        if (int_year < 1 && int_month == 4 && isFirst == true) {
-                          setState(() {
-                            int_countvaccine = 2;
-                          });
-                        } else if (isFirst = false) {
-                          DateTime d = DateTime(
-                              listVaccination.last.dateVaccination!.year,
-                              listVaccination.last.dateVaccination!.month,
-                              listVaccination.last.dateVaccination!.day);
-                          if (((d.year < 1 &&
-                              (d.month == 5 ||
-                                  (d.month == 4 &&
-                                      (d.day >= 20 && d.day <= 32)))))) {
-                            int_countvaccine = 2;
-                          } else if (d.year > 0 && d.month == 5) {
+                          if (int_month >= 3 && isFirst == true ||
+                              int_year >= 1) {
                             setState(() {
                               int_countvaccine = 2;
                             });
-                          } else if (d.compareTo(DateTime.now()) == 0) {
-                            setState(() {
-                              date_vaccine_c.text =
-                                  "ัคซีนสามารถฉีดได้วันละครั้งเดียวเท่านั้น";
-                            });
+                          } else if (isFirst == false) {
+                            DateTime d = DateTime(
+                                listVaccination.last.dateVaccination!.year,
+                                listVaccination.last.dateVaccination!.month,
+                                listVaccination.last.dateVaccination!.day);
+                            if (d.compareTo(DateTime.now()) == 0) {
+                              setState(() {
+                                date_vaccine_c.text =
+                                    "วัคซีนสามารถฉีดได้วันละครั้งเดียวเท่านั้น";
+                              });
+                            }
                           } else {
                             setState(() {
-                              date_vaccine_c.text = "กรุณาตรวจสอบวันฉีดวัคซีน";
+                              date_vaccine_c.text = isFirst == true
+                                  ? "ไม่สามารถฉีดวัคซีนได้เนืองจากอายุ น้อย"
+                                  : "วัคซีนสามารถฉีดได้ครั้งเดียวเท่านั้น";
                             });
                           }
-                        } else {
-                          setState(() {
-                            date_vaccine_c.text =
-                                "ไม่สามารถฉีดวัคซีนได้เนืองจากอายุ น้อย";
-                          });
-                        }
-                      } else if (name_vaccine == listvaccine[3].name_vaccine) {
-                        bool isFirst = true;
-                        for (Vaccination v in listVaccination) {
-                          if (v.cow!.cow_id == co.cow_id &&
-                              v.vaccine!.name_vaccine == name_vaccine) {
-                            isFirst = false;
-                            break;
+                        } else if (name_vaccine ==
+                            listvaccine[1].name_vaccine) {
+                          bool isFirst = true;
+                          for (Vaccination v in listVaccination) {
+                            if (v.cow!.cow_id == co.cow_id &&
+                                v.vaccine!.name_vaccine == name_vaccine) {
+                              isFirst = false;
+                              break;
+                            }
                           }
-                        }
-                        if (int_year < 1 && int_month == 3 && isFirst == true) {
-                          setState(() {
-                            int_countvaccine = 1;
-                          });
-                        } else if (isFirst == false) {
-                          DateTime d = DateTime(
-                              listVaccination.last.dateVaccination!.year,
-                              listVaccination.last.dateVaccination!.month,
-                              listVaccination.last.dateVaccination!.day);
-                          if (d.year > 0 && d.month == 3) {
+                          if (int_year < 1 &&
+                              int_month >= 4 &&
+                              isFirst == true) {
+                            setState(() {
+                              int_countvaccine = 5;
+                            });
+                          } else if (isFirst == false) {
+                            DateTime d = DateTime(
+                                listVaccination.last.dateVaccination!.year,
+                                listVaccination.last.dateVaccination!.month,
+                                listVaccination.last.dateVaccination!.day);
+
+                            if (d.year < 1 && d.month >= 10) {
+                              setState(() {
+                                int_countvaccine = 5;
+                              });
+                            } else if ((d.year > 0 && d.month > 0)) {
+                              setState(() {
+                                int_countvaccine = 5;
+                              });
+                            } else if (d.compareTo(DateTime.now()) == 0) {
+                              setState(() {
+                                date_vaccine_c.text =
+                                    "ัคซีนสามารถฉีดได้วันละครั้งเดียวเท่านั้น";
+                              });
+                            } else {
+                              setState(() {
+                                date_vaccine_c.text =
+                                    "กรุณาตรวจสอบวันฉีดวัคซีน";
+                              });
+                            }
+                          } else {
+                            setState(() {
+                              date_vaccine_c.text =
+                                  "ไม่สามารถฉีดวัคซีนได้เนืองจากอายุ น้อย";
+                            });
+                          }
+                        } else if (name_vaccine ==
+                            listvaccine[2].name_vaccine) {
+                          bool isFirst = true;
+                          for (Vaccination v in listVaccination) {
+                            if (v.cow!.cow_id == co.cow_id &&
+                                v.vaccine!.name_vaccine == name_vaccine) {
+                              isFirst = false;
+                              break;
+                            }
+                          }
+                          if (int_year < 1 &&
+                              int_month == 4 &&
+                              isFirst == true) {
+                            setState(() {
+                              int_countvaccine = 2;
+                            });
+                          } else if (isFirst = false) {
+                            DateTime d = DateTime(
+                                listVaccination.last.dateVaccination!.year,
+                                listVaccination.last.dateVaccination!.month,
+                                listVaccination.last.dateVaccination!.day);
+                            if (((d.year < 1 &&
+                                (d.month == 5 ||
+                                    (d.month == 4 &&
+                                        (d.day >= 20 && d.day <= 32)))))) {
+                              int_countvaccine = 2;
+                            } else if (d.year > 0 && d.month == 5) {
+                              setState(() {
+                                int_countvaccine = 2;
+                              });
+                            } else if (d.compareTo(DateTime.now()) == 0) {
+                              setState(() {
+                                date_vaccine_c.text =
+                                    "ัคซีนสามารถฉีดได้วันละครั้งเดียวเท่านั้น";
+                              });
+                            } else {
+                              setState(() {
+                                date_vaccine_c.text =
+                                    "กรุณาตรวจสอบวันฉีดวัคซีน";
+                              });
+                            }
+                          } else {
+                            setState(() {
+                              date_vaccine_c.text =
+                                  "ไม่สามารถฉีดวัคซีนได้เนืองจากอายุ น้อย";
+                            });
+                          }
+                        } else if (name_vaccine ==
+                            listvaccine[3].name_vaccine) {
+                          bool isFirst = true;
+                          for (Vaccination v in listVaccination) {
+                            if (v.cow!.cow_id == co.cow_id &&
+                                v.vaccine!.name_vaccine == name_vaccine) {
+                              isFirst = false;
+                              break;
+                            }
+                          }
+                          if (int_year < 1 &&
+                              int_month == 3 &&
+                              isFirst == true) {
                             setState(() {
                               int_countvaccine = 1;
                             });
-                          } else if (d.compareTo(DateTime.now()) == 0) {
-                            setState(() {
-                              date_vaccine_c.text =
-                                  "ัคซีนสามารถฉีดได้วันละครั้งเดียวเท่านั้น";
-                            });
+                          } else if (isFirst == false) {
+                            DateTime d = DateTime(
+                                listVaccination.last.dateVaccination!.year,
+                                listVaccination.last.dateVaccination!.month,
+                                listVaccination.last.dateVaccination!.day);
+                            if (d.year > 0 && d.month == 3) {
+                              setState(() {
+                                int_countvaccine = 1;
+                              });
+                            } else if (d.compareTo(DateTime.now()) == 0) {
+                              setState(() {
+                                date_vaccine_c.text =
+                                    "ัคซีนสามารถฉีดได้วันละครั้งเดียวเท่านั้น";
+                              });
+                            } else {
+                              setState(() {
+                                date_vaccine_c.text =
+                                    "กรุณาตรวจสอบวันฉีดวัคซีน";
+                              });
+                            }
                           } else {
                             setState(() {
-                              date_vaccine_c.text = "กรุณาตรวจสอบวันฉีดวัคซีน";
+                              date_vaccine_c.text =
+                                  "ไม่สามารถฉีดวัคซีนได้เนืองจากอายุ น้อย";
                             });
                           }
-                        } else {
-                          setState(() {
-                            date_vaccine_c.text =
-                                "ไม่สามารถฉีดวัคซีนได้เนืองจากอายุ น้อย";
-                          });
-                        }
-                      } else if (name_vaccine == listvaccine[4].name_vaccine) {
-                        bool isFirst = true;
-                        for (Vaccination v in listVaccination) {
-                          if (v.cow!.cow_id == co.cow_id &&
-                              v.vaccine!.name_vaccine == name_vaccine) {
-                            isFirst = false;
-                            break;
+                        } else if (name_vaccine ==
+                            listvaccine[4].name_vaccine) {
+                          bool isFirst = true;
+                          for (Vaccination v in listVaccination) {
+                            if (v.cow!.cow_id == co.cow_id &&
+                                v.vaccine!.name_vaccine == name_vaccine) {
+                              isFirst = false;
+                              break;
+                            }
                           }
-                        }
-                        if (int_year < 1 && int_month >= 4 && isFirst == true) {
-                          setState(() {
-                            int_countvaccine = 1;
-                          });
-                        } else if (isFirst == false) {
-                          DateTime d = DateTime(
-                              listVaccination.last.dateVaccination!.year,
-                              listVaccination.last.dateVaccination!.month,
-                              listVaccination.last.dateVaccination!.day);
-                          if (d.year > 0 && d.month >= 4) {
+                          if (int_year < 1 &&
+                              int_month >= 4 &&
+                              isFirst == true) {
                             setState(() {
                               int_countvaccine = 1;
                             });
-                          } else if (d.compareTo(DateTime.now()) == 0) {
+                          } else if (isFirst == false) {
+                            DateTime d = DateTime(
+                                listVaccination.last.dateVaccination!.year,
+                                listVaccination.last.dateVaccination!.month,
+                                listVaccination.last.dateVaccination!.day);
+                            if (d.year > 0 && d.month >= 4) {
+                              setState(() {
+                                int_countvaccine = 1;
+                              });
+                            } else if (d.compareTo(DateTime.now()) == 0) {
+                              setState(() {
+                                date_vaccine_c.text =
+                                    "วัคซีนสามารถฉีดได้วันละครั้งเดียวเท่านั้น";
+                              });
+                            } else {
+                              setState(() {
+                                date_vaccine_c.text =
+                                    "กรุณาตรวจสอบวันฉีดวัคซีน";
+                              });
+                            }
+                          } else {
+                            setState(() {
+                              date_vaccine_c.text =
+                                  "ไม่สามารถฉีดวัคซีนได้เนืองจากอายุ น้อย";
+                            });
+                          }
+                        }
+
+                        vct.cow = Cow.Idcow(cow_id: widget.cow.cow_id);
+                        vct.dateVaccination = date_vaccine;
+
+                        vct.countvaccine = int_countvaccine;
+                        vct.vaccine =
+                            Vaccine.IdVaccine(vaccine_id: name_vaccine);
+                        vct.doctorname = doctorname.text;
+
+                        if ((validate == false) ||
+                            date_vaccine_c.text == "กรุณาตรวจสอบวันฉีดวัคซีน" ||
+                            date_vaccine_c.text ==
+                                "ไม่สามารถฉีดวัคซีนได้เนืองจากอายุ น้อย" ||
+                            date_vaccine_c.text ==
+                                "วัคซีนสามารถฉีดได้วันละครั้งเดียวเท่านั้น" ||
+                            date_vaccine_c.text ==
+                                "วัคซีนสามารถฉีดได้ครั้งเดียวเท่านั้น") {
+                          print(1);
+                        } else {
+                          final vaccination =
+                              await Vaccination_data().AddVaccinationcow(vct);
+
+                          if (vaccination != null &&
+                              widget.emp != null &&
+                              vaccination != 0) {
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(builder: ((context) {
+                              return DetailCow(
+                                cow: widget.cow,
+                                emp: widget.emp,
+                              );
+                            })));
+                          } else if (vaccination != null &&
+                              widget.fm != null &&
+                              vaccination != 0) {
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(builder: ((context) {
+                              return DetailCow(
+                                cow: widget.cow,
+                                fm: widget.fm,
+                              );
+                            })));
+                          } else if (vaccination == 0) {
                             setState(() {
                               date_vaccine_c.text =
                                   "วัคซีนสามารถฉีดได้วันละครั้งเดียวเท่านั้น";
                             });
-                          } else {
-                            setState(() {
-                              date_vaccine_c.text = "กรุณาตรวจสอบวันฉีดวัคซีน";
-                            });
                           }
-                        } else {
-                          setState(() {
-                            date_vaccine_c.text =
-                                "ไม่สามารถฉีดวัคซีนได้เนืองจากอายุ น้อย";
-                          });
                         }
-                      }
-
-                      vct.cow = Cow.Idcow(cow_id: widget.cow.cow_id);
-                      vct.dateVaccination = date_vaccine;
-
-                      vct.countvaccine = int.parse(countvaccine.text);
-                      vct.vaccine = Vaccine.IdVaccine(vaccine_id: name_vaccine);
-                      vct.doctorname = doctorname.text;
-
-                      if ((validate == false) ||
-                          date_vaccine_c.text == "กรุณาตรวจสอบวันฉีดวัคซีน" ||
-                          date_vaccine_c.text ==
-                              "ไม่สามารถฉีดวัคซีนได้เนืองจากอายุ น้อย" ||
-                          date_vaccine_c.text ==
-                              "วัคซีนสามารถฉีดได้วันละครั้งเดียวเท่านั้น" ||
-                          date_vaccine_c.text ==
-                              "วัคซีนสามารถฉีดได้ครั้งเดียวเท่านั้น") {
-                        print(1);
-                      } else {
-                        final vaccination =
-                            await Vaccination_data().AddVaccinationcow(vct);
-
-                        if (vaccination != null &&
-                            widget.emp != null &&
-                            vaccination != 0) {
-                          Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(builder: ((context) {
-                            return DetailCow(
-                              cow: widget.cow,
-                              emp: widget.emp,
-                            );
-                          })));
-                        } else if (vaccination != null &&
-                            widget.fm != null &&
-                            vaccination != 0) {
-                          Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(builder: ((context) {
-                            return DetailCow(
-                              cow: widget.cow,
-                              fm: widget.fm,
-                            );
-                          })));
-                        } else if (vaccination == 0) {
-                          setState(() {
-                            date_vaccine_c.text =
-                                "วัคซีนสามารถฉีดได้วันละครั้งเดียวเท่านั้น";
-                          });
-                        }
-                      }
-                    },
-                    borderRadius: BorderRadius.circular(30),
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(vertical: 10),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 12),
-                      width: size.width * 0.8,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: const Color.fromARGB(255, 34, 120, 37)
-                              .withAlpha(50)),
-                      alignment: Alignment.center,
-                      child: const Text('เพิ่มข้อมูลการพัฒนาโค',
-                          style: TextStyle(
-                              color: Color(0xff235d3a), fontSize: 18)),
-                    ),
-                  ),
+                      },
+                      borderRadius: BorderRadius.circular(30),
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 12),
+                        width: size.width * 0.8,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            color: const Color.fromARGB(255, 34, 120, 37)
+                                .withAlpha(50)),
+                        alignment: Alignment.center,
+                        child: const Text('เพิ่มข้อมูลการพัฒนาโค',
+                            style: TextStyle(
+                                color: Color(0xff235d3a), fontSize: 18)),
+                      ),
+                    )
+                  else
+                    SizedBox(),
                 ],
               ),
             )),

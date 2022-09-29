@@ -176,7 +176,8 @@ class _ListHybridizationState extends State<ListHybridization> {
                                         context: context,
                                         builder: (BuildContext context) =>
                                             CupertinoAlertDialog(
-                                          title: Text('ยืนยันการลบข้อมูลโค ${widget.cow!.cow_id}'),
+                                          title: Text(
+                                              'ยืนยันการลบข้อมูลโค ${widget.cow!.cow_id}'),
                                           content: const Text(
                                               'เช็คข้อมูลการลบข้อมูลทุกครั้ง'),
                                           actions: <CupertinoDialogAction>[
@@ -241,9 +242,7 @@ class _ListHybridizationState extends State<ListHybridization> {
                                       child: ListTile(
                                         leading: _buildLeadingTile(),
                                         title: Text(
-                                          "รหัสการพัฒนาโค : ${ListCow_has_Hybridization[index]
-                                                  .hybridization!
-                                                  .id_Hybridization}",
+                                          "รหัสการพัฒนาโค : ${ListCow_has_Hybridization[index].hybridization!.id_Hybridization}",
                                           style: const TextStyle(fontSize: 20),
                                         ),
                                         subtitle: progress_date(),
@@ -328,8 +327,7 @@ Widget _buildLeadingTile() {
     width: 80,
     alignment: Alignment.center,
     decoration: const BoxDecoration(
-        border:
-            Border(right: BorderSide(width: 1.0, color: Colors.black))),
+        border: Border(right: BorderSide(width: 1.0, color: Colors.black))),
     child: Container(
       width: 75,
       height: 75,

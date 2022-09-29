@@ -134,22 +134,6 @@ class _MyWidgetState extends State<MyWidget> {
           ),
           ListTile(
             leading: const Icon(
-              FontAwesomeIcons.userLarge,
-              color: Color(0XFF397D54),
-              size: 20,
-            ),
-            title: const Text("ข้อมูลส่วนตัว"),
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: ((context) {
-                return MainpageEmployee(
-                  emp: widget.emp,
-                  cow: cow,
-                );
-              })));
-            },
-          ),
-          ListTile(
-            leading: const Icon(
               FontAwesomeIcons.rightFromBracket,
               color: Color(0XFF397D54),
               size: 20,

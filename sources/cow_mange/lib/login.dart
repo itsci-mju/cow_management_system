@@ -71,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen>
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 20, 0, 0),
+                  padding: const EdgeInsets.fromLTRB(15, 25, 0, 0),
                   child: Row(
                     children: [
                       GestureDetector(
@@ -182,10 +182,10 @@ class _LoginScreenState extends State<LoginScreen>
                                     ),
                                     validator: Validators.compose([
                                       Validators.required_isempty(
-                                        "**กรุณากรอก Username",
+                                        "**กรุณากรอก ชื่อผู้ใช้",
                                       ),
                                       Validators.text_eng_only(
-                                          "**กรุณาชื่อผู้ใช้เป็นภาษาอังกฤษและตัวเลขเท่านั้น"),
+                                          "กรุณากรอกชื่อผู้ใช้ให้ถูกต้อง"),
                                     ]),
                                   )),
                               Container(
@@ -222,9 +222,9 @@ class _LoginScreenState extends State<LoginScreen>
                                         )),
                                     validator: Validators.compose([
                                       Validators.required_isempty(
-                                          "กรุณากรอก Password"),
+                                          "กรุณากรอก รหัสผ่าน"),
                                       Validators.text_eng_only(
-                                          "กรุณาชื่อรหัสผ่านให้ถูกต้อง"),
+                                          "กรุณากรอกรหัสผ่านให้ถูกต้อง"),
                                     ]),
                                   )),
                               Text(

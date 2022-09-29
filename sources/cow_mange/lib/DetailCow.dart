@@ -140,54 +140,17 @@ class _DetailCowState extends State<DetailCow> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(32, 60, 0, 0),
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        if (widget.emp != null) {
-                          Navigator.of(context)
-                              .push(MaterialPageRoute(builder: ((context) {
-                            return MainpageEmployee(
-                              cow: listcow,
-                              emp: widget.emp,
-                            );
-                          })));
-                        } else {
-                          Navigator.of(context)
-                              .push(MaterialPageRoute(builder: ((context) {
-                            return Mainfarm(
-                              fm: widget.fm!,
-                            );
-                          })));
-                        }
-                      },
-                      child: Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8.0)),
-                          child: const Icon(
-                            Icons.arrow_back,
-                            size: 25,
-                          )),
-                    )
-                  ],
-                ),
-              ),
               widget.cow.picture == "-"
                   ? image_cow_df()
                   : image_cow(widget.cow),
               Container(
                 width: MediaQuery.of(context).size.width,
-                margin: const EdgeInsets.only(top: 28.0),
                 padding: const EdgeInsets.symmetric(vertical: 28.0),
                 decoration: const BoxDecoration(
                     color: Color(0XFF397D54),
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(50.0),
-                      topRight: Radius.circular(50.0),
+                      topLeft: Radius.circular(0.0),
+                      topRight: Radius.circular(0.0),
                     )),
                 child: Column(
                   children: [
@@ -199,13 +162,12 @@ class _DetailCowState extends State<DetailCow> {
                           color: Color.fromARGB(255, 4, 16, 6)),
                     ),
                     Container(
-                      child: Text(
-                        "รหัสโค : ${widget.cow.namecow}",
-                        style: const TextStyle(
-                            fontSize: 28.0,
-                            color: Color.fromARGB(255, 253, 253, 253),
-                            fontWeight: FontWeight.w700),
-                      ),
+                      child: Text("รหัสโค : ${widget.cow.cow_id}",
+                          style: const TextStyle(
+                              fontSize: 28.0,
+                              color: Color.fromARGB(255, 253, 253, 253),
+                              fontWeight: FontWeight.w700),
+                          overflow: TextOverflow.ellipsis),
                     ),
                     const SizedBox(
                       height: 20.0,
@@ -370,7 +332,8 @@ class _DetailCowState extends State<DetailCow> {
                                                 fontSize: 20.0,
                                                 color: Color.fromARGB(
                                                     255, 12, 2, 2),
-                                                fontWeight: FontWeight.w600))),
+                                                fontWeight: FontWeight.w600),
+                                            overflow: TextOverflow.ellipsis)),
                                   ),
                                   const SizedBox(
                                     height: 5,
@@ -1270,10 +1233,54 @@ class _DetailCowState extends State<DetailCow> {
   }
 
   image_cow(Cow c) {
-    return Image.network(
-      c.picture.toString(),
-      fit: BoxFit.cover,
-    );
+    return Stack(children: [
+      Container(
+        height: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30.0),
+            boxShadow: [BoxShadow(color: Colors.black)]),
+        child: Image.network(
+          c.picture.toString(),
+          fit: BoxFit.fill,
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.fromLTRB(32, 60, 0, 0),
+        child: Row(
+          children: [
+            GestureDetector(
+              onTap: () {
+                if (widget.emp != null) {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: ((context) {
+                    return MainpageEmployee(
+                      cow: listcow,
+                      emp: widget.emp,
+                    );
+                  })));
+                } else {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: ((context) {
+                    return Mainfarm(
+                      fm: widget.fm!,
+                    );
+                  })));
+                }
+              },
+              child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(8.0)),
+                  child: const Icon(
+                    Icons.arrow_back,
+                    size: 25,
+                  )),
+            )
+          ],
+        ),
+      ),
+    ]);
   }
 
   image_cow_df() {

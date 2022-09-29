@@ -3,6 +3,8 @@ import 'package:cow_mange/AddHybridization.dart';
 import 'package:cow_mange/AddProgresscow.dart';
 import 'package:cow_mange/AddVaccine.dart';
 import 'package:cow_mange/Editcow.dart';
+import 'package:cow_mange/Function/Function.dart';
+import 'package:cow_mange/class/Progress.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -33,6 +35,9 @@ class MainpageEmployeeState extends State<MainpageEmployee> {
   //map database
   late List<dynamic> list;
   Map? mapResponse;
+
+  //progress
+  List<Progress> Listprogress = [];
 
   // query
   String query = "";
@@ -369,7 +374,7 @@ class MainpageEmployeeState extends State<MainpageEmployee> {
                                     })));
                                   }),
                                   trailing: PopupMenuButton(
-                                    onSelected: (result) {
+                                    onSelected: (result) async {
                                       if (result == 0) {
                                         Navigator.push(
                                           context,
@@ -408,15 +413,56 @@ class MainpageEmployeeState extends State<MainpageEmployee> {
                                                   )),
                                         );
                                       } else if (result == 4) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  AddHybridization(
-                                                    cow: listcow[index],
-                                                    emp: widget.emp,
-                                                  )),
-                                        );
+                                        double doubleWeight = 0;
+                                        List<double> weight = [];
+                                        final list_Pg = await Progress_data()
+                                            .listMainprogress(
+                                                listcow[index].cow_id);
+                                        Listprogress = list_Pg;
+                                        for (int i = 0;
+                                            i < Listprogress.length;
+                                            i++) {
+                                          setState(() {
+                                            weight.add(Listprogress[i]
+                                                .weight!
+                                                .toDouble());
+                                          });
+                                        }
+
+                                        if (weight.isNotEmpty) {
+                                          weight.sort();
+                                          setState(() {
+                                            doubleWeight =
+                                                weight[weight.length - 1];
+                                          });
+                                        } else {
+                                          setState(() {
+                                            doubleWeight = listcow[index]
+                                                .weight!
+                                                .toDouble();
+                                          });
+                                        }
+
+                                        if (doubleWeight >= 100) {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AddHybridization(
+                                                      cow: listcow[index],
+                                                      emp: widget.emp,
+                                                    )),
+                                          );
+                                        } else {
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) => AlertDialog(
+                                                    title: Text(
+                                                        "น้ำหนักโคปัจจุบัน${doubleWeight}กิโลกรัม"),
+                                                    content: Text(
+                                                        "ในการผสมพันธุ์โคต้องมีน้ำหนักโดยประมาณ 100-150 กิโลกรัม"),
+                                                  ));
+                                        }
                                       }
                                     },
                                     iconSize: 40,

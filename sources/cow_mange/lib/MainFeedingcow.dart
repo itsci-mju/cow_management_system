@@ -1,4 +1,3 @@
-import 'package:cow_mange/Drawer/Drawer_Filter_Progress.dart';
 import 'package:cow_mange/ListFeeding.dart';
 import 'package:cow_mange/Mainpage.dart';
 import 'package:cow_mange/class/Cow.dart';
@@ -59,10 +58,11 @@ class _FeedingcowState extends State<Feedingcow> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: globalKey,
+      /*
       endDrawer: Drawer_Filter_Progress(
         emp: widget.emp!,
         cow: listcow,
-      ),
+      ),*/
       body: Column(children: <Widget>[
         Row(
           children: <Widget>[
@@ -182,9 +182,7 @@ class _FeedingcowState extends State<Feedingcow> {
                                 style: const TextStyle(fontSize: 20),
                               ),
                               subtitle: Text(
-                                  "สายพันธุ์ :${listcow[index]
-                                          .species!
-                                          .species_breed}\nเพศ :${listcow[index].gender}    สี :${listcow[index].color}",
+                                  "สายพันธุ์ :${listcow[index].species!.species_breed}\nเพศ :${listcow[index].gender}    สี :${listcow[index].color}",
                                   style: const TextStyle(fontSize: 17)),
                               isThreeLine: true,
                             )));
@@ -235,8 +233,7 @@ Widget _buildLeadingTile() {
     width: 80,
     alignment: Alignment.center,
     decoration: const BoxDecoration(
-        border:
-            Border(right: BorderSide(width: 1.0, color: Colors.black))),
+        border: Border(right: BorderSide(width: 1.0, color: Colors.black))),
     child: Container(
       width: 75,
       height: 75,

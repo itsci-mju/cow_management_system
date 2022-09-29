@@ -55,27 +55,6 @@ class _DetailCow_guestState extends State<DetailCow_guest> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(32, 60, 0, 0),
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8.0)),
-                          child: const Icon(
-                            Icons.arrow_back,
-                            size: 25,
-                          )),
-                    )
-                  ],
-                ),
-              ),
               widget.cow.picture == "-"
                   ? image_cow_df()
                   : image_cow(widget.cow),
@@ -294,24 +273,40 @@ class _DetailCow_guestState extends State<DetailCow_guest> {
 
   image_cow(Cow c) {
     Size size = MediaQuery.of(context).size;
-    return Padding(
-        padding: EdgeInsets.all(0),
-        child: Container(
-          width: size.width,
-          height: size.height * 0.5,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-                image: NetworkImage(
-                  c.picture.toString(),
-                ),
-                fit: BoxFit.fill),
-          ),
-        ));
-    /*
-    return Image.network(
-      c.picture.toString(),
-      fit: BoxFit.cover,
-    );*/
+
+    return Stack(children: [
+      Container(
+        height: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30.0),
+            boxShadow: [BoxShadow(color: Colors.black)]),
+        child: Image.network(
+          c.picture.toString(),
+          fit: BoxFit.fill,
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.fromLTRB(15, 30, 0, 0),
+        child: Row(
+          children: [
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(8.0)),
+                  child: const Icon(
+                    Icons.arrow_back,
+                    size: 25,
+                  )),
+            )
+          ],
+        ),
+      ),
+    ]);
   }
 
   Widget _AgeCow() {

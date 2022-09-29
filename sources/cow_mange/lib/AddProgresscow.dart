@@ -209,7 +209,7 @@ class _AddProgressState extends State<AddProgress> {
                         "เลือกวันพัฒนาการโค",
                         style: TextStyle(color: Colors.black),
                       ),
-                      hintText: "Date is not selected",
+                      hintText: "กรุณาเลือกวันพัฒนาการโค",
                       suffixIcon: _getClearButton_date(),
                       hintStyle: const TextStyle(color: Colors.black),
                       border: InputBorder.none,
@@ -235,7 +235,7 @@ class _AddProgressState extends State<AddProgress> {
                         birth.text = formattedDate;
                       });
                     } else {
-                      print("Date is not selected");
+                      print("กรุณาเลือกวันพัฒนาการโค");
                     }
                   },
                 )),

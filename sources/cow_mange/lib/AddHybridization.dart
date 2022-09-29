@@ -70,15 +70,16 @@ class _AddHybridizationState extends State<AddHybridization> {
   Future init() async {
     if (widget.cow.gender == "เมีย") {
       if (widget.emp != null) {
-        final bu =
-            await Cow_data().fetchbull(widget.emp!.farm!.id_Farm.toString());
+        final bu = await Cow_data()
+            .fetchbull_weight(widget.emp!.farm!.id_Farm.toString());
         setState(() {
           list_cow = [];
           list_cow.add(widget.cow.cow_id.toString());
           list_bull = bu;
         });
       } else {
-        final bu = await Cow_data().fetchbull(widget.fm!.id_Farm.toString());
+        final bu =
+            await Cow_data().fetchbull_weight(widget.fm!.id_Farm.toString());
         setState(() {
           list_cow = [];
           list_cow.add(widget.cow.cow_id.toString());
@@ -87,15 +88,16 @@ class _AddHybridizationState extends State<AddHybridization> {
       }
     } else {
       if (widget.emp != null) {
-        final co =
-            await Cow_data().fetchCow(widget.emp!.farm!.id_Farm.toString());
+        final co = await Cow_data()
+            .fetchCow_weight(widget.emp!.farm!.id_Farm.toString());
         setState(() {
           list_cow = co;
           list_bull = [];
           list_bull.add(widget.cow.cow_id.toString());
         });
       } else {
-        final co = await Cow_data().fetchCow(widget.fm!.id_Farm.toString());
+        final co =
+            await Cow_data().fetchCow_weight(widget.fm!.id_Farm.toString());
         setState(() {
           list_cow = co;
           list_bull = [];

@@ -161,9 +161,63 @@ class Cow_data {
     }
   }
 
+  Future fetchCow_weight(t) async {
+    final response = await http.post(
+      Uri.parse(url.URL.toString() + url.URL_Listbreedercow_weight.toString()),
+      body: jsonEncode({"Farm_id_Farm": t}),
+      headers: <String, String>{
+        "Accept": "application/json",
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    List? list;
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> map = json.decode(response.body);
+      mapResponse = json.decode(response.body);
+      list = map['result'];
+      listcow.add("----");
+      for (dynamic l in list!) {
+        listcow.add(l['cow_id']);
+      }
+      return listcow;
+    } else {
+      throw Exception('Failed to load album');
+    }
+  }
+
   Future fetchbull(idfarm) async {
     final response = await http.post(
       Uri.parse(url.URL.toString() + url.URL_Listbreederbull.toString()),
+      body: jsonEncode({"Farm_id_Farm": idfarm}),
+      headers: <String, String>{
+        "Accept": "application/json",
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    List? list;
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> map = json.decode(response.body);
+
+      mapResponse = json.decode(response.body);
+
+      list = map['result'];
+      listbull.add("----");
+      for (dynamic l in list!) {
+        listbull.add(l['cow_id']);
+      }
+      return listbull;
+    } else {
+      throw Exception('Failed to load album');
+    }
+  }
+
+  Future fetchbull_weight(idfarm) async {
+    final response = await http.post(
+      Uri.parse(url.URL.toString() + url.URL_Listbreederbull_weight.toString()),
       body: jsonEncode({"Farm_id_Farm": idfarm}),
       headers: <String, String>{
         "Accept": "application/json",
