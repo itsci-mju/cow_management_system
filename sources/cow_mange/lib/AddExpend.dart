@@ -52,6 +52,10 @@ class _AddExpendState extends State<AddExpend> {
   bool _showClearButton_amount = false;
   bool _showClearButton_price = false;
 
+  //textalert
+  String textalert_1 = "";
+  String textalert_2 = "";
+
   Future clean_number() async {
     expendDate.addListener(() {
       setState(() {
@@ -255,7 +259,7 @@ class _AddExpendState extends State<AddExpend> {
                         ],
                         decoration: InputDecoration(
                           suffixIcon: _getClearButton_amount(),
-                          label: Text("จำนวน"),
+                          label: Text("จำนวน "),
                           hintStyle: TextStyle(color: Colors.black),
                           border: InputBorder.none,
                         ),
@@ -297,6 +301,25 @@ class _AddExpendState extends State<AddExpend> {
                 ],
               ),
               Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Row(
+                    children: [
+                      Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            child: Text(textalert_1,
+                                style: TextStyle(color: Colors.red)),
+                          )),
+                      Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            child: Text(
+                              textalert_2,
+                            ),
+                          ))
+                    ],
+                  )),
+              Container(
                 margin: const EdgeInsets.only(top: 20),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
@@ -315,6 +338,12 @@ class _AddExpendState extends State<AddExpend> {
                     onChanged: (String? newValue) {
                       setState(() {
                         category = newValue;
+                        textalert_1 = "**";
+                        if (category == "อาหาร") {
+                          textalert_2 = "ถ้าเป็นประเภทอาหารเป็นกิโลกรัม";
+                        } else {
+                          textalert_2 = "ถ้าเป็นประเภทวัคซีนเป็นจำนวนขวด";
+                        }
                       });
                     },
                     validator:

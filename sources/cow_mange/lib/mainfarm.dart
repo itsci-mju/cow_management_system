@@ -1015,9 +1015,15 @@ _expenseFarm_date(Expendfarm expendfarm) {
   DateTime dateBirthday = DateTime(numY + 543, numM, numD);
   var formatter = DateFormat('dd/MM/yyyy');
   String formattedDate = formatter.format(dateBirthday);
-
-  return Text(
-      "ชื่อ :${expendfarm.name} ราคา : ${expendfarm.price} บาท \nจำนวน : ${expendfarm.amount} ชิ้น\nวันที่ซื้อ : $formattedDate\nประเภทสินค้า : ${expendfarm.expendType!.expendType_name}",
-      style:
-          const TextStyle(fontSize: 16, color: Color.fromARGB(255, 12, 2, 2)));
+  if (expendfarm.expendType!.expendType_name.toString() == "อาหาร") {
+    return Text(
+        "ชื่อ :${expendfarm.name} ราคา : ${expendfarm.price} บาท \nจำนวน : ${expendfarm.amount} กิโลกรัม\nวันที่ซื้อ : $formattedDate\nประเภทสินค้า : ${expendfarm.expendType!.expendType_name}",
+        style: const TextStyle(
+            fontSize: 16, color: Color.fromARGB(255, 12, 2, 2)));
+  } else {
+    return Text(
+        "ชื่อ :${expendfarm.name} ราคา : ${expendfarm.price} บาท \nจำนวน : ${expendfarm.amount} ขวด\nวันที่ซื้อ : $formattedDate\nประเภทสินค้า : ${expendfarm.expendType!.expendType_name}",
+        style: const TextStyle(
+            fontSize: 16, color: Color.fromARGB(255, 12, 2, 2)));
+  }
 }

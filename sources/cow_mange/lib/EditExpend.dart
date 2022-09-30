@@ -342,9 +342,11 @@ class _EditExpendState extends State<EditExpend> {
                     exd_f.price = double.parse(price.text);
                     exd_f.expendType =
                         ExpendType.expendType_name(expendType_name: category);
+
                     exd_f.farm = Farm.Newid_farm(id_Farm: widget.fm.id_Farm);
 
                     final exd = Expend_data().EditExpendfarm(exd_f);
+
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: ((context) {
                       return Mainfarm(
