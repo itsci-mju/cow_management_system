@@ -14,6 +14,9 @@ import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cow_mange/firebase/storage.dart';
+import 'package:cow_mange/class/Cow.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:firebase_storage/firebase_storage.dart';
 
 class Register_farm extends StatefulWidget {
   const Register_farm({Key? key}) : super(key: key);
@@ -45,6 +48,20 @@ class _Register_farmState extends State<Register_farm> {
     clean_number();
   }
 
+  final firebase_storage.FirebaseStorage storage =
+      firebase_storage.FirebaseStorage.instance;
+
+  static firebase_storage.UploadTask? uploadFile2(
+      String destination, File file) {
+    try {
+      final ref = FirebaseStorage.instance.ref(destination);
+
+      return ref.putFile(file);
+    } on firebase_storage.FirebaseException {
+      return null;
+    }
+  }
+
   Future uploadFile(file, Farm? farm) async {
     if (file == null) return;
 
@@ -52,9 +69,9 @@ class _Register_farmState extends State<Register_farm> {
     final fileExtension = fileName.split(".").last;
     final name = fileExtension;
     final namefarm = farm!.name_Farm;
-    final destination = 'Cow/$namefarm';
+    final destination = 'Farm/$namefarm';
 
-    task = Storage.uploadFile2(destination, file!);
+    task = uploadFile2(destination, file!);
 
     if (task == null) return;
 

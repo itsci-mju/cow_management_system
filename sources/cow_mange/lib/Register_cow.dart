@@ -19,6 +19,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
+import 'package:cow_mange/class/Cow.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path/path.dart' as path;
 
 class Register_Cow extends StatefulWidget {
   final Employee? emp;
@@ -233,30 +237,44 @@ class _Register_CowState extends State<Register_Cow> {
     setState(() {
       file = image;
     });
-    if (file == null) {
-      filePath = "";
-    } else {
-      filePath = file!.path;
-    }
 
     //fileName = file!.path.split('/').last;
   }
 
-  Future uploadFile(file, Cow? cow) async {
+  final firebase_storage.FirebaseStorage storage =
+      firebase_storage.FirebaseStorage.instance;
+
+  static firebase_storage.UploadTask? uploadFile2(
+      String destination, File file) {
+    try {
+      final ref = FirebaseStorage.instance.ref(destination);
+
+      return ref.putFile(file);
+    } on firebase_storage.FirebaseException {
+      return null;
+    }
+  }
+
+  Future uploadFile() async {
     if (file == null) return;
 
-    final fileName = file!.path;
+    final fileName = path.basename(file!.path);
     final fileExtension = fileName.split(".").last;
-    final name = fileExtension;
-    final namecow = cow!.cow_id;
+    final namecow = co!.cow_id! + "." + fileExtension;
     final destination = 'Cow/$namecow';
 
-    task = Storage.uploadFile2(destination, file!);
+    // task = uploadFile2(destination, file!);
+    // if (task == null) return;
+    final uploadtask;
+    final ref = FirebaseStorage.instance.ref(destination);
 
-    if (task == null) return;
+    uploadtask = ref.putFile(file!);
 
-    final snapshot = await task!.whenComplete(() {});
-    final urlDownload = await snapshot.ref.getDownloadURL();
+    //String url = await ref.getDownloadURL();
+
+    //final snapshot = await task!.whenComplete(() {});
+    final urlDownload = await (await uploadtask).ref.getDownloadURL();
+    print("$urlDownload");
     String textUrldownload = urlDownload;
 
     return textUrldownload;
@@ -1066,7 +1084,7 @@ class _Register_CowState extends State<Register_Cow> {
                         }
                         var imageCow = "";
                         if (file != null) {
-                          imageCow = await uploadFile(file, co);
+                          imageCow = await uploadFile();
                         }
                         if (imageCow == null) {
                           co?.picture = "-";
@@ -1101,15 +1119,18 @@ class _Register_CowState extends State<Register_Cow> {
                             idBreeder: bd!.idBreeder.toString());
 
                         final cow2 = await registercow(co!);
-                        final lc = await Cow_data().listMaincow(widget.emp!);
 
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: ((context) {
-                          return MainpageEmployee(
-                            emp: widget.emp,
-                            cow: lc,
-                          );
-                        })));
+                        final lc = await Cow_data().listMaincow(widget.emp!);
+                        if (cow2 != null) {
+                          print(1);
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: ((context) {
+                            return MainpageEmployee(
+                              emp: widget.emp,
+                              cow: lc,
+                            );
+                          })));
+                        }
                       } else {
                         setState(() {
                           texterror = "กรุณากรอกข้อมูลให้ครบถ้วน";

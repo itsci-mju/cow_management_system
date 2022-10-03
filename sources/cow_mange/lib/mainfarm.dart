@@ -19,6 +19,7 @@ import 'package:cow_mange/class/Cow.dart';
 import 'package:cow_mange/class/Employee.dart';
 import 'package:cow_mange/EditEmployee.dart';
 import 'package:cow_mange/class/Expendfarm.dart';
+import 'package:cow_mange/class/Progress.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -231,7 +232,7 @@ class _MainfarmState extends State<Mainfarm> {
                 child: Column(children: <Widget>[
                   Container(
                     padding: const EdgeInsets.only(top: 50, left: 0, right: 20),
-                    height: 210,
+                    height: 220,
                     width: double.infinity,
                     decoration: const BoxDecoration(
                         borderRadius: BorderRadius.only(
@@ -464,105 +465,7 @@ class _MainfarmState extends State<Mainfarm> {
                   shrinkWrap: true,
                   itemCount: listcow.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return Card(
-                        color: (Colors.green),
-                        child: ListTile(
-                          leading: _buildLeadingTile(listcow[index]),
-                          onTap: (() {
-                            Navigator.of(context)
-                                .push(MaterialPageRoute(builder: ((context) {
-                              return DetailCow(
-                                cow: listcow[index],
-                                fm: widget.fm,
-                              );
-                            })));
-                          }),
-                          trailing: PopupMenuButton(
-                            onSelected: (result) {
-                              if (result == 0) {
-                                SchedulerBinding.instance
-                                    .addPostFrameCallback((_) {
-                                  {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => EditCow(
-                                                cow: listcow[index],
-                                                fm: widget.fm,
-                                              )),
-                                    );
-                                  }
-                                });
-                              } else if (result == 1) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => AddProgress(
-                                            fm: widget.fm,
-                                            cow: listcow[index],
-                                          )),
-                                );
-                              } else if (result == 2) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => AddFeedingcow(
-                                            cow: listcow[index],
-                                            fm: widget.fm,
-                                          )),
-                                );
-                              } else if (result == 3) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => AddVaccine(
-                                            fm: widget.fm,
-                                            cow: listcow[index],
-                                          )),
-                                );
-                              } else if (result == 4) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => AddHybridization(
-                                            cow: listcow[index],
-                                            fm: widget.fm,
-                                          )),
-                                );
-                              }
-                            },
-                            iconSize: 40,
-                            itemBuilder: (BuildContext context) {
-                              return [
-                                const PopupMenuItem(
-                                  value: 0,
-                                  child: Text('แก้ไขข้อมูล'),
-                                ),
-                                const PopupMenuItem(
-                                  value: 1,
-                                  child: Text('เพิ่มข้อมูลพัฒนาการโค'),
-                                ),
-                                const PopupMenuItem(
-                                  value: 2,
-                                  child: Text('เพิ่มข้อมูลการให้อาหารโค'),
-                                ),
-                                const PopupMenuItem(
-                                  value: 3,
-                                  child: Text('เพิ่มข้อมูลการฉีดวัคซีน'),
-                                ),
-                                const PopupMenuItem(
-                                  value: 4,
-                                  child: Text('เพิ่มข้อมูลการผสมพันธุ์โค'),
-                                )
-                              ];
-                            },
-                          ),
-                          title: Text("รหัสโค : ${listcow[index].cow_id!}",
-                              style: const TextStyle(fontSize: 20),
-                              overflow: TextOverflow.ellipsis),
-                          subtitle: _birthdayCow(listcow[index]),
-                          // isThreeLine: true,
-                        ));
+                    return Check_Weight(co: listcow[index], fm: widget.fm);
                   })));
     } else if (_currentIndex == 1) {
       return Expanded(
@@ -573,7 +476,13 @@ class _MainfarmState extends State<Mainfarm> {
                 itemCount: listemployee.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Card(
-                      color: (Colors.green),
+                      color: (Color.fromARGB(255, 197, 236, 197)),
+                      shape: RoundedRectangleBorder(
+                        //<-- SEE HERE
+                        side: BorderSide(
+                          color: Colors.green,
+                        ),
+                      ),
                       child: ListTile(
                         leading: _buildLeadingTile_user(listemployee[index]),
                         trailing: PopupMenuButton(
@@ -662,7 +571,13 @@ class _MainfarmState extends State<Mainfarm> {
                 itemCount: listexpendfarm.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Card(
-                      color: (Colors.green),
+                      color: (Color.fromARGB(255, 197, 236, 197)),
+                      shape: RoundedRectangleBorder(
+                        //<-- SEE HERE
+                        side: BorderSide(
+                          color: Colors.green,
+                        ),
+                      ),
                       child: ListTile(
                         //leading: _buildLeadingTile_df(listcow[index]),
                         trailing: PopupMenuButton(
@@ -1023,6 +938,259 @@ _expenseFarm_date(Expendfarm expendfarm) {
   } else {
     return Text(
         "ชื่อ :${expendfarm.name} ราคา : ${expendfarm.price} บาท \nจำนวน : ${expendfarm.amount} ขวด\nวันที่ซื้อ : $formattedDate\nประเภทสินค้า : ${expendfarm.expendType!.expendType_name}",
+        style: const TextStyle(
+            fontSize: 16, color: Color.fromARGB(255, 12, 2, 2)));
+  }
+}
+
+class Check_Weight extends StatefulWidget {
+  Cow? co;
+  Farm? fm;
+  Check_Weight({required this.co, required this.fm});
+
+  @override
+  State<Check_Weight> createState() => _Check_WeightState();
+}
+
+class _Check_WeightState extends State<Check_Weight> {
+  List<Progress> Listprogress = [];
+
+  // query
+
+  //weight
+  double doubleWeight = 0;
+  List<double> weight = [];
+
+  Future ch_weight() async {
+    final list_Pg = await Progress_data().listMainprogress(widget.co!.cow_id);
+    Listprogress = list_Pg;
+    for (int i = 0; i < Listprogress.length; i++) {
+      setState(() {
+        weight.add(Listprogress[i].weight!.toDouble());
+      });
+    }
+
+    if (weight.isNotEmpty) {
+      weight.sort();
+      setState(() {
+        doubleWeight = weight[weight.length - 1];
+      });
+    } else {
+      setState(() {
+        doubleWeight = widget.co!.weight!.toDouble();
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    ch_weight();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+        color: (Color.fromARGB(255, 197, 236, 197)),
+        shape: RoundedRectangleBorder(
+          //<-- SEE HERE
+          side: BorderSide(
+            color: Colors.green,
+          ),
+        ),
+        child: ListTile(
+          leading: _buildLeadingTile(widget.co!),
+          onTap: (() {
+            Navigator.of(context).push(MaterialPageRoute(builder: ((context) {
+              return DetailCow(
+                cow: widget.co!,
+                fm: widget.fm,
+              );
+            })));
+          }),
+          trailing: PopupMenuButton(
+              onSelected: (result) async {
+                if (result == 0) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EditCow(
+                              fm: widget.fm,
+                              cow: widget.co!,
+                            )),
+                  );
+                } else if (result == 1) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AddProgress(
+                              fm: widget.fm,
+                              cow: widget.co!,
+                            )),
+                  );
+                } else if (result == 2) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AddFeedingcow(
+                              fm: widget.fm,
+                              cow: widget.co!,
+                            )),
+                  );
+                } else if (result == 3) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AddVaccine(
+                              fm: widget.fm,
+                              cow: widget.co!,
+                            )),
+                  );
+                } else if (result == 4) {
+                  final list_Pg =
+                      await Progress_data().listMainprogress(widget.co!.cow_id);
+                  Listprogress = list_Pg;
+                  for (int i = 0; i < Listprogress.length; i++) {
+                    setState(() {
+                      weight.add(Listprogress[i].weight!.toDouble());
+                    });
+                  }
+
+                  if (weight.isNotEmpty) {
+                    weight.sort();
+                    setState(() {
+                      doubleWeight = weight[weight.length - 1];
+                    });
+                  } else {
+                    setState(() {
+                      doubleWeight = widget.co!.weight!.toDouble();
+                    });
+                  }
+
+                  if (doubleWeight >= 100) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AddHybridization(
+                                cow: widget.co!,
+                                fm: widget.fm,
+                              )),
+                    );
+                  } else {
+                    showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                              title: Text(
+                                  "น้ำหนักโคปัจจุบัน${doubleWeight}กิโลกรัม"),
+                              content: Text(
+                                  "ในการผสมพันธุ์โคต้องมีน้ำหนักโดยประมาณ 100-150 กิโลกรัมขึ้นไป"),
+                            ));
+                  }
+                }
+              },
+              iconSize: 40,
+              itemBuilder: (BuildContext context) {
+                if (doubleWeight >= 100) {
+                  return [
+                    const PopupMenuItem(
+                      value: 0,
+                      child: Text('แก้ไขข้อมูล'),
+                    ),
+                    const PopupMenuItem(
+                      value: 1,
+                      child: Text('เพิ่มข้อมูลพัฒนาการโค'),
+                    ),
+                    const PopupMenuItem(
+                      value: 2,
+                      child: Text('เพิ่มข้อมูลการให้อาหารโค'),
+                    ),
+                    const PopupMenuItem(
+                      value: 3,
+                      child: Text('เพิ่มข้อมูลการฉีดวัคซีน'),
+                    ),
+                    const PopupMenuItem(
+                      value: 4,
+                      child: Text('เพิ่มข้อมูลการผสมพันธุ์โค'),
+                    )
+                  ];
+                } else {
+                  return [
+                    const PopupMenuItem(
+                      value: 0,
+                      child: Text('แก้ไขข้อมูล'),
+                    ),
+                    const PopupMenuItem(
+                      value: 1,
+                      child: Text('เพิ่มข้อมูลพัฒนาการโค'),
+                    ),
+                    const PopupMenuItem(
+                      value: 2,
+                      child: Text('เพิ่มข้อมูลการให้อาหารโค'),
+                    ),
+                    const PopupMenuItem(
+                      value: 3,
+                      child: Text('เพิ่มข้อมูลการฉีดวัคซีน'),
+                    ),
+                    const PopupMenuItem(
+                      value: 4,
+                      child: Text('เพิ่มข้อมูลการผสมพันธุ์โค'),
+                      enabled: false,
+                    )
+                  ];
+                }
+              }),
+          title: Text("รหัสโค : ${widget.co!.cow_id}",
+              style: const TextStyle(fontSize: 20),
+              overflow: TextOverflow.ellipsis),
+          subtitle: _birthdayCow(widget.co!),
+          // isThreeLine: true,
+        ));
+  }
+
+  Widget _buildLeadingTile(Cow listcow) {
+    return Container(
+      width: 100,
+      child: SizedBox(
+        child: Image.network(
+          listcow.picture.toString(),
+          fit: BoxFit.fitWidth,
+        ),
+      ),
+    );
+  }
+
+  _birthdayCow(Cow cow) {
+    int textYear = 0;
+    String textMonth = " ";
+    String textDay = " ";
+
+    String colros = "";
+    String nameSpecies = "";
+    String gender = "";
+
+    DateTime birthday = DateTime.now();
+    DateDuration duration;
+
+//Age
+    var numY = int.parse(cow.birthday!.year.toString());
+
+    var numM = int.parse(cow.birthday!.month.toString());
+
+    var numD = int.parse(cow.birthday!.day.toString());
+
+    DateTime dateBirthday = DateTime(numY, numM, numD);
+
+//colors
+    colros = cow.color.toString();
+//name_species
+    nameSpecies = cow.species!.species_breed.toString();
+//gender
+    gender = cow.gender.toString();
+
+    duration = AgeCalculator.age(dateBirthday);
+
+    return Text(
+        "สายพันธุ์ :$nameSpecies\nเพศ :$gender  สี :$colros\nอายุ : $duration ",
         style: const TextStyle(
             fontSize: 16, color: Color.fromARGB(255, 12, 2, 2)));
   }

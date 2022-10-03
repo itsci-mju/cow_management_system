@@ -41,7 +41,10 @@ class MainpageEmployeeState extends State<MainpageEmployee> {
 
   // query
   String query = "";
-
+  //weight
+  double doubleWeight = 0;
+  List<double> weight = [];
+  List<double> weight3 = [];
   //ขนาด size ของหน้าจอ
   late final Size size;
 
@@ -258,250 +261,8 @@ class MainpageEmployeeState extends State<MainpageEmployee> {
                         shrinkWrap: true,
                         itemCount: listcow.length,
                         itemBuilder: (BuildContext context, int index) {
-                          if (listcow[index].picture == "-") {
-                            return Card(
-                                color: (Colors.green),
-                                child: ListTile(
-                                  leading: _buildLeadingTile_df(listcow[index]),
-                                  onTap: (() {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(builder: ((context) {
-                                      return DetailCow(
-                                        cow: listcow[index],
-                                        emp: widget.emp,
-                                      );
-                                    })));
-                                  }),
-                                  trailing: PopupMenuButton(
-                                    onSelected: (result) {
-                                      if (result == 0) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => EditCow(
-                                                    cow: listcow[index],
-                                                    emp: widget.emp,
-                                                  )),
-                                        );
-                                      } else if (result == 1) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => AddProgress(
-                                                    emp: widget.emp,
-                                                    cow: listcow[index],
-                                                  )),
-                                        );
-                                      } else if (result == 2) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  AddFeedingcow(
-                                                    cow: listcow[index],
-                                                    emp: widget.emp,
-                                                  )),
-                                        );
-                                      } else if (result == 3) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => AddVaccine(
-                                                    emp: widget.emp,
-                                                    cow: listcow[index],
-                                                  )),
-                                        );
-                                      } else if (result == 4) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  AddHybridization(
-                                                    cow: listcow[index],
-                                                    emp: widget.emp,
-                                                  )),
-                                        );
-                                      }
-                                    },
-                                    iconSize: 40,
-                                    itemBuilder: (BuildContext context) {
-                                      return [
-                                        const PopupMenuItem(
-                                          value: 0,
-                                          child: Text('แก้ไขข้อมูล'),
-                                        ),
-                                        const PopupMenuItem(
-                                          value: 1,
-                                          child: Text('เพิ่มข้อมูลพัฒนาการโค'),
-                                        ),
-                                        const PopupMenuItem(
-                                          value: 2,
-                                          child:
-                                              Text('เพิ่มข้อมูลการให้อาหารโค'),
-                                        ),
-                                        const PopupMenuItem(
-                                          value: 3,
-                                          child:
-                                              Text('เพิ่มข้อมูลการฉีดวัคซีน'),
-                                        ),
-                                        const PopupMenuItem(
-                                          value: 4,
-                                          child:
-                                              Text('เพิ่มข้อมูลการผสมพันธุ์โค'),
-                                        )
-                                      ];
-                                    },
-                                  ),
-                                  title: Text(
-                                      "รหัสโค : ${listcow[index].cow_id}",
-                                      style: const TextStyle(fontSize: 20),
-                                      overflow: TextOverflow.ellipsis),
-                                  subtitle: _birthdayCow(widget.cow[index]),
-                                  // isThreeLine: true,
-                                ));
-                          } else {
-                            return Card(
-                                color: (Colors.green),
-                                child: ListTile(
-                                  leading: _buildLeadingTile(listcow[index]),
-                                  onTap: (() {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(builder: ((context) {
-                                      return DetailCow(
-                                        cow: listcow[index],
-                                        emp: widget.emp,
-                                      );
-                                    })));
-                                  }),
-                                  trailing: PopupMenuButton(
-                                    onSelected: (result) async {
-                                      if (result == 0) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => EditCow(
-                                                    cow: listcow[index],
-                                                    emp: widget.emp,
-                                                  )),
-                                        );
-                                      } else if (result == 1) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => AddProgress(
-                                                    emp: widget.emp,
-                                                    cow: listcow[index],
-                                                  )),
-                                        );
-                                      } else if (result == 2) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  AddFeedingcow(
-                                                    cow: listcow[index],
-                                                    emp: widget.emp,
-                                                  )),
-                                        );
-                                      } else if (result == 3) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => AddVaccine(
-                                                    emp: widget.emp,
-                                                    cow: listcow[index],
-                                                  )),
-                                        );
-                                      } else if (result == 4) {
-                                        double doubleWeight = 0;
-                                        List<double> weight = [];
-                                        final list_Pg = await Progress_data()
-                                            .listMainprogress(
-                                                listcow[index].cow_id);
-                                        Listprogress = list_Pg;
-                                        for (int i = 0;
-                                            i < Listprogress.length;
-                                            i++) {
-                                          setState(() {
-                                            weight.add(Listprogress[i]
-                                                .weight!
-                                                .toDouble());
-                                          });
-                                        }
-
-                                        if (weight.isNotEmpty) {
-                                          weight.sort();
-                                          setState(() {
-                                            doubleWeight =
-                                                weight[weight.length - 1];
-                                          });
-                                        } else {
-                                          setState(() {
-                                            doubleWeight = listcow[index]
-                                                .weight!
-                                                .toDouble();
-                                          });
-                                        }
-
-                                        if (doubleWeight >= 100) {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    AddHybridization(
-                                                      cow: listcow[index],
-                                                      emp: widget.emp,
-                                                    )),
-                                          );
-                                        } else {
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) => AlertDialog(
-                                                    title: Text(
-                                                        "น้ำหนักโคปัจจุบัน${doubleWeight}กิโลกรัม"),
-                                                    content: Text(
-                                                        "ในการผสมพันธุ์โคต้องมีน้ำหนักโดยประมาณ 100-150 กิโลกรัม"),
-                                                  ));
-                                        }
-                                      }
-                                    },
-                                    iconSize: 40,
-                                    itemBuilder: (BuildContext context) {
-                                      return [
-                                        const PopupMenuItem(
-                                          value: 0,
-                                          child: Text('แก้ไขข้อมูล'),
-                                        ),
-                                        const PopupMenuItem(
-                                          value: 1,
-                                          child: Text('เพิ่มข้อมูลพัฒนาการโค'),
-                                        ),
-                                        const PopupMenuItem(
-                                          value: 2,
-                                          child:
-                                              Text('เพิ่มข้อมูลการให้อาหารโค'),
-                                        ),
-                                        const PopupMenuItem(
-                                          value: 3,
-                                          child:
-                                              Text('เพิ่มข้อมูลการฉีดวัคซีน'),
-                                        ),
-                                        const PopupMenuItem(
-                                          value: 4,
-                                          child:
-                                              Text('เพิ่มข้อมูลการผสมพันธุ์โค'),
-                                        )
-                                      ];
-                                    },
-                                  ),
-                                  title: Text(
-                                      "รหัสโค : ${listcow[index].cow_id}",
-                                      style: const TextStyle(fontSize: 20),
-                                      overflow: TextOverflow.ellipsis),
-                                  subtitle: _birthdayCow(widget.cow[index]),
-                                  // isThreeLine: true,
-                                ));
-                          }
+                          return Check_Weight(
+                              co: listcow[index], emp: widget.emp);
                         },
                       )))
             ]),
@@ -575,6 +336,259 @@ class MainpageEmployeeState extends State<MainpageEmployee> {
           width: 250.0,
           height: 250.0,
           fit: BoxFit.contain,
+        ),
+      ),
+    );
+  }
+
+  _birthdayCow(Cow cow) {
+    int textYear = 0;
+    String textMonth = " ";
+    String textDay = " ";
+
+    String colros = "";
+    String nameSpecies = "";
+    String gender = "";
+
+    DateTime birthday = DateTime.now();
+    DateDuration duration;
+
+//Age
+    var numY = int.parse(cow.birthday!.year.toString());
+
+    var numM = int.parse(cow.birthday!.month.toString());
+
+    var numD = int.parse(cow.birthday!.day.toString());
+
+    DateTime dateBirthday = DateTime(numY, numM, numD);
+
+//colors
+    colros = cow.color.toString();
+//name_species
+    nameSpecies = cow.species!.species_breed.toString();
+//gender
+    gender = cow.gender.toString();
+
+    duration = AgeCalculator.age(dateBirthday);
+
+    return Text(
+        "สายพันธุ์ :$nameSpecies\nเพศ :$gender  สี :$colros\nอายุ : $duration ",
+        style: const TextStyle(
+            fontSize: 16, color: Color.fromARGB(255, 12, 2, 2)));
+  }
+}
+
+class Check_Weight extends StatefulWidget {
+  Cow? co;
+  Employee? emp;
+  Check_Weight({required this.co, required this.emp});
+
+  @override
+  State<Check_Weight> createState() => _Check_WeightState();
+}
+
+class _Check_WeightState extends State<Check_Weight> {
+  List<Progress> Listprogress = [];
+
+  // query
+
+  //weight
+  double doubleWeight = 0;
+  List<double> weight = [];
+
+  Future ch_weight() async {
+    final list_Pg = await Progress_data().listMainprogress(widget.co!.cow_id);
+    Listprogress = list_Pg;
+    for (int i = 0; i < Listprogress.length; i++) {
+      setState(() {
+        weight.add(Listprogress[i].weight!.toDouble());
+      });
+    }
+
+    if (weight.isNotEmpty) {
+      weight.sort();
+      setState(() {
+        doubleWeight = weight[weight.length - 1];
+      });
+    } else {
+      setState(() {
+        doubleWeight = widget.co!.weight!.toDouble();
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    ch_weight();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+        color: (Color.fromARGB(255, 197, 236, 197)),
+        shape: RoundedRectangleBorder(
+          //<-- SEE HERE
+          side: BorderSide(
+            color: Colors.green,
+          ),
+        ),
+        child: ListTile(
+          leading: _buildLeadingTile(widget.co!),
+          onTap: (() {
+            Navigator.of(context).push(MaterialPageRoute(builder: ((context) {
+              return DetailCow(
+                cow: widget.co!,
+                emp: widget.emp,
+              );
+            })));
+          }),
+          trailing: PopupMenuButton(
+              onSelected: (result) async {
+                if (result == 0) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EditCow(
+                              emp: widget.emp,
+                              cow: widget.co!,
+                            )),
+                  );
+                } else if (result == 1) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AddProgress(
+                              emp: widget.emp,
+                              cow: widget.co!,
+                            )),
+                  );
+                } else if (result == 2) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AddFeedingcow(
+                              emp: widget.emp,
+                              cow: widget.co!,
+                            )),
+                  );
+                } else if (result == 3) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AddVaccine(
+                              emp: widget.emp,
+                              cow: widget.co!,
+                            )),
+                  );
+                } else if (result == 4) {
+                  final list_Pg =
+                      await Progress_data().listMainprogress(widget.co!.cow_id);
+                  Listprogress = list_Pg;
+                  for (int i = 0; i < Listprogress.length; i++) {
+                    setState(() {
+                      weight.add(Listprogress[i].weight!.toDouble());
+                    });
+                  }
+
+                  if (weight.isNotEmpty) {
+                    weight.sort();
+                    setState(() {
+                      doubleWeight = weight[weight.length - 1];
+                    });
+                  } else {
+                    setState(() {
+                      doubleWeight = widget.co!.weight!.toDouble();
+                    });
+                  }
+
+                  if (doubleWeight >= 100) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AddHybridization(
+                                cow: widget.co!,
+                                emp: widget.emp,
+                              )),
+                    );
+                  } else {
+                    showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                              title: Text(
+                                  "น้ำหนักโคปัจจุบัน${doubleWeight}กิโลกรัม"),
+                              content: Text(
+                                  "ในการผสมพันธุ์โคต้องมีน้ำหนักโดยประมาณ 100-150 กิโลกรัมขึ้นไป"),
+                            ));
+                  }
+                }
+              },
+              iconSize: 40,
+              itemBuilder: (BuildContext context) {
+                if (doubleWeight >= 100) {
+                  return [
+                    const PopupMenuItem(
+                      value: 0,
+                      child: Text('แก้ไขข้อมูล'),
+                    ),
+                    const PopupMenuItem(
+                      value: 1,
+                      child: Text('เพิ่มข้อมูลพัฒนาการโค'),
+                    ),
+                    const PopupMenuItem(
+                      value: 2,
+                      child: Text('เพิ่มข้อมูลการให้อาหารโค'),
+                    ),
+                    const PopupMenuItem(
+                      value: 3,
+                      child: Text('เพิ่มข้อมูลการฉีดวัคซีน'),
+                    ),
+                    const PopupMenuItem(
+                      value: 4,
+                      child: Text('เพิ่มข้อมูลการผสมพันธุ์โค'),
+                    )
+                  ];
+                } else {
+                  return [
+                    const PopupMenuItem(
+                      value: 0,
+                      child: Text('แก้ไขข้อมูล'),
+                    ),
+                    const PopupMenuItem(
+                      value: 1,
+                      child: Text('เพิ่มข้อมูลพัฒนาการโค'),
+                    ),
+                    const PopupMenuItem(
+                      value: 2,
+                      child: Text('เพิ่มข้อมูลการให้อาหารโค'),
+                    ),
+                    const PopupMenuItem(
+                      value: 3,
+                      child: Text('เพิ่มข้อมูลการฉีดวัคซีน'),
+                    ),
+                    const PopupMenuItem(
+                      value: 4,
+                      child: Text('เพิ่มข้อมูลการผสมพันธุ์โค'),
+                      enabled: false,
+                    )
+                  ];
+                }
+              }),
+          title: Text("รหัสโค : ${widget.co!.cow_id}",
+              style: const TextStyle(fontSize: 20),
+              overflow: TextOverflow.ellipsis),
+          subtitle: _birthdayCow(widget.co!),
+          // isThreeLine: true,
+        ));
+  }
+
+  Widget _buildLeadingTile(Cow listcow) {
+    return Container(
+      width: 100,
+      child: SizedBox(
+        child: Image.network(
+          listcow.picture.toString(),
+          fit: BoxFit.fitWidth,
         ),
       ),
     );

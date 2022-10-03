@@ -7,11 +7,8 @@ import 'package:google_fonts/google_fonts.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await FirebaseAppCheck.instance.activate(
-    webRecaptchaSiteKey: 'recaptcha-v3-site-key',
-  );
 
-  runApp(const MyApp());
+  runApp(MyApp());
   GoogleFonts.config.allowRuntimeFetching = true;
 }
 

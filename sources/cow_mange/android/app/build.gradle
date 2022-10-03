@@ -28,6 +28,7 @@ apply plugin: 'com.google.gms.google-services'
 
 
 
+
 android {
     compileSdkVersion flutter.compileSdkVersion
 
@@ -51,6 +52,7 @@ android {
         targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        useLibrary 'org.apache.http.legacy'
     }
 
     buildTypes {
@@ -66,15 +68,15 @@ flutter {
     source '../..'
 }
 
+
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     // ทำอันนี้
     implementation 'com.android.support:support-v4:20.0.+'
     //firebase
-    implementation platform('com.google.firebase:firebase-bom:30.4.0')
+    implementation platform('com.google.firebase:firebase-bom:30.4.1')
     implementation 'com.google.firebase:firebase-analytics' 
-    implementation 'com.google.firebase:firebase-appcheck:16.0.1'
-    implementation 'com.google.firebase:firebase-appcheck-safetynet:16.0.0'
+    implementation 'com.google.firebase:firebase-appcheck-safetynet:16.0.2'
     implementation 'com.google.firebase:firebase-appcheck:16.0.2'
 
     

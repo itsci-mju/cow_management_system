@@ -19,6 +19,9 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:cow_mange/url/URL.dart';
 
+import 'package:cow_mange/class/Cow.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:firebase_storage/firebase_storage.dart';
 import 'validators.dart';
 
 class EditCow extends StatefulWidget {
@@ -167,21 +170,34 @@ class _EditCowState extends State<EditCow> {
     //fileName = file!.path.split('/').last;
   }
 
+  final firebase_storage.FirebaseStorage storage =
+      firebase_storage.FirebaseStorage.instance;
+
+  static firebase_storage.UploadTask? uploadFile2(
+      String destination, File file) {
+    try {
+      final ref = FirebaseStorage.instance.ref(destination);
+
+      return ref.putFile(file);
+    } on firebase_storage.FirebaseException {
+      return null;
+    }
+  }
+
   Future uploadFile(file, Cow? cow) async {
     if (file == null) return;
 
     final fileName = file!.path;
     final fileExtension = fileName.split(".").last;
-    final name = fileExtension;
     final namecow = cow!.cow_id;
     final destination = 'Cow/$namecow';
 
-    task = Storage.uploadFile2(destination, file!);
-
-    if (task == null) return;
+    final ref = FirebaseStorage.instance.ref(destination).child(fileName);
+    task = ref.putFile(file);
 
     final snapshot = await task!.whenComplete(() {});
     final urlDownload = await snapshot.ref.getDownloadURL();
+    print("$urlDownload");
     String textUrldownload = urlDownload;
 
     return textUrldownload;

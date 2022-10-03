@@ -365,6 +365,28 @@ class Feeding_data {
     }
   }
 
+  Future AddFeedingcow(Feeding feeding) async {
+    final response = await http.post(
+      Uri.parse(url.URL.toString() + url.URL_feeding_add.toString()),
+      body: jsonEncode(feeding.tojson_Feeding()),
+      headers: <String, String>{
+        "Accept": "application/json",
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    String? stringResponse;
+    List? list;
+    Map<String, dynamic> mapResponse = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      dynamic feeding = mapResponse['result'];
+      return Feeding.fromJson(feeding);
+    } else {
+      throw Exception('Failed to load album');
+    }
+  }
+
   Future listMainFedding_DESC(cowId) async {
     final response = await http.post(
       Uri.parse(
@@ -521,7 +543,6 @@ class Hybridization_data {
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
-
     String? stringResponse;
     List? list;
     Map<String, dynamic> mapResponse = json.decode(response.body);
@@ -972,5 +993,30 @@ class typehybridization_data {
 
       return typeHybridization;
     }
+  }
+}
+
+List<String> list_food = [];
+Future listfood() async {
+  final response = await http.post(
+    Uri.parse(url.URL.toString() + url.URL_list_food.toString()),
+  );
+
+  String? stringResponse;
+  List? list;
+  Map<String, dynamic> mapResponse = json.decode(response.body);
+
+  if (response.statusCode == 200) {
+    Map<String, dynamic> map = json.decode(response.body);
+
+    mapResponse = json.decode(response.body);
+
+    list = map['result'];
+
+    for (dynamic l in list!) {
+      list_food.add(l['food_name']);
+    }
+
+    return list_food;
   }
 }
