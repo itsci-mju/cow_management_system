@@ -461,7 +461,7 @@ class _DetailCowState extends State<DetailCow> {
                                                       child: Container(
                                                           child: Text(
                                                               breeder_bull == null
-                                                                  ? "ยังไม่มีข้อมูลในระบบ"
+                                                                  ? "ไม่พบข้อมูล"
                                                                   : breeder_bull
                                                                       .namecow
                                                                       .toString(),
@@ -532,7 +532,7 @@ class _DetailCowState extends State<DetailCow> {
                                                       child: Container(
                                                           child: Text(
                                                               breeder_cow == null
-                                                                  ? "ยังไม่มีข้อมูลในระบบ"
+                                                                  ? "ไม่พบข้อมูล"
                                                                   : breeder_cow
                                                                       .namecow
                                                                       .toString(),
@@ -723,7 +723,7 @@ class _DetailCowState extends State<DetailCow> {
                                         builder: (BuildContext context) =>
                                             CupertinoAlertDialog(
                                           title: Text(
-                                              'รหัสโค : ${Listprogress[index].cow!.cow_id}'),
+                                              'ยืนยันการลบข้อมูล \nรหัสโค : ${Listprogress[index].cow!.cow_id}'),
                                           content: const Text(
                                               'เช็คข้อมูลการลบข้อมูลทุกครั้ง'),
                                           actions: <CupertinoDialogAction>[
@@ -821,7 +821,7 @@ class _DetailCowState extends State<DetailCow> {
                                         builder: (BuildContext context) =>
                                             CupertinoAlertDialog(
                                           title: Text(
-                                              'รหัสโค : ${ListFeeding[index].cow!.cow_id}'),
+                                              'ยืนยันการลบข้อมูล \nรหัสโค : ${ListFeeding[index].cow!.cow_id}'),
                                           content: const Text(
                                               'เช็คข้อมูลการลบข้อมูลทุกครั้ง'),
                                           actions: <CupertinoDialogAction>[
@@ -923,7 +923,7 @@ class _DetailCowState extends State<DetailCow> {
                                         builder: (BuildContext context) =>
                                             CupertinoAlertDialog(
                                           title: Text(
-                                              'รหัสโค : ${ListVaccination[index].cow!.cow_id}'),
+                                              'ยืนยันการลบข้อมูล \nรหัสโค : ${ListVaccination[index].cow!.cow_id}'),
                                           content: const Text(
                                               'เช็คข้อมูลการลบข้อมูลทุกครั้ง'),
                                           actions: <CupertinoDialogAction>[
@@ -1027,7 +1027,7 @@ class _DetailCowState extends State<DetailCow> {
                                         builder: (BuildContext context) =>
                                             CupertinoAlertDialog(
                                           title: Text(
-                                              'รหัสโค : ${List_Cow_has_Hybridization[index].cow!.cow_id}'),
+                                              'ยืนยันการลบข้อมูล \nรหัสโค : ${List_Cow_has_Hybridization[index].cow!.cow_id}'),
                                           content: const Text(
                                               'เช็คข้อมูลการลบข้อมูลทุกครั้ง'),
                                           actions: <CupertinoDialogAction>[

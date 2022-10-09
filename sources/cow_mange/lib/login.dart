@@ -315,7 +315,7 @@ class _LoginScreenState extends State<LoginScreen>
                                                                         .white),
                                                               ),
                                                               const Text(
-                                                                "กรุณาตรวจสอบ username และ password ให้ถูกต้องก่อนเข้าสู่ระบบ",
+                                                                "กรุณากรอกชื่อผู้ใช้หรือรหัสผ่านให้ถูกต้อง",
                                                                 style: TextStyle(
                                                                     color: Colors
                                                                         .white,
@@ -399,7 +399,7 @@ class _LoginScreenState extends State<LoginScreen>
                                                                         .white),
                                                               ),
                                                               const Text(
-                                                                "กรุณาตรวจสอบ username และ password ให้ถูกต้องก่อนเข้าสู่ระบบ",
+                                                                "กรุณากรอกชื่อผู้ใช้หรือรหัสผ่านให้ถูกต้อง",
                                                                 style: TextStyle(
                                                                     color: Colors
                                                                         .white,

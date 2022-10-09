@@ -11,17 +11,18 @@ import 'package:cow_mange/class/Species.dart';
 import 'package:cow_mange/firebase/storage.dart';
 import 'package:cow_mange/url/URL.dart';
 import 'package:cow_mange/validators.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:image_picker/image_picker.dart';
+
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:cow_mange/class/Cow.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:path/path.dart' as path;
 
 class Register_Cow extends StatefulWidget {
@@ -57,7 +58,8 @@ class _Register_CowState extends State<Register_Cow> {
 
   //
   late DateTime _dateTime;
-  File? file;
+  //File? file;
+
   String id_species = "";
   DateTime? birthday;
   DateTime? registration_date;
@@ -231,54 +233,91 @@ class _Register_CowState extends State<Register_Cow> {
     clean_number();
   }
 
+  PlatformFile? pickedFile;
   Future chooseImage() async {
-    final image =
-        await ImagePicker.pickImage(source: ImageSource.gallery) as File?;
-    setState(() {
-      file = image;
-    });
+    final result = await FilePicker.platform.pickFiles(
+        allowMultiple: false,
+        type: FileType.custom,
+        allowedExtensions: ['png', 'jpg']);
+    if (result == null) return;
 
-    //fileName = file!.path.split('/').last;
+    setState(() {
+      pickedFile = result.files.first;
+    });
   }
 
   final firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
 
-  static firebase_storage.UploadTask? uploadFile2(
-      String destination, File file) {
+  UploadTask? uploadTask;
+  Future<String> uploadFile() async {
+    final fileName = File(pickedFile!.path!);
+    final fileExtension = fileName.path.split(".").last;
+    final id_cow = co!.cow_id! + "." + fileExtension;
+    final destination = 'Cow/$id_cow';
+    String textUrldownload = "";
+
+    final storageRef = FirebaseStorage.instance.ref(destination);
+
     try {
-      final ref = FirebaseStorage.instance.ref(destination);
+      task = storageRef.putFile(
+          fileName,
+          SettableMetadata(
+            contentType: "image/jpeg",
+          ));
 
-      return ref.putFile(file);
-    } on firebase_storage.FirebaseException {
-      return null;
+      task!.snapshotEvents.listen((TaskSnapshot taskSnapshot) {
+        switch (taskSnapshot.state) {
+          case TaskState.running:
+            final progress = 100.0 *
+                (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes);
+            print("Upload is $progress% complete.");
+            break;
+          case TaskState.paused:
+            print("Upload is paused.");
+            break;
+          case TaskState.canceled:
+            print("Upload was canceled");
+            break;
+          case TaskState.error:
+            // Handle unsuccessful uploads
+            break;
+          case TaskState.success:
+            // Handle successful uploads on complete
+            // ...
+            break;
+        }
+      });
+
+      final snapshot = await task!.whenComplete(() {});
+      final urlDownload = await snapshot.ref.getDownloadURL();
+      textUrldownload = urlDownload;
+    } on firebase_core.FirebaseException catch (e) {
+      print(e);
     }
+
+    return textUrldownload;
   }
+/*
+  Future uploadFile2() async {
+    if (image == null) return;
+    print(image);
 
-  Future uploadFile() async {
-    if (file == null) return;
-
-    final fileName = path.basename(file!.path);
+    final fileName = path.basename(image!.path);
     final fileExtension = fileName.split(".").last;
     final namecow = co!.cow_id! + "." + fileExtension;
     final destination = 'Cow/$namecow';
 
-    // task = uploadFile2(destination, file!);
-    // if (task == null) return;
-    final uploadtask;
-    final ref = FirebaseStorage.instance.ref(destination);
+    final ref = FirebaseStorage.instance.ref().child(destination);
+    uploadTask = ref.putFile(image!);
+    final snapshot = await uploadTask!.whenComplete(() {});
+    final urlDownload = await snapshot.ref.getDownloadURL();
 
-    uploadtask = ref.putFile(file!);
-
-    //String url = await ref.getDownloadURL();
-
-    //final snapshot = await task!.whenComplete(() {});
-    final urlDownload = await (await uploadtask).ref.getDownloadURL();
-    print("$urlDownload");
     String textUrldownload = urlDownload;
+    print(textUrldownload);
 
     return textUrldownload;
-  }
+  }*/
 
   /// text Controller
   final cow_id = TextEditingController();
@@ -670,22 +709,23 @@ class _Register_CowState extends State<Register_Cow> {
                       children: <Widget>[
                         const SizedBox(height: 20),
                         Center(
-                            child: file == null
-                                ? Container(
-                                    margin: const EdgeInsets.only(top: 10),
-                                    child: Column(
-                                      children: [
-                                        Text(img! == texterror_img
-                                            ? ""
-                                            : texterror_img),
-                                        Text(
-                                          error_img,
-                                          style: const TextStyle(
-                                              color: Colors.red),
-                                        )
-                                      ],
-                                    ))
-                                : Image.file(file!)),
+                          child: pickedFile == null
+                              ? Container(
+                                  margin: const EdgeInsets.only(top: 10),
+                                  child: Column(
+                                    children: [
+                                      Text(img! == texterror_img
+                                          ? ""
+                                          : texterror_img),
+                                      Text(
+                                        error_img,
+                                        style:
+                                            const TextStyle(color: Colors.red),
+                                      )
+                                    ],
+                                  ))
+                              : Image.file(File(pickedFile!.path!)),
+                        ),
                         const SizedBox(
                           height: 20,
                         ),
@@ -1046,7 +1086,7 @@ class _Register_CowState extends State<Register_Cow> {
                         setState(() {
                           texterror = "กรุณากรอกข้อมูลให้ครบถ้วน";
                         });
-                        if (file == null) {
+                        if (pickedFile == null) {
                           setState(() {
                             texterror_img = "";
                             error_img = "กรุณากรอกรูปโค";
@@ -1058,7 +1098,7 @@ class _Register_CowState extends State<Register_Cow> {
                           });
                         }
                       }
-                      if (error_img == "" && validate != false) {
+                      if (pickedFile != null && validate != false) {
                         setState(() {
                           texterror = "";
                         });
@@ -1083,7 +1123,7 @@ class _Register_CowState extends State<Register_Cow> {
                           co?.gender = gender;
                         }
                         var imageCow = "";
-                        if (file != null) {
+                        if (pickedFile != null) {
                           imageCow = await uploadFile();
                         }
                         if (imageCow == null) {

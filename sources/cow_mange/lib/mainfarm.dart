@@ -226,6 +226,7 @@ class _MainfarmState extends State<Mainfarm> {
           fm: widget.fm,
           cow: listcow,
         ),
+        backgroundColor: Color(0xFFF3F5F7),
         body: listcow == null
             ? Column(children: const <Widget>[])
             : Container(
@@ -478,9 +479,8 @@ class _MainfarmState extends State<Mainfarm> {
                   return Card(
                       color: (Color.fromARGB(255, 197, 236, 197)),
                       shape: RoundedRectangleBorder(
-                        //<-- SEE HERE
                         side: BorderSide(
-                          color: Colors.green,
+                          color: Color.fromARGB(255, 0, 239, 8),
                         ),
                       ),
                       child: ListTile(
@@ -500,7 +500,8 @@ class _MainfarmState extends State<Mainfarm> {
                                 context: context,
                                 builder: (BuildContext context) =>
                                     CupertinoAlertDialog(
-                                  title: Text('ลบข้อมูลพนักงาน  ' "\n" +
+                                  title: Text('ยืนยันการลบข้อมูลพนักงาน  '
+                                          "\n" +
                                       listemployee[index].firstname.toString() +
                                       " " +
                                       listemployee[index].lastname.toString() +
@@ -573,7 +574,6 @@ class _MainfarmState extends State<Mainfarm> {
                   return Card(
                       color: (Color.fromARGB(255, 197, 236, 197)),
                       shape: RoundedRectangleBorder(
-                        //<-- SEE HERE
                         side: BorderSide(
                           color: Colors.green,
                         ),
@@ -595,7 +595,7 @@ class _MainfarmState extends State<Mainfarm> {
                                 context: context,
                                 builder: (BuildContext context) =>
                                     CupertinoAlertDialog(
-                                  title: Text('ลบข้อมูลค่าใช้จ่าย  '
+                                  title: Text('ยืนยันการลบข้อมูลค่าใช้จ่าย  '
                                           "\n"
                                           "รหัสคำสั่งซื้อ : " +
                                       listexpendfarm[index].id_list.toString()),
@@ -991,12 +991,11 @@ class _Check_WeightState extends State<Check_Weight> {
   @override
   Widget build(BuildContext context) {
     return Card(
-        color: (Color.fromARGB(255, 197, 236, 197)),
+        elevation: 5,
+        color: (Color.fromARGB(255, 255, 255, 255)),
+        margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 10.0),
         shape: RoundedRectangleBorder(
-          //<-- SEE HERE
-          side: BorderSide(
-            color: Colors.green,
-          ),
+          borderRadius: BorderRadius.circular(0.0),
         ),
         child: ListTile(
           leading: _buildLeadingTile(widget.co!),

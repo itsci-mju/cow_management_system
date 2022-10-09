@@ -12,7 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:image_picker/image_picker.dart';
+
 import 'package:cow_mange/firebase/storage.dart';
 import 'package:cow_mange/class/Cow.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -31,15 +31,12 @@ class _Register_farmState extends State<Register_farm> {
   String fileName = "";
   String filePath = "";
   UploadTask? task;
-  Future chooseImage() async {
-    final image =
-        await ImagePicker.pickImage(source: ImageSource.gallery) as File?;
-    setState(() {
-      file = image;
-    });
-    filePath = file!.path;
 
-    fileName = file!.path.split('/').last;
+  
+  Future chooseImage() async {
+   
+
+    
   }
 
   @override

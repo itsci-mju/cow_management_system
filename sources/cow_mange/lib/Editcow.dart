@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:image_picker/image_picker.dart';
+
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:cow_mange/url/URL.dart';
@@ -155,20 +155,7 @@ class _EditCowState extends State<EditCow> {
     }
   }
 
-  Future chooseImage() async {
-    final image =
-        await ImagePicker.pickImage(source: ImageSource.gallery) as File?;
-    setState(() {
-      file = image;
-    });
-    if (file == null) {
-      filePath = "";
-    } else {
-      filePath = file!.path;
-    }
-
-    //fileName = file!.path.split('/').last;
-  }
+  Future chooseImage() async {}
 
   final firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
