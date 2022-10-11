@@ -1238,7 +1238,7 @@ class _DetailCowState extends State<DetailCow> {
             borderRadius: BorderRadius.circular(30.0),
             boxShadow: [BoxShadow(color: Colors.black)]),
         child: Image.network(
-          c.picture.toString(),
+          url.URL_IMAGE + c.picture.toString(),
           fit: BoxFit.fill,
         ),
       ),

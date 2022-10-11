@@ -226,7 +226,7 @@ class _MainfarmState extends State<Mainfarm> {
           fm: widget.fm,
           cow: listcow,
         ),
-        backgroundColor: Color(0xFFF3F5F7),
+        backgroundColor: Color.fromARGB(255, 223, 224, 226),
         body: listcow == null
             ? Column(children: const <Widget>[])
             : Container(
@@ -810,7 +810,7 @@ Widget _buildLeadingTile(Cow listcow) {
     width: 100,
     child: SizedBox(
       child: Image.network(
-        listcow.picture.toString(),
+        url.URL_IMAGE + listcow.picture.toString(),
         fit: BoxFit.fitWidth,
       ),
     ),
@@ -848,20 +848,11 @@ Widget _buildLeadingTile_user(Employee listemp) {
       fit: BoxFit.fitWidth,
     ),
   );
-  return Container(
-    width: 80.0,
-    height: 200.0,
-    decoration: const BoxDecoration(
-        image: DecorationImage(
-            image: AssetImage('images/user.jpg'), fit: BoxFit.cover),
-        borderRadius: BorderRadius.all(Radius.circular(5)),
-        boxShadow: [BoxShadow(blurRadius: 5.0, color: Colors.black)]),
-  );
 }
 
 image_cow(Cow c) {
   return Image.network(
-    c.picture!,
+    url.URL_IMAGE + c.picture!,
     fit: BoxFit.cover,
   );
 }
@@ -1151,7 +1142,7 @@ class _Check_WeightState extends State<Check_Weight> {
       width: 100,
       child: SizedBox(
         child: Image.network(
-          listcow.picture.toString(),
+          url.URL_IMAGE + listcow.picture.toString(),
           fit: BoxFit.fitWidth,
         ),
       ),

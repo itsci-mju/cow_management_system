@@ -21,9 +21,10 @@ import 'package:intl/intl.dart';
 
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:cow_mange/class/Cow.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:path/path.dart' as path;
+import 'package:cow_mange/url/URL.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:image/image.dart' as Img;
 
 class Register_Cow extends StatefulWidget {
   final Employee? emp;
@@ -58,7 +59,6 @@ class _Register_CowState extends State<Register_Cow> {
 
   //
   late DateTime _dateTime;
-  //File? file;
 
   String id_species = "";
   DateTime? birthday;
@@ -85,6 +85,8 @@ class _Register_CowState extends State<Register_Cow> {
   String fileName = "";
   String filePath = "";
   UploadTask? task;
+
+  List<PlatformFile>? _files;
 
   //error text
   String texterror = "";
@@ -159,6 +161,38 @@ class _Register_CowState extends State<Register_Cow> {
       return Breeder.fromJson(breeder);
     } else {
       throw Exception('Failed to load album');
+    }
+  }
+
+  Future uploadfile() async {
+    var url_ = (Uri.parse(url.URL + url.URL_cow_uploadimage));
+    var request = http.MultipartRequest('Post', url_);
+
+    final fileName = File(pickedFile!.path!);
+
+    final fileExtension = fileName.path.split(".").last;
+    final fileName_id_cow = co!.cow_id!;
+
+    int sizeInBytes = fileName.lengthSync();
+    Img.Image? image_temp = Img.decodeImage(fileName.readAsBytesSync());
+    Img.Image? resized_img =
+        Img.copyResize(image_temp!, width: 300, height: 300);
+
+    request.files.add(await http.MultipartFile.fromBytes(
+        'file', Img.encodeJpg(resized_img),
+        filename: pickedFile!.path.toString(),
+        contentType: MediaType.parse('image/jpeg')));
+
+    request.files
+        .add(await http.MultipartFile.fromString('cow', fileName_id_cow));
+    var response = await request.send();
+
+    final res = await http.Response.fromStream(response);
+    if (response.statusCode == 200) {
+      print('Uploaded ...');
+      return fileName_id_cow + "." + fileExtension;
+    } else {
+      print('Something went wrong');
     }
   }
 /////////////////////////////////////////////////////////////
@@ -245,79 +279,6 @@ class _Register_CowState extends State<Register_Cow> {
       pickedFile = result.files.first;
     });
   }
-
-  final firebase_storage.FirebaseStorage storage =
-      firebase_storage.FirebaseStorage.instance;
-
-  UploadTask? uploadTask;
-  Future<String> uploadFile() async {
-    final fileName = File(pickedFile!.path!);
-    final fileExtension = fileName.path.split(".").last;
-    final id_cow = co!.cow_id! + "." + fileExtension;
-    final destination = 'Cow/$id_cow';
-    String textUrldownload = "";
-
-    final storageRef = FirebaseStorage.instance.ref(destination);
-
-    try {
-      task = storageRef.putFile(
-          fileName,
-          SettableMetadata(
-            contentType: "image/jpeg",
-          ));
-
-      task!.snapshotEvents.listen((TaskSnapshot taskSnapshot) {
-        switch (taskSnapshot.state) {
-          case TaskState.running:
-            final progress = 100.0 *
-                (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes);
-            print("Upload is $progress% complete.");
-            break;
-          case TaskState.paused:
-            print("Upload is paused.");
-            break;
-          case TaskState.canceled:
-            print("Upload was canceled");
-            break;
-          case TaskState.error:
-            // Handle unsuccessful uploads
-            break;
-          case TaskState.success:
-            // Handle successful uploads on complete
-            // ...
-            break;
-        }
-      });
-
-      final snapshot = await task!.whenComplete(() {});
-      final urlDownload = await snapshot.ref.getDownloadURL();
-      textUrldownload = urlDownload;
-    } on firebase_core.FirebaseException catch (e) {
-      print(e);
-    }
-
-    return textUrldownload;
-  }
-/*
-  Future uploadFile2() async {
-    if (image == null) return;
-    print(image);
-
-    final fileName = path.basename(image!.path);
-    final fileExtension = fileName.split(".").last;
-    final namecow = co!.cow_id! + "." + fileExtension;
-    final destination = 'Cow/$namecow';
-
-    final ref = FirebaseStorage.instance.ref().child(destination);
-    uploadTask = ref.putFile(image!);
-    final snapshot = await uploadTask!.whenComplete(() {});
-    final urlDownload = await snapshot.ref.getDownloadURL();
-
-    String textUrldownload = urlDownload;
-    print(textUrldownload);
-
-    return textUrldownload;
-  }*/
 
   /// text Controller
   final cow_id = TextEditingController();
@@ -742,54 +703,6 @@ class _Register_CowState extends State<Register_Cow> {
                       ],
                     ),
                   ),
-                  /* Container(
-                        margin: const EdgeInsets.symmetric(vertical: 10),
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                        width: size.width * 0.8,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            color: Colors.lightGreen.withAlpha(50)),
-                        child: TextField(
-                          controller: Recording,
-                          readOnly: true,
-                          decoration: InputDecoration(
-                              label: Text(
-                                formattedDate,
-                                style: TextStyle(color: Colors.black),
-                              ),
-                              hintText: "Date is not selected",
-                              suffixIcon: _getClearButton_Recording(),
-                              hintStyle: TextStyle(color: Colors.black),
-                              border: InputBorder.none,
-                              icon: Icon(
-                                FontAwesomeIcons.calendar,
-                                color: Color(0XFF397D54),
-                                size: 20,
-                              )),
-                          enabled: false,
-                        )),*/
-                  /*
-                    Container(
-                        margin: const EdgeInsets.symmetric(vertical: 10),
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                        width: size.width * 0.8,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            color: Colors.lightGreen.withAlpha(50)),
-                        child: TextField(
-                          controller: treatmentHistory,
-                          decoration: InputDecoration(
-                              label: Text("ประวัติการรักษา"),
-                              hintStyle: TextStyle(color: Colors.black),
-                              border: InputBorder.none,
-                              icon: Icon(
-                                FontAwesomeIcons.bookMedical,
-                                color: Color(0XFF397D54),
-                                size: 20,
-                              )),
-                        )),*/
                   Container(
                       margin: const EdgeInsets.symmetric(horizontal: 30),
                       child: Row(
@@ -1122,14 +1035,9 @@ class _Register_CowState extends State<Register_Cow> {
                         } else {
                           co?.gender = gender;
                         }
-                        var imageCow = "";
+
                         if (pickedFile != null) {
-                          imageCow = await uploadFile();
-                        }
-                        if (imageCow == null) {
-                          co?.picture = "-";
-                        } else {
-                          co?.picture = imageCow;
+                          co?.picture = await uploadfile();
                         }
 
                         co?.weight = double.parse(weight.text);
@@ -1162,7 +1070,6 @@ class _Register_CowState extends State<Register_Cow> {
 
                         final lc = await Cow_data().listMaincow(widget.emp!);
                         if (cow2 != null) {
-                          print(1);
                           Navigator.of(context)
                               .push(MaterialPageRoute(builder: ((context) {
                             return MainpageEmployee(

@@ -5,23 +5,22 @@ import 'package:cow_mange/DetailCow.dart';
 import 'package:cow_mange/Function/Function.dart';
 import 'package:cow_mange/class/Breeder.dart';
 import 'package:cow_mange/class/Cow.dart';
+import 'package:cow_mange/class/Cow.dart';
 import 'package:cow_mange/class/Employee.dart';
 import 'package:cow_mange/class/Farm.dart';
 import 'package:cow_mange/class/Species.dart';
-import 'package:cow_mange/firebase/storage.dart';
+import 'package:cow_mange/url/URL.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
-import 'package:cow_mange/url/URL.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:image/image.dart' as Img;
+import 'package:intl/intl.dart';
 
-import 'package:cow_mange/class/Cow.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:firebase_storage/firebase_storage.dart';
 import 'validators.dart';
 
 class EditCow extends StatefulWidget {
@@ -124,6 +123,39 @@ class _EditCowState extends State<EditCow> {
     clean_number();
   }
 
+  List<PlatformFile>? _files;
+  Future uploadfile() async {
+    var url_ = (Uri.parse(url.URL + url.URL_cow_uploadimage));
+    var request = http.MultipartRequest('Post', url_);
+
+    final fileName = File(pickedFile!.path!);
+
+    final fileExtension = fileName.path.split(".").last;
+    final fileName_id_cow = co!.cow_id!;
+
+    int sizeInBytes = fileName.lengthSync();
+    Img.Image? image_temp = Img.decodeImage(fileName.readAsBytesSync());
+    Img.Image? resized_img =
+        Img.copyResize(image_temp!, width: 300, height: 300);
+
+    request.files.add(http.MultipartFile.fromBytes(
+        'file', Img.encodeJpg(resized_img),
+        filename: pickedFile!.path.toString(),
+        contentType: MediaType.parse('image/jpeg')));
+
+    request.files
+        .add(await http.MultipartFile.fromString('cow', fileName_id_cow));
+    var response = await request.send();
+
+    final res = await http.Response.fromStream(response);
+    if (response.statusCode == 200) {
+      print('Uploaded ...');
+      return fileName_id_cow + "." + fileExtension;
+    } else {
+      print('Something went wrong');
+    }
+  }
+
   Future fetchCow(String idFarm, String cowId) async {
     final response = await http.post(
       Uri.parse(url.URL.toString() + url.URL_Listbreedercow.toString()),
@@ -155,39 +187,17 @@ class _EditCowState extends State<EditCow> {
     }
   }
 
-  Future chooseImage() async {}
+  PlatformFile? pickedFile;
+  Future chooseImage() async {
+    final result = await FilePicker.platform.pickFiles(
+        allowMultiple: false,
+        type: FileType.custom,
+        allowedExtensions: ['png', 'jpg']);
+    if (result == null) return;
 
-  final firebase_storage.FirebaseStorage storage =
-      firebase_storage.FirebaseStorage.instance;
-
-  static firebase_storage.UploadTask? uploadFile2(
-      String destination, File file) {
-    try {
-      final ref = FirebaseStorage.instance.ref(destination);
-
-      return ref.putFile(file);
-    } on firebase_storage.FirebaseException {
-      return null;
-    }
-  }
-
-  Future uploadFile(file, Cow? cow) async {
-    if (file == null) return;
-
-    final fileName = file!.path;
-    final fileExtension = fileName.split(".").last;
-    final namecow = cow!.cow_id;
-    final destination = 'Cow/$namecow';
-
-    final ref = FirebaseStorage.instance.ref(destination).child(fileName);
-    task = ref.putFile(file);
-
-    final snapshot = await task!.whenComplete(() {});
-    final urlDownload = await snapshot.ref.getDownloadURL();
-    print("$urlDownload");
-    String textUrldownload = urlDownload;
-
-    return textUrldownload;
+    setState(() {
+      pickedFile = result.files.first;
+    });
   }
 
   Future fetchbull(idfarm, cowid) async {
@@ -790,19 +800,14 @@ class _EditCowState extends State<EditCow> {
                         children: <Widget>[
                           const SizedBox(height: 20),
                           Center(
-                              child: file == null
-                                  ? widget.cow.picture == null
-                                      ? Container(
-                                          margin:
-                                              const EdgeInsets.only(top: 10),
-                                          child: Column(
-                                            children: [Text(img!)],
-                                          ))
-                                      : Image.network(
-                                          widget.cow.picture.toString(),
-                                          fit: BoxFit.cover,
-                                        )
-                                  : Image.file(file!)),
+                            child: pickedFile == null
+                                ? Image.network(
+                                    url.URL_IMAGE +
+                                        widget.cow.picture.toString(),
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.file(File(pickedFile!.path!)),
+                          ),
                           const SizedBox(
                             height: 20,
                           ),
@@ -1182,17 +1187,11 @@ class _EditCowState extends State<EditCow> {
                           } else {
                             co!.gender = textgender;
                           }
-                          //image
-                          var imageCow = "";
-                          if (file == null) {
-                            if (widget.cow.picture.toString() != null) {
-                              co!.picture = widget.cow.picture.toString();
-                            } else {
-                              co?.picture = "-";
-                            }
+
+                          if (pickedFile == null) {
+                            co!.picture = widget.cow.picture.toString();
                           } else {
-                            imageCow = await uploadFile(file, cow);
-                            co?.picture = imageCow;
+                            co?.picture = await uploadfile();
                           }
 
                           co?.registration_date = cow!.registration_date;

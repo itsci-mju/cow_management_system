@@ -255,14 +255,10 @@ class _MainguestState extends State<Mainguest> {
 
   Widget _buildLeadingTile(String? picture) {
     return Container(
-      width: 80,
-      height: 100,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: NetworkImage(picture.toString()),
-          fit: BoxFit.fill,
-        ),
-      ),
+      width: 100,
+      child: SizedBox(
+          child: Image.network(url.URL_IMAGE + picture.toString(),
+              fit: BoxFit.fill)),
     );
   }
 }

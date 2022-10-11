@@ -5,18 +5,20 @@ import 'package:cow_mange/class/Farm.dart';
 import 'package:cow_mange/class/Farmtype.dart';
 import 'package:cow_mange/login.dart';
 import 'package:cow_mange/validators.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:cow_mange/url/URL.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'package:cow_mange/firebase/storage.dart';
 import 'package:cow_mange/class/Cow.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:firebase_storage/firebase_storage.dart';
+
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+import 'package:image/image.dart' as Img;
 
 class Register_farm extends StatefulWidget {
   const Register_farm({Key? key}) : super(key: key);
@@ -32,51 +34,55 @@ class _Register_farmState extends State<Register_farm> {
   String filePath = "";
   UploadTask? task;
 
-  
-  Future chooseImage() async {
-   
+  List<PlatformFile>? _files;
+  Future uploadfile() async {
+    var url_ = (Uri.parse(url.URL + url.URL_uploadimage));
+    var request = http.MultipartRequest('Post', url_);
 
-    
+    final fileName = File(pickedFile!.path!);
+    final fileExtension = fileName.path.split(".").last;
+    final filename_Farm = farm.name_Farm;
+
+    int sizeInBytes = fileName.lengthSync();
+    Img.Image? image_temp = Img.decodeImage(fileName.readAsBytesSync());
+    Img.Image? resized_img =
+        Img.copyResize(image_temp!, width: 300, height: 300);
+
+    request.files.add(http.MultipartFile.fromBytes(
+        'file', Img.encodeJpg(resized_img),
+        filename: pickedFile!.path.toString(),
+        contentType: MediaType.parse('image/jpeg')));
+
+    request.files.add(http.MultipartFile.fromString('farm', filename_Farm!));
+    var response = await request.send();
+
+    final res = await http.Response.fromStream(response);
+    print(res);
+    if (response.statusCode == 200) {
+      print('Uploaded ...');
+      return filename_Farm + "." + fileExtension;
+    } else {
+      print('Something went wrong');
+    }
+  }
+
+  PlatformFile? pickedFile;
+  Future chooseImage() async {
+    final result = await FilePicker.platform.pickFiles(
+        allowMultiple: false,
+        type: FileType.custom,
+        allowedExtensions: ['png', 'jpg']);
+    if (result == null) return;
+
+    setState(() {
+      pickedFile = result.files.first;
+    });
   }
 
   @override
   void initState() {
     super.initState();
     clean_number();
-  }
-
-  final firebase_storage.FirebaseStorage storage =
-      firebase_storage.FirebaseStorage.instance;
-
-  static firebase_storage.UploadTask? uploadFile2(
-      String destination, File file) {
-    try {
-      final ref = FirebaseStorage.instance.ref(destination);
-
-      return ref.putFile(file);
-    } on firebase_storage.FirebaseException {
-      return null;
-    }
-  }
-
-  Future uploadFile(file, Farm? farm) async {
-    if (file == null) return;
-
-    final fileName = file!.path;
-    final fileExtension = fileName.split(".").last;
-    final name = fileExtension;
-    final namefarm = farm!.name_Farm;
-    final destination = 'Farm/$namefarm';
-
-    task = uploadFile2(destination, file!);
-
-    if (task == null) return;
-
-    final snapshot = await task!.whenComplete(() {});
-    final urlDownload = await snapshot.ref.getDownloadURL();
-    String textUrldownload = urlDownload;
-
-    return textUrldownload;
   }
 
   //class
@@ -218,7 +224,7 @@ class _Register_farmState extends State<Register_farm> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    final Storage storage = Storage();
+
     return Scaffold(
       body: SingleChildScrollView(
           child: Form(
@@ -524,7 +530,7 @@ class _Register_farmState extends State<Register_farm> {
                     ),
                   ),
                   Text(
-                    "ที่อยู่",
+                    "ที่อยู่ * ถ้าไม่มีให้ใส่ -",
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       fontSize: 20,
@@ -810,21 +816,22 @@ class _Register_farmState extends State<Register_farm> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Center(
-                        child: file == null
-                            ? Container(
-                                margin: const EdgeInsets.only(top: 10),
-                                child: Column(
-                                  children: [
-                                    Text(img == texterror_img
-                                        ? ""
-                                        : texterror_img!),
-                                    Text(
-                                      error_img!,
-                                      style: const TextStyle(color: Colors.red),
-                                    )
-                                  ],
-                                ))
-                            : Image.file(file!)),
+                      child: pickedFile == null
+                          ? Container(
+                              margin: const EdgeInsets.only(top: 10),
+                              child: Column(
+                                children: [
+                                  Text(img == texterror_img
+                                      ? ""
+                                      : texterror_img!),
+                                  Text(
+                                    error_img!,
+                                    style: const TextStyle(color: Colors.red),
+                                  )
+                                ],
+                              ))
+                          : Image.file(File(pickedFile!.path!)),
+                    ),
                     const SizedBox(
                       height: 20,
                     ),
@@ -865,31 +872,38 @@ class _Register_farmState extends State<Register_farm> {
                   farm.email = email.text;
                   farm.tel = tel.text;
 
-                  String testAddress =
-                      "${address.text}/${village.text} ${alley.text} ${road.text} ${district.text} ${canton.text} ${province.text} ${zip_code.text}";
+                  String testAddress = "";
+                  if ("${alley.text}" == "-" && "${road.text}" == "-") {
+                    testAddress =
+                        "${address.text}/${village.text} ต.${district.text} อ.${canton.text} จ.${province.text} ${zip_code.text}";
+                  } else if ("${alley.text}" == "-") {
+                    testAddress =
+                        "${address.text}/${village.text} ${road.text} ต.${district.text} อ.${canton.text} จ.${province.text} ${zip_code.text}";
+                  } else {
+                    testAddress =
+                        "${address.text}/${village.text} ${alley.text}  ต.${district.text} อ.${canton.text} จ.${province.text} ${zip_code.text}";
+                  }
+
                   farm.addressFarm = testAddress;
-                  farm.name_Farm = farmname.text;
+                  setState(() {
+                    farm.name_Farm = farmname.text;
+                  });
+
                   Farmtype newFarmtype = Farmtype(name_FarmType: farmcategory);
                   farm.farmtype = newFarmtype;
 
-                  var imagefarm = "";
-                  if (file != null) {
-                    imagefarm = await uploadFile(file, farm);
-                  }
-                  if (imagefarm == null) {
-                    farm.photo = "-";
-                  } else {
-                    farm.photo = imagefarm;
+                  if (pickedFile != null) {
+                    farm.photo = await uploadfile();
                   }
 
                   final farm2 = await Farm_data().registerfarm(farm);
-
+/*
                   if (farm2 != null) {
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: ((context) {
                       return const LoginScreen();
                     })));
-                  }
+                  }*/
                 }
               },
               borderRadius: BorderRadius.circular(30),

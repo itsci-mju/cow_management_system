@@ -14,6 +14,7 @@ import 'package:cow_mange/Drawer/hamberg.dart';
 import 'package:cow_mange/Register_cow.dart';
 import 'package:cow_mange/class/Cow.dart';
 import 'package:cow_mange/class/Employee.dart';
+import 'package:cow_mange/url/URL.dart';
 
 import 'package:age_calculator/age_calculator.dart';
 
@@ -309,18 +310,6 @@ class MainpageEmployeeState extends State<MainpageEmployee> {
         });
   }
 
-  Widget _buildLeadingTile(Cow listcow) {
-    return Container(
-      width: 100,
-      child: SizedBox(
-        child: Image.network(
-          listcow.picture.toString(),
-          fit: BoxFit.fitWidth,
-        ),
-      ),
-    );
-  }
-
   Widget _buildLeadingTile_df(Cow listcow) {
     return Container(
       padding: const EdgeInsets.only(right: 10.0),
@@ -586,11 +575,8 @@ class _Check_WeightState extends State<Check_Weight> {
     return Container(
       width: 100,
       child: SizedBox(
-        child: Image.network(
-          listcow.picture.toString(),
-          fit: BoxFit.fitWidth,
-        ),
-      ),
+          child: Image.network(url.URL_IMAGE + listcow.picture.toString(),
+              fit: BoxFit.fill)),
     );
   }
 

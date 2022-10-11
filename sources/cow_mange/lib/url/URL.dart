@@ -1,5 +1,8 @@
 class url {
-  static const String URL = "http://172.16.1.10:8081/project_cowmanage";
+  static const String URL = "http://10.0.0.195:8081/project_cowmanage";
+
+  static const String URL_IMAGE =
+      "http://10.0.0.195:8081/project_cowmanage/file/";
 
 //employee
   static const String URL_Login = "/employee/login";
@@ -36,6 +39,8 @@ class url {
   static const String URL_Get_breeder_Cow_cow = "/cow/Get_breeder_Cow_cow";
 
   static const String URL_Listmaincow_farm = "/cow/listmaincow_farm";
+
+  static const String URL_cow_uploadimage = "/cow/uploadimage";
 
 //species
   static const String URL_queryspecies = "/species/queryspecies";
@@ -106,6 +111,8 @@ class url {
   static const String URL_Addfarm = "/farm/add";
 
   static const String URL_Listfarm = "/farm/list";
+
+  static const String URL_uploadimage = "/farm/uploadimage";
 
 //ExpendFarm
   static const String URL_AddExpendfarm = "/ExpendFarm/add";
