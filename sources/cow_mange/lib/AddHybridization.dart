@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cow_mange/DetailCow.dart';
 import 'package:cow_mange/Function/Function.dart';
+import 'package:cow_mange/class/Date.dart';
 import 'package:cow_mange/class/Farm.dart';
 import 'package:cow_mange/class/Hybridization.dart';
 import 'package:cow_mange/class/Typehybridization.dart';
@@ -36,6 +37,7 @@ class _AddHybridizationState extends State<AddHybridization> {
   String id_cow_cow = "";
   String text_result = "";
   String name_typeHybridization = "";
+  String error_text = "";
 
 // datetime
   DateTime? progress_date;
@@ -117,7 +119,6 @@ class _AddHybridizationState extends State<AddHybridization> {
   void initState() {
     super.initState();
     init();
-    //clean_number();
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -462,7 +463,7 @@ class _AddHybridizationState extends State<AddHybridization> {
                         date_Hybirdzation_controller.text = formattedDate;
                       });
                     } else {
-                      print("Date is not selected");
+                      date_Hybirdzation_controller.text = "เลือกวันผสมพันธุ์";
                     }
                   },
                 )),
@@ -501,12 +502,21 @@ class _AddHybridizationState extends State<AddHybridization> {
                 ),
               ]),
             ),
+            Text(
+              error_text,
+              style: TextStyle(color: Colors.red),
+            ),
             InkWell(
               onTap: () async {
                 bool validate = _formKey.currentState!.validate();
-
                 if (validate == false) {
+                  setState(() {
+                    error_text = "กรุณากรอกข้อมูลให้ครบถ้วน";
+                  });
                 } else {
+                  setState(() {
+                    error_text = "";
+                  });
                   if (dute_to_Brith != null) {
                     hyb!.date_of_birthday = dute_to_Brith;
                     hyb!.date_Hybridization = date_Hybirdzation;
@@ -606,6 +616,8 @@ class _AddHybridizationState extends State<AddHybridization> {
 
   date_of_birth(textResult) {
     Size size = MediaQuery.of(context).size;
+    DateTime t = DateTime.now();
+    DateTime d = DateTime(t.year, t.month, t.day + 283);
     if (textResult == "สำเร็จ") {
       return Container(
           margin: const EdgeInsets.symmetric(vertical: 10),
@@ -635,8 +647,8 @@ class _AddHybridizationState extends State<AddHybridization> {
             onTap: () async {
               dute_to_Brith = await showDatePicker(
                   context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime.now(),
+                  initialDate: d,
+                  firstDate: d,
                   lastDate: DateTime(2101));
 
               if (dute_to_Brith != null) {

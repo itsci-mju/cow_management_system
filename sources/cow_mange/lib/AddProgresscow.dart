@@ -31,14 +31,15 @@ class AddProgress extends StatefulWidget {
 class _AddProgressState extends State<AddProgress> {
   //class
   Progress? pg = Progress();
-  Cow? co = Cow();
-  List<Progress> listprogress = [];
-
-  DateTime? progress_date;
-
-  DateTime? birthday;
   Cow? cow = Cow();
   Employee emp = Employee();
+
+  //list_class
+  List<Progress> listprogress = [];
+
+  //date_time
+  DateTime? progress_date;
+  DateTime? birthday;
 
   final birth = TextEditingController();
   final height = TextEditingController();

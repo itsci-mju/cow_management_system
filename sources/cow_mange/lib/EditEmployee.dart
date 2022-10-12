@@ -24,6 +24,7 @@ class EditEmployee extends StatefulWidget {
 class _EditEmployeeState extends State<EditEmployee> {
   Employee emp = Employee();
   String? name_title = "";
+  String error_text = "";
   String? text_position = "";
   List<String>? list_text_position = [];
   List<String>? list_name_title = [];
@@ -427,12 +428,19 @@ class _EditEmployeeState extends State<EditEmployee> {
                   ),
                 ]),
               ),
+              Text(error_text),
               const SizedBox(height: 10),
               InkWell(
                 onTap: () async {
                   bool validate = _formKey.currentState!.validate();
                   if (validate == false) {
+                    setState(() {
+                      error_text = "กรุณากรอกข้อมูลให้ครบถ้วน";
+                    });
                   } else {
+                    setState(() {
+                      error_text = "";
+                    });
                     emp.username = username.text;
                     emp.password = password.text;
                     String firstnameTitle = name_title! + firstname.text;

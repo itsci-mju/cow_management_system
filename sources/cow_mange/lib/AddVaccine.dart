@@ -37,8 +37,6 @@ class _AddVaccineState extends State<AddVaccine> {
   String id_cow = "";
   String name_vaccine = "";
   String injection_program = "";
-  List<String> list_injection_program = [];
-
   String day = "";
   String month = "";
   String year = "";
@@ -53,6 +51,7 @@ class _AddVaccineState extends State<AddVaccine> {
   List<String> listcow = [];
   List<String> listcow_id = [];
   List<String> list_String_vaccine = [];
+  List<String> list_injection_program = [];
 
   //list_class
   List<Vaccine> listvaccine = [];
@@ -187,15 +186,24 @@ class _AddVaccineState extends State<AddVaccine> {
             for (Vaccination v in listVaccination) {
               if (v.cow!.cow_id == co.cow_id &&
                   v.vaccine!.name_vaccine == list_String_vaccine[i]) {
-                startDate = DateTime(v.dateVaccination!.year,
-                    v.dateVaccination!.month + 6, v.dateVaccination!.day);
-                String formattedDate =
-                    DateFormat('dd-MM-yyyy').format(startDate!);
-                setState(() {
-                  list_String_vaccine[i] = list_String_vaccine[i] +
-                      "\nจะเพิ่มข้อมูลได้เมือวันที่ : " +
-                      formattedDate;
-                });
+                DateTime startDate = DateTime(
+                    listVaccination.last.dateVaccination!.year,
+                    listVaccination.last.dateVaccination!.month + 6,
+                    listVaccination.last.dateVaccination!.day);
+
+                if (startDate.isBefore(DateTime.now()) ||
+                    startDate == DateTime.now()) {
+                  list_String_vaccine[i] = list_String_vaccine[i];
+                } else {
+                  String formattedDate =
+                      DateFormat('dd-MM-yyyy').format(startDate);
+                  setState(() {
+                    list_String_vaccine[i] = list_String_vaccine[i] +
+                        "\nจะเพิ่มข้อมูลได้เมือวันที่ : " +
+                        formattedDate;
+                  });
+                }
+
                 break;
               }
             }
@@ -218,15 +226,23 @@ class _AddVaccineState extends State<AddVaccine> {
             for (Vaccination v in listVaccination) {
               if (v.cow!.cow_id == co.cow_id &&
                   v.vaccine!.name_vaccine == list_String_vaccine[i]) {
-                startDate = DateTime(v.dateVaccination!.year,
-                    v.dateVaccination!.month + 6, v.dateVaccination!.day);
-                String formattedDate =
-                    DateFormat('dd-MM-yyyy').format(startDate!);
-                setState(() {
-                  list_String_vaccine[i] = list_String_vaccine[i] +
-                      "\nจะเพิ่มข้อมูลได้เมือวันที่ : " +
-                      formattedDate;
-                });
+                DateTime startDate = DateTime(
+                    listVaccination.last.dateVaccination!.year,
+                    listVaccination.last.dateVaccination!.month + 6,
+                    listVaccination.last.dateVaccination!.day);
+
+                if (startDate.isBefore(DateTime.now()) ||
+                    startDate == DateTime.now()) {
+                  list_String_vaccine[i] = list_String_vaccine[i];
+                } else {
+                  String formattedDate =
+                      DateFormat('dd-MM-yyyy').format(startDate);
+                  setState(() {
+                    list_String_vaccine[i] = list_String_vaccine[i] +
+                        "\nจะเพิ่มข้อมูลได้เมือวันที่ : " +
+                        formattedDate;
+                  });
+                }
 
                 break;
               }
@@ -281,15 +297,25 @@ class _AddVaccineState extends State<AddVaccine> {
             for (Vaccination v in listVaccination) {
               if (v.cow!.cow_id == co.cow_id &&
                   v.vaccine!.name_vaccine == list_String_vaccine[i]) {
-                startDate = DateTime(v.dateVaccination!.year + 1,
-                    v.dateVaccination!.month, v.dateVaccination!.day);
-                String formattedDate =
-                    DateFormat('dd-MM-yyyy').format(startDate!);
-                setState(() {
-                  list_String_vaccine[i] = list_String_vaccine[i] +
-                      "\nจะเพิ่มข้อมูลได้เมือวันที่ : " +
-                      formattedDate;
-                });
+                DateTime startDate = DateTime(
+                    listVaccination.last.dateVaccination!.year + 1,
+                    listVaccination.last.dateVaccination!.month,
+                    listVaccination.last.dateVaccination!.day);
+
+                if (startDate.isBefore(DateTime(2024, 12, 10)) ||
+                    startDate == DateTime(2024, 12, 10)) {
+                  /*if (startDate.isBefore(DateTime.now()) ||
+                    startDate == DateTime.now()) {*/
+                  list_String_vaccine[i] = list_String_vaccine[i];
+                } else {
+                  String formattedDate =
+                      DateFormat('dd-MM-yyyy').format(startDate);
+                  setState(() {
+                    list_String_vaccine[i] = list_String_vaccine[i] +
+                        "\nจะเพิ่มข้อมูลได้เมือวันที่ : " +
+                        formattedDate;
+                  });
+                }
                 break;
               }
             }
@@ -465,7 +491,7 @@ class _AddVaccineState extends State<AddVaccine> {
                                 break;
                               }
                             }
-                            if (int_year < 1 &&
+                            if (int_year >= 1 &&
                                 int_month >= 4 &&
                                 isFirst == true) {
                               setState(() {
@@ -496,7 +522,7 @@ class _AddVaccineState extends State<AddVaccine> {
                                 break;
                               }
                             }
-                            if (int_year < 1 &&
+                            if (int_year >= 1 &&
                                 int_month >= 4 &&
                                 isFirst == true) {
                               setState(() {
@@ -528,7 +554,7 @@ class _AddVaccineState extends State<AddVaccine> {
                                 break;
                               }
                             }
-                            if (int_year < 1 &&
+                            if (int_year >= 1 &&
                                 int_month >= 3 &&
                                 isFirst == true) {
                               setState(() {
@@ -559,7 +585,7 @@ class _AddVaccineState extends State<AddVaccine> {
                                 break;
                               }
                             }
-                            if (int_year < 1 &&
+                            if (int_year >= 1 &&
                                 int_month >= 4 &&
                                 isFirst == true) {
                               setState(() {
@@ -597,21 +623,11 @@ class _AddVaccineState extends State<AddVaccine> {
                       ),
                     ]),
                   ),
-                  // if (startDate!.compareTo(DateTime(2023, 03, 21)) <= 0)
-
                   detailvaccine(name_vaccine),
-
-                  //if (startDate!.compareTo(DateTime(2023, 03, 21)) <= 0)
-
                   SizedBox(
                     height: 10,
                   ),
-
-                  //if (startDate!.compareTo(DateTime(2023, 03, 21)) <= 0)
-
                   _injection_program(name_vaccine),
-                  // ปี เดือน วัน
-
                   Container(
                       margin: const EdgeInsets.symmetric(vertical: 10),
                       padding: const EdgeInsets.symmetric(
@@ -646,12 +662,8 @@ class _AddVaccineState extends State<AddVaccine> {
                           date_vaccine = await showDatePicker(
                               context: context,
                               initialDate: DateTime.now(),
-                              //initialDate: DateTime(2023, 03, 21),
-                              //firstDate: DateTime(2023, 03, 21),
-
                               firstDate: startDate!,
                               lastDate: DateTime.now());
-                          //lastDate: DateTime(2023, 03, 21));
 
                           if (date_vaccine != null) {
                             DateTime d = DateTime(date_vaccine!.year + 543,
@@ -669,7 +681,6 @@ class _AddVaccineState extends State<AddVaccine> {
                           }
                         },
                       )),
-
                   Container(
                       margin: const EdgeInsets.symmetric(vertical: 10),
                       padding: const EdgeInsets.symmetric(
@@ -693,7 +704,6 @@ class _AddVaccineState extends State<AddVaccine> {
                               size: 20,
                             )),
                       )),
-
                   InkWell(
                     onTap: () async {
                       bool validate = _formKey.currentState!.validate();
@@ -743,7 +753,9 @@ class _AddVaccineState extends State<AddVaccine> {
                             break;
                           }
                         }
-                        if (int_year < 1 && int_month >= 4 && isFirst == true) {
+                        if (int_year >= 1 &&
+                            int_month >= 4 &&
+                            isFirst == true) {
                           setState(() {
                             int_countvaccine = 5;
                           });
@@ -786,7 +798,9 @@ class _AddVaccineState extends State<AddVaccine> {
                             break;
                           }
                         }
-                        if (int_year < 1 && int_month == 4 && isFirst == true) {
+                        if (int_year >= 1 &&
+                            int_month >= 4 &&
+                            isFirst == true) {
                           setState(() {
                             int_countvaccine = 2;
                           });
@@ -829,7 +843,9 @@ class _AddVaccineState extends State<AddVaccine> {
                             break;
                           }
                         }
-                        if (int_year < 1 && int_month >= 3 && isFirst == true) {
+                        if (int_year >= 1 &&
+                            int_month >= 3 &&
+                            isFirst == true) {
                           setState(() {
                             int_countvaccine = 1;
                           });
@@ -867,7 +883,9 @@ class _AddVaccineState extends State<AddVaccine> {
                             break;
                           }
                         }
-                        if (int_year < 1 && int_month >= 4 && isFirst == true) {
+                        if (int_year >= 1 &&
+                            int_month >= 4 &&
+                            isFirst == true) {
                           setState(() {
                             int_countvaccine = 1;
                           });
@@ -913,7 +931,6 @@ class _AddVaccineState extends State<AddVaccine> {
                               "วัคซีนสามารถฉีดได้วันละครั้งเดียวเท่านั้น" ||
                           date_vaccine_c.text ==
                               "วัคซีนสามารถฉีดได้ครั้งเดียวเท่านั้น") {
-                        print(1);
                       } else {
                         final vaccination =
                             await Vaccination_data().AddVaccinationcow(vct);

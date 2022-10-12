@@ -21,8 +21,6 @@ import 'package:cow_mange/class/Cow.dart';
 import 'package:cow_mange/class/Employee.dart';
 import 'package:cow_mange/url/URL.dart';
 
-//firebase
-
 class DetailCow extends StatefulWidget {
   final Cow cow;
   final Employee? emp;
@@ -120,7 +118,6 @@ class _DetailCowState extends State<DetailCow> {
       ListVaccination = listVc;
       List_Cow_has_Hybridization = list_c__list_hz;
     });
-    //List_Cow_has_Hybridization
   }
 
   String? data_cow = "";
@@ -133,16 +130,13 @@ class _DetailCowState extends State<DetailCow> {
 
   @override
   Widget build(BuildContext context) {
-    final Storage storage = Storage();
     Size size = MediaQuery.of(context).size;
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: SingleChildScrollView(
           child: Column(
             children: [
-              widget.cow.picture == "-"
-                  ? image_cow_df()
-                  : image_cow(widget.cow),
+              image_cow(widget.cow),
               Container(
                 width: MediaQuery.of(context).size.width,
                 padding: const EdgeInsets.symmetric(vertical: 28.0),
@@ -1315,7 +1309,7 @@ class _DetailCowState extends State<DetailCow> {
     gender = cow.gender.toString();
 
     return Text(
-        "วันที่บันทึก :${dateBirthday.day} / ${dateBirthday.month} / ${dateBirthday.year}",
+        "วันที่บันทึก : ${dateBirthday.day} / ${dateBirthday.month} / ${dateBirthday.year}",
         style: const TextStyle(
             fontSize: 20.0,
             color: Color.fromARGB(255, 12, 2, 2),
@@ -1374,7 +1368,7 @@ class _DetailCowState extends State<DetailCow> {
       return Align(
           alignment: Alignment.centerLeft,
           child: Text(
-              "วันที่ผสมพันธุ์ :${cH.hybridization!.date_Hybridization!.year}/${cH.hybridization!.date_Hybridization!.month}/${cH.hybridization!.date_Hybridization!.day} \nผลลัพธ์ : ${cH.hybridization!.result} \nประเภทผสมพันธุ์ :\n${cH.hybridization!.typebridization!.name_typebridization}",
+              "วันที่ผสมพันธุ์ :${cH.hybridization!.date_Hybridization!.day}/${cH.hybridization!.date_Hybridization!.month}/${cH.hybridization!.date_Hybridization!.year} \nผลลัพธ์ : ${cH.hybridization!.result} \nประเภทผสมพันธุ์ :\n${cH.hybridization!.typebridization!.name_typebridization}",
               /*"",*/
               style: const TextStyle(
                   fontSize: 20.0,

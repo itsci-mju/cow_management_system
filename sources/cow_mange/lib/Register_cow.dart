@@ -9,6 +9,7 @@ import 'package:cow_mange/class/Employee.dart';
 import 'package:cow_mange/class/Farm.dart';
 import 'package:cow_mange/class/Species.dart';
 import 'package:cow_mange/firebase/storage.dart';
+import 'package:cow_mange/mainfarm.dart';
 import 'package:cow_mange/url/URL.dart';
 import 'package:cow_mange/validators.dart';
 import 'package:file_picker/file_picker.dart';
@@ -222,10 +223,25 @@ class _Register_CowState extends State<Register_Cow> {
     } else {
       final co = await Cow_data().fetchCow(widget.fm!.id_Farm.toString());
       final bu = await Cow_data().fetchbull(widget.fm!.id_Farm.toString());
-
+      final farm = await Employee_data().List_employee(widget.fm!);
       setState(() {
-        cow = co;
-        bull = bu;
+        listemployee = [];
+        listemployee = farm;
+
+        //set_caretaker
+        listcaretaker = [];
+        for (int i = 0; i < listemployee.length; i++) {
+          listcaretaker
+              .add("${listemployee[i].firstname} ${listemployee[i].lastname}");
+        }
+        //set_defultcaretaker
+        listcaretaker_defult = [];
+        listcaretaker_defult.add(widget.fm!.owner_name!);
+
+        setState(() {
+          cow = co;
+          bull = bu;
+        });
       });
     }
   }
@@ -723,7 +739,40 @@ class _Register_CowState extends State<Register_Cow> {
                         ],
                       )),
                   widget.emp == null
-                      ? Container()
+                      ? Container(
+                          margin: const EdgeInsets.symmetric(vertical: 10),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 5),
+                          width: size.width * 0.9,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              color: Colors.lightGreen.withAlpha(50)),
+                          child: Column(children: [
+                            DropdownButtonFormField(
+                              items: listcaretaker.map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  caretaker = newValue;
+                                });
+                              },
+                              decoration: InputDecoration(
+                                hintText: listcaretaker_defult[0],
+                                hintStyle: const TextStyle(color: Colors.black),
+                                icon: const Icon(
+                                  FontAwesomeIcons.userLarge,
+                                  color: Color(0XFF397D54),
+                                  size: 20,
+                                ),
+                                border: InputBorder.none,
+                              ),
+                            ),
+                          ]),
+                        )
                       : Container(
                           margin: const EdgeInsets.symmetric(vertical: 10),
                           padding: const EdgeInsets.symmetric(
@@ -1043,14 +1092,25 @@ class _Register_CowState extends State<Register_Cow> {
                         co?.weight = double.parse(weight.text);
                         co?.height = double.parse(height.text);
                         co?.registration_date = registration_date;
-                        co?.caretaker = listcaretaker[0];
+
+                        if (listemployee.length < 1) {
+                          co?.caretaker = listcaretaker_defult[0];
+                        } else {
+                          co?.caretaker = listcaretaker[0];
+                        }
+
                         co?.status = "มีชีวิต";
                         co?.color = color;
                         co?.species!.country = country;
                         co?.species!.species_breed = species;
 
-                        co?.farm =
-                            Farm.Newid_farm(id_Farm: widget.emp!.farm!.id_Farm);
+                        if (widget.fm! != null) {
+                          co?.farm =
+                              Farm.Newid_farm(id_Farm: widget.fm!.id_Farm);
+                        } else if (widget.emp! != null) {
+                          co?.farm = Farm.Newid_farm(
+                              id_Farm: widget.emp!.farm!.id_Farm);
+                        }
 
                         final querysp = await queryspecies(
                             species_breed: species, country: country);
@@ -1067,21 +1127,40 @@ class _Register_CowState extends State<Register_Cow> {
                             idBreeder: bd!.idBreeder.toString());
 
                         final cow2 = await registercow(co!);
-
-                        final lc = await Cow_data().listMaincow(widget.emp!);
-                        if (cow2 != null) {
-                          Navigator.of(context)
-                              .push(MaterialPageRoute(builder: ((context) {
-                            return MainpageEmployee(
-                              emp: widget.emp,
-                              cow: lc,
-                            );
-                          })));
+                        if (widget.fm! != null) {
+                          final lc =
+                              await Cow_data().listMaincow_farm(widget.fm!);
+                          if (cow2 != null) {
+                            print(1);
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: ((context) {
+                              return Mainfarm(
+                                fm: widget.fm!,
+                                cow: lc,
+                              );
+                            })));
+                          } else {
+                            setState(() {
+                              texterror = "กรุณากรอกข้อมูลให้ครบถ้วน";
+                            });
+                          }
+                        } else if (widget.emp! != null) {
+                          final lc = await Cow_data().listMaincow(widget.emp!);
+                          if (cow2 != null) {
+                            print(1);
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: ((context) {
+                              return MainpageEmployee(
+                                emp: widget.emp,
+                                cow: lc,
+                              );
+                            })));
+                          } else {
+                            setState(() {
+                              texterror = "กรุณากรอกข้อมูลให้ครบถ้วน";
+                            });
+                          }
                         }
-                      } else {
-                        setState(() {
-                          texterror = "กรุณากรอกข้อมูลให้ครบถ้วน";
-                        });
                       }
 
                       /*

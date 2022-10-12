@@ -62,7 +62,7 @@ class _EditExpendState extends State<EditExpend> {
       price.text = widget.ex.price.toString();
 
       expendFarmDate = widget.ex.expendFarmDate;
-      category = widget.ex.expendType!.idExpendType;
+      category = widget.ex.expendType!.expendType_name;
 
       expend = expT;
       list_exp_name = exp;
@@ -336,12 +336,17 @@ class _EditExpendState extends State<EditExpend> {
                   } else {
                     exd_f.id_list = widget.ex.id_list;
                     exd_f.expendFarmDate = expendFarmDate;
-                    print(exd_f.expendFarmDate);
                     exd_f.name = name.text;
                     exd_f.amount = int.parse(amount.text);
                     exd_f.price = double.parse(price.text);
-                    exd_f.expendType =
-                        ExpendType.expendType_name(expendType_name: category);
+                    if (category != null) {
+                      exd_f.expendType =
+                          ExpendType.expendType_name(expendType_name: category);
+                    } else {
+                      exd_f.expendType = ExpendType.expendType_name(
+                          expendType_name:
+                              widget.ex.expendType!.expendType_name);
+                    }
 
                     exd_f.farm = Farm.Newid_farm(id_Farm: widget.fm.id_Farm);
 

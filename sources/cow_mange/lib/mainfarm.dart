@@ -118,7 +118,7 @@ class _MainfarmState extends State<Mainfarm> {
   Future search_expend(String query, Farm farm) async {
     final response = await http.post(
       Uri.parse(url.URL.toString() + url.URL_List_idfarm_Expendfarm),
-      body: jsonEncode({"id_Farm": farm.id_Farm}),
+      body: jsonEncode({"Farm_id_Farm": farm.id_Farm}),
       headers: <String, String>{
         "Accept": "application/json",
         'Content-Type': 'application/json; charset=UTF-8',
@@ -203,7 +203,7 @@ class _MainfarmState extends State<Mainfarm> {
     final listEmp = await Employee_data().List_employee(widget.fm);
     //expenfarm
     final exp = await search_expend(query, widget.fm);
-    final listexp = await Expend_data().ListExpend();
+    final listexp = await Expend_data().ListExpend_idfarm(widget.fm.id_Farm);
 
     setState(() {
       listemployee = emp;
@@ -477,11 +477,11 @@ class _MainfarmState extends State<Mainfarm> {
                 itemCount: listemployee.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Card(
-                      color: (Color.fromARGB(255, 197, 236, 197)),
+                      elevation: 5,
+                      color: (Color.fromARGB(255, 255, 255, 255)),
+                      margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 10.0),
                       shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          color: Color.fromARGB(255, 0, 239, 8),
-                        ),
+                        borderRadius: BorderRadius.circular(0.0),
                       ),
                       child: ListTile(
                         leading: _buildLeadingTile_user(listemployee[index]),
@@ -572,11 +572,11 @@ class _MainfarmState extends State<Mainfarm> {
                 itemCount: listexpendfarm.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Card(
-                      color: (Color.fromARGB(255, 197, 236, 197)),
+                      elevation: 5,
+                      color: (Color.fromARGB(255, 255, 255, 255)),
+                      margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 10.0),
                       shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          color: Colors.green,
-                        ),
+                        borderRadius: BorderRadius.circular(0.0),
                       ),
                       child: ListTile(
                         //leading: _buildLeadingTile_df(listcow[index]),
@@ -962,10 +962,19 @@ class _Check_WeightState extends State<Check_Weight> {
     }
 
     if (weight.isNotEmpty) {
+      double w = 0.00;
+
       weight.sort();
-      setState(() {
-        doubleWeight = weight[weight.length - 1];
-      });
+      w = weight[weight.length - 1];
+      if (w <= 100) {
+        setState(() {
+          doubleWeight = widget.co!.weight!.toDouble();
+        });
+      } else {
+        setState(() {
+          doubleWeight = weight[weight.length - 1];
+        });
+      }
     } else {
       setState(() {
         doubleWeight = widget.co!.weight!.toDouble();

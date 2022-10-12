@@ -181,8 +181,6 @@ class _EditCowState extends State<EditCow> {
       }
       return listcow;
     } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
       throw Exception('Failed to load album');
     }
   }
@@ -214,12 +212,8 @@ class _EditCowState extends State<EditCow> {
     List? list;
 
     if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      // then parse the JSON.
       Map<String, dynamic> map = json.decode(response.body);
-
       mapResponse = json.decode(response.body);
-
       list = map['result'];
       listbull = [];
       listbull.add("----");
@@ -241,6 +235,7 @@ class _EditCowState extends State<EditCow> {
       listcow = co;
       listbull = bull;
     });
+
     if (widget.emp != null) {
       final employee = await Employee_data().List_employee(widget.emp!.farm!);
       setState(() {
@@ -257,7 +252,6 @@ class _EditCowState extends State<EditCow> {
         listcaretaker_defult = [];
         listcaretaker_defult
             .add("${widget.emp!.firstname} ${widget.emp!.lastname}");
-
         //cow_id
         econ_cowid.text = cow!.cow_id.toString();
         //cow_name
@@ -274,7 +268,6 @@ class _EditCowState extends State<EditCow> {
         gender = ["เมีย", "ผู ้"];
 
         birthday = cow!.birthday;
-
         //weight
         econ_cow_weight.text = cow!.weight.toString();
         //height
@@ -416,7 +409,6 @@ class _EditCowState extends State<EditCow> {
     if (response.statusCode == 200) {
       mapResponse = json.decode(response.body);
       dynamic species = mapResponse!['result'];
-
       return Species.fromJson(species);
     } else {
       throw Exception('Failed to load album');
@@ -742,7 +734,7 @@ class _EditCowState extends State<EditCow> {
                             FilteringTextInputFormatter.allow(
                                 RegExp(r'[0-9.]')),
                             FilteringTextInputFormatter.deny(RegExp(r'[,]')),
-                            MaskedInputFormatter('##.##')
+                            MaskedInputFormatter('###.##')
                           ],
                           decoration: InputDecoration(
                               label: const Text("น้ำหนัก (กิโลกรัม)"),

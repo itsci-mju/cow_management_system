@@ -710,6 +710,7 @@ class _Register_farmState extends State<Register_farm> {
                     color: Colors.lightGreen.withAlpha(50)),
                 child: TextFormField(
                   controller: zip_code,
+                  keyboardType: TextInputType.number,
                   validator: Validators.compose([
                     Validators.required_isempty(
                       "กรุณากรอก รหัสไปรษณีย์",
@@ -897,13 +898,13 @@ class _Register_farmState extends State<Register_farm> {
                   }
 
                   final farm2 = await Farm_data().registerfarm(farm);
-/*
+
                   if (farm2 != null) {
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: ((context) {
                       return const LoginScreen();
                     })));
-                  }*/
+                  }
                 }
               },
               borderRadius: BorderRadius.circular(30),

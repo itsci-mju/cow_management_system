@@ -24,6 +24,9 @@ class _AddEmployeeState extends State<AddEmployee> {
   String? name_title = "";
   String? position = "";
 
+  //error_text
+  String error_text = "";
+
   final firstname = TextEditingController();
   final lastname = TextEditingController();
   final username = TextEditingController();
@@ -34,7 +37,6 @@ class _AddEmployeeState extends State<AddEmployee> {
   @override
   void initState() {
     super.initState();
-
     clean_number();
   }
 
@@ -351,7 +353,6 @@ class _AddEmployeeState extends State<AddEmployee> {
                         label: Text("เบอร์โทร"),
                         suffixIcon: _getClearButton_tel(),
                         hintStyle: TextStyle(color: Colors.black),
-                        //suffixIcon: _getClearButton_weight(),
                         border: InputBorder.none,
                         icon: Icon(
                           FontAwesomeIcons.phone,
@@ -395,11 +396,21 @@ class _AddEmployeeState extends State<AddEmployee> {
                 ]),
               ),
               const SizedBox(height: 10),
+              Text(
+                error_text,
+                style: TextStyle(color: Colors.red),
+              ),
               InkWell(
                 onTap: () async {
                   bool validate = _formKey.currentState!.validate();
                   if (validate == false) {
+                    setState(() {
+                      error_text = "กรุณากรอกข้อมูลให้ครบถ้วน";
+                    });
                   } else {
+                    setState(() {
+                      error_text = "";
+                    });
                     emp.username = username.text;
                     emp.password = password.text;
                     String firstnameTitle = name_title! + firstname.text;
@@ -421,7 +432,9 @@ class _AddEmployeeState extends State<AddEmployee> {
                         );
                       })));
                     } else {
-                      print("fail to upload");
+                      setState(() {
+                        error_text = "fail to upload";
+                      });
                     }
                   }
                 },

@@ -48,16 +48,13 @@ class _DetailCow_guestState extends State<DetailCow_guest> {
 
   @override
   Widget build(BuildContext context) {
-    String gender = " ${cow.gender}";
     Size size = MediaQuery.of(context).size;
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: SingleChildScrollView(
           child: Column(
             children: [
-              widget.cow.picture == "-"
-                  ? image_cow_df()
-                  : image_cow(widget.cow),
+              image_cow(widget.cow),
               Container(
                 width: MediaQuery.of(context).size.width,
                 padding: const EdgeInsets.symmetric(vertical: 28.0),
@@ -246,23 +243,7 @@ class _DetailCow_guestState extends State<DetailCow_guest> {
                               ),
                             ),
                           )
-                        : Container(
-                            height: 130,
-                            margin:
-                                const EdgeInsets.symmetric(horizontal: 16.0),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 16),
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(24.0)),
-                            child: const Text(
-                              "แก้ไข",
-                              style: TextStyle(
-                                  fontSize: 15.0,
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
+                        : Container()
                   ],
                 ),
               ),
@@ -326,20 +307,10 @@ class _DetailCow_guestState extends State<DetailCow_guest> {
                 fontWeight: FontWeight.w600)));
   }
 
-  image_cow_df() {
-    return Image.asset(
-      "images/cow-01.png",
-      width: 250.0,
-      height: 250.0,
-      fit: BoxFit.contain,
-    );
-  }
-
   _birthdayCow(Cow cow) {
     int textYear = 0;
     String textMonth = " ";
     String textDay = " ";
-
     String colros = "";
     String nameSpecies = "";
     String gender = "";
@@ -358,6 +329,7 @@ class _DetailCow_guestState extends State<DetailCow_guest> {
     DateTime dateBirthday = DateTime(numY, numM + 1, numD);
 
     birthday = dateBirthday;
+
     duration = AgeCalculator.age(birthday);
 //colors
     colros = cow.color.toString();

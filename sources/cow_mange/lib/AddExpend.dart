@@ -55,6 +55,8 @@ class _AddExpendState extends State<AddExpend> {
   //textalert
   String textalert_1 = "";
   String textalert_2 = "";
+  //error_text
+  String error_text = "";
 
   Future clean_number() async {
     expendDate.addListener(() {
@@ -285,7 +287,7 @@ class _AddExpendState extends State<AddExpend> {
                         inputFormatters: <TextInputFormatter>[
                           FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
                           FilteringTextInputFormatter.deny(RegExp(r'[,]')),
-                          MaskedInputFormatter('##########')
+                          MaskedInputFormatter('###,###,###')
                         ],
                         decoration: InputDecoration(
                             suffixIcon: _getClearButton_price(),
@@ -320,7 +322,6 @@ class _AddExpendState extends State<AddExpend> {
                     ],
                   )),
               Container(
-                margin: const EdgeInsets.only(top: 20),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                 width: size.width * 0.93,
@@ -362,11 +363,21 @@ class _AddExpendState extends State<AddExpend> {
                 ]),
               ),
               const SizedBox(height: 10),
+              Text(
+                error_text,
+                style: TextStyle(color: Colors.red),
+              ),
               InkWell(
                 onTap: () async {
                   bool validate = _formKey.currentState!.validate();
                   if (validate == false) {
+                    setState(() {
+                      error_text = "กรุณากรอกข้อมูลให้ครบถ้วน";
+                    });
                   } else {
+                    setState(() {
+                      error_text = "";
+                    });
                     exd_f.expendFarmDate = expendFarmDate;
                     exd_f.name = name.text;
                     exd_f.amount = int.parse(amount.text);
@@ -385,7 +396,9 @@ class _AddExpendState extends State<AddExpend> {
                         );
                       })));
                     } else {
-                      print("fail to upload");
+                      setState(() {
+                        error_text = "fail to upload";
+                      });
                     }
                   }
                 },

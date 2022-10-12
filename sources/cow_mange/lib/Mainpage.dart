@@ -145,7 +145,7 @@ class MainpageEmployeeState extends State<MainpageEmployee> {
           : Column(children: <Widget>[
               Container(
                 padding: const EdgeInsets.only(top: 50, left: 0, right: 20),
-                height: 210,
+                height: 215,
                 width: double.infinity,
                 decoration: const BoxDecoration(
                     borderRadius: BorderRadius.only(
@@ -257,15 +257,13 @@ class MainpageEmployeeState extends State<MainpageEmployee> {
               ),
               Expanded(
                   child: Container(
-                      margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                       child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: listcow.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Check_Weight(
-                              co: listcow[index], emp: widget.emp);
-                        },
-                      )))
+                shrinkWrap: true,
+                itemCount: listcow.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Check_Weight(co: listcow[index], emp: widget.emp);
+                },
+              )))
             ]),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 10.0),
@@ -395,10 +393,19 @@ class _Check_WeightState extends State<Check_Weight> {
     }
 
     if (weight.isNotEmpty) {
+      double w = 0.00;
+
       weight.sort();
-      setState(() {
-        doubleWeight = weight[weight.length - 1];
-      });
+      w = weight[weight.length - 1];
+      if (w <= 100) {
+        setState(() {
+          doubleWeight = widget.co!.weight!.toDouble();
+        });
+      } else {
+        setState(() {
+          doubleWeight = weight[weight.length - 1];
+        });
+      }
     } else {
       setState(() {
         doubleWeight = widget.co!.weight!.toDouble();
@@ -471,45 +478,14 @@ class _Check_WeightState extends State<Check_Weight> {
                             )),
                   );
                 } else if (result == 4) {
-                  final list_Pg =
-                      await Progress_data().listMainprogress(widget.co!.cow_id);
-                  Listprogress = list_Pg;
-                  for (int i = 0; i < Listprogress.length; i++) {
-                    setState(() {
-                      weight.add(Listprogress[i].weight!.toDouble());
-                    });
-                  }
-
-                  if (weight.isNotEmpty) {
-                    weight.sort();
-                    setState(() {
-                      doubleWeight = weight[weight.length - 1];
-                    });
-                  } else {
-                    setState(() {
-                      doubleWeight = widget.co!.weight!.toDouble();
-                    });
-                  }
-
-                  if (doubleWeight >= 100) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AddHybridization(
-                                cow: widget.co!,
-                                emp: widget.emp,
-                              )),
-                    );
-                  } else {
-                    showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                              title: Text(
-                                  "น้ำหนักโคปัจจุบัน${doubleWeight}กิโลกรัม"),
-                              content: Text(
-                                  "ในการผสมพันธุ์โคต้องมีน้ำหนักโดยประมาณ 100-150 กิโลกรัมขึ้นไป"),
-                            ));
-                  }
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AddHybridization(
+                              cow: widget.co!,
+                              emp: widget.emp,
+                            )),
+                  );
                 }
               },
               iconSize: 40,

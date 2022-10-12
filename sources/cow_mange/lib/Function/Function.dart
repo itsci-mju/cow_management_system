@@ -876,9 +876,14 @@ class Expend_data {
     }
   }
 
-  Future ListExpend() async {
+  Future ListExpend_idfarm(idfarm) async {
     final response = await http.post(
-      Uri.parse(url.URL.toString() + url.URL_ListExpend.toString()),
+      Uri.parse(url.URL.toString() + url.URL_List_idfarm_Expendfarm.toString()),
+      body: jsonEncode({"Farm_id_Farm": idfarm}),
+      headers: <String, String>{
+        "Accept": "application/json",
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
     );
 
     if (response.statusCode == 200) {
