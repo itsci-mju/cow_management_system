@@ -20,6 +20,7 @@ import 'package:http/http.dart' as http;
 import 'package:cow_mange/class/Cow.dart';
 import 'package:cow_mange/class/Employee.dart';
 import 'package:cow_mange/url/URL.dart';
+import 'package:intl/intl.dart';
 
 class DetailCow extends StatefulWidget {
   final Cow cow;
@@ -36,7 +37,7 @@ class DetailCow extends StatefulWidget {
 class _DetailCowState extends State<DetailCow> {
   List tabs = [
     "รายละเอียด",
-    "ข้อมูลต่างๆของโค",
+    "ข้อมูลอื่นๆ",
   ];
   int selectIndex = 0;
 
@@ -49,7 +50,7 @@ class _DetailCowState extends State<DetailCow> {
   Cow breeder_cow = Cow();
   Cow breeder_bull = Cow();
   Hybridization hy = Hybridization();
-
+  List<Cow> gender_co = [];
   String cow_id = "";
 
   //List
@@ -98,14 +99,17 @@ class _DetailCowState extends State<DetailCow> {
       });
     }
 
-    final listPg = await Progress_data()
-        .listMainprogress_DESC(widget.cow.cow_id.toString());
+    final listPg =
+        await Progress_data().listMainprogress(widget.cow.cow_id.toString());
     final listFd =
         await Feeding_data().listMainFedding_DESC(widget.cow.cow_id.toString());
     final listVc = await Vaccination_data()
         .listMainVaccination(widget.cow.cow_id.toString());
     final list_c__list_hz = await Hybridization_data()
         .listMainCow_has_Hybridization(widget.cow.cow_id.toString());
+
+    final co = await Cow_data().mating_pair(widget.cow.cow_id.toString());
+    gender_co = co;
 
     setState(() {
       if (breederCow == null) {
@@ -131,562 +135,607 @@ class _DetailCowState extends State<DetailCow> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              image_cow(widget.cow),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                padding: const EdgeInsets.symmetric(vertical: 28.0),
-                decoration: const BoxDecoration(
-                    color: Color(0XFF397D54),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(0.0),
-                      topRight: Radius.circular(0.0),
-                    )),
+        body: listcow == null
+            ? SingleChildScrollView()
+            : SingleChildScrollView(
                 child: Column(
                   children: [
+                    image_cow(widget.cow),
                     Container(
-                      height: 4.0,
-                      width: 28.0,
-                      margin: const EdgeInsets.only(bottom: 32.0),
+                      width: MediaQuery.of(context).size.width,
+                      padding: const EdgeInsets.symmetric(vertical: 28.0),
                       decoration: const BoxDecoration(
-                          color: Color.fromARGB(255, 4, 16, 6)),
-                    ),
-                    Container(
-                      child: Text("รหัสโค : ${widget.cow.cow_id}",
-                          style: const TextStyle(
-                              fontSize: 28.0,
-                              color: Color.fromARGB(255, 253, 253, 253),
-                              fontWeight: FontWeight.w700),
-                          overflow: TextOverflow.ellipsis),
-                    ),
-                    const SizedBox(
-                      height: 20.0,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Column(
-                          children: (List.generate(
-                            12,
-                            (index) => Container(
-                              height: 2.0,
-                              width: 2.0,
-                              margin: const EdgeInsets.only(bottom: 2),
-                              decoration: BoxDecoration(
-                                color: Colors.white54,
-                                borderRadius: BorderRadius.circular(2.0),
-                              ),
-                            ),
+                          color: Color(0XFF397D54),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(0.0),
+                            topRight: Radius.circular(0.0),
                           )),
-                        ),
-                        Column(
-                          children: [
-                            const Icon(
-                              FontAwesomeIcons.cow,
-                              size: 55,
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            const Text(
-                              "สายพันธุ์ ",
-                              style: TextStyle(
-                                  fontSize: 20.0,
-                                  color: Color.fromARGB(255, 255, 255, 255),
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            const SizedBox(
-                              height: 4.0,
-                            ),
-                            Text(
-                              widget.cow.species!.species_breed.toString(),
-                              style: const TextStyle(
-                                  fontSize: 18.0,
-                                  color: Color.fromARGB(255, 255, 253, 253),
-                                  fontWeight: FontWeight.w600),
-                            )
-                          ],
-                        ),
-                        Column(
-                          children: (List.generate(
-                            12,
-                            (index) => Container(
-                              height: 2.0,
-                              width: 2.0,
-                              margin: const EdgeInsets.only(bottom: 2),
-                              decoration: BoxDecoration(
-                                color: Colors.white54,
-                                borderRadius: BorderRadius.circular(2.0),
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 4.0,
+                            width: 28.0,
+                            margin: const EdgeInsets.only(bottom: 32.0),
+                            decoration: const BoxDecoration(
+                                color: Color.fromARGB(255, 4, 16, 6)),
+                          ),
+                          Container(
+                            child: Text("รหัสโค : ${widget.cow.cow_id}",
+                                style: const TextStyle(
+                                    fontSize: 28.0,
+                                    color: Color.fromARGB(255, 253, 253, 253),
+                                    fontWeight: FontWeight.w700),
+                                overflow: TextOverflow.ellipsis),
+                          ),
+                          const SizedBox(
+                            height: 20.0,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Column(
+                                children: (List.generate(
+                                  12,
+                                  (index) => Container(
+                                    height: 2.0,
+                                    width: 2.0,
+                                    margin: const EdgeInsets.only(bottom: 2),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white54,
+                                      borderRadius: BorderRadius.circular(2.0),
+                                    ),
+                                  ),
+                                )),
                               ),
+                              Column(
+                                children: [
+                                  const Icon(
+                                    FontAwesomeIcons.cow,
+                                    size: 55,
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  const Text(
+                                    "พันธุ์ ",
+                                    style: TextStyle(
+                                        fontSize: 20.0,
+                                        color:
+                                            Color.fromARGB(255, 255, 255, 255),
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  const SizedBox(
+                                    height: 4.0,
+                                  ),
+                                  Text(
+                                    widget.cow.species!.species_breed
+                                        .toString(),
+                                    style: const TextStyle(
+                                        fontSize: 18.0,
+                                        color:
+                                            Color.fromARGB(255, 255, 253, 253),
+                                        fontWeight: FontWeight.w600),
+                                  )
+                                ],
+                              ),
+                              Column(
+                                children: (List.generate(
+                                  12,
+                                  (index) => Container(
+                                    height: 2.0,
+                                    width: 2.0,
+                                    margin: const EdgeInsets.only(bottom: 2),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white54,
+                                      borderRadius: BorderRadius.circular(2.0),
+                                    ),
+                                  ),
+                                )),
+                              ),
+                              Column(
+                                children: [
+                                  const Icon(
+                                    FontAwesomeIcons.userLarge,
+                                    color: Colors.black,
+                                    size: 55,
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  const Text(
+                                    "ผู้ดูแล",
+                                    style: TextStyle(
+                                        fontSize: 20.0,
+                                        color:
+                                            Color.fromARGB(255, 255, 255, 255),
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  const SizedBox(
+                                    height: 4.0,
+                                  ),
+                                  Text(
+                                    widget.cow.caretaker.toString(),
+                                    style: const TextStyle(
+                                        fontSize: 18.0,
+                                        color:
+                                            Color.fromARGB(255, 255, 253, 253),
+                                        fontWeight: FontWeight.w600),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 32.0,
+                          ),
+                          Container(
+                            margin:
+                                const EdgeInsets.symmetric(horizontal: 32.0),
+                            padding: const EdgeInsets.symmetric(vertical: 12.0),
+                            decoration: BoxDecoration(
+                              color: Colors.white54,
+                              borderRadius: BorderRadius.circular(36.0),
                             ),
-                          )),
-                        ),
-                        Column(
-                          children: [
-                            const Icon(
-                              FontAwesomeIcons.userLarge,
-                              color: Colors.black,
-                              size: 55,
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            const Text(
-                              "ผู้ดูแล",
-                              style: TextStyle(
-                                  fontSize: 20.0,
-                                  color: Color.fromARGB(255, 255, 255, 255),
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            const SizedBox(
-                              height: 4.0,
-                            ),
-                            Text(
-                              widget.cow.caretaker.toString(),
-                              style: const TextStyle(
-                                  fontSize: 18.0,
-                                  color: Color.fromARGB(255, 255, 253, 253),
-                                  fontWeight: FontWeight.w600),
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 32.0,
-                    ),
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 32.0),
-                      padding: const EdgeInsets.symmetric(vertical: 12.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white54,
-                        borderRadius: BorderRadius.circular(36.0),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(
-                          tabs.length,
-                          (index) => GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                selectIndex = index;
-                              });
-                            },
-                            child: Container(
-                              height: 48,
-                              width: 160,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                  color: selectIndex == index
-                                      ? const Color.fromARGB(255, 29, 103, 31)
-                                      : Colors.transparent,
-                                  borderRadius: BorderRadius.circular(28.0)),
-                              child: Text(
-                                tabs[index],
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                  color: selectIndex == index
-                                      ? Colors.white
-                                      : Colors.black,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: List.generate(
+                                tabs.length,
+                                (index) => GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      selectIndex = index;
+                                    });
+                                  },
+                                  child: Container(
+                                    height: 48,
+                                    width: 160,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                        color: selectIndex == index
+                                            ? const Color.fromARGB(
+                                                255, 29, 103, 31)
+                                            : Colors.transparent,
+                                        borderRadius:
+                                            BorderRadius.circular(28.0)),
+                                    child: Text(
+                                      tabs[index],
+                                      style: TextStyle(
+                                        fontSize: 16.0,
+                                        color: selectIndex == index
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    selectIndex == 0
-                        ? Container(
-                            height: 470,
-                            width: 370,
-                            margin:
-                                const EdgeInsets.symmetric(horizontal: 16.0),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 16),
-                            decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 212, 248, 226),
-                                borderRadius: BorderRadius.circular(24.0)),
-                            child: SingleChildScrollView(
-                              physics: const NeverScrollableScrollPhysics(),
-                              child: Column(
-                                children: <Widget>[
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Container(
-                                        child: Text(
-                                            "รหัสประจำตัวโค : ${widget.cow.cow_id}",
-                                            style: const TextStyle(
-                                                fontSize: 20.0,
-                                                color: Color.fromARGB(
-                                                    255, 12, 2, 2),
-                                                fontWeight: FontWeight.w600),
-                                            overflow: TextOverflow.ellipsis)),
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Container(
-                                      child: Text(
-                                        "ชื่อโค : ${widget.cow.namecow}",
-                                        style: const TextStyle(
-                                            fontSize: 20.0,
-                                            color:
-                                                Color.fromARGB(255, 12, 2, 2),
-                                            fontWeight: FontWeight.w600),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                          "ผู้พัฒนาพันธุ์ : ${widget.cow.farm!.name_Farm}",
-                                          style: const TextStyle(
-                                              fontSize: 20.0,
-                                              color:
-                                                  Color.fromARGB(255, 12, 2, 2),
-                                              fontWeight: FontWeight.w600))),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                          "สายพันธุ์ : ${widget.cow.species!.species_breed}",
-                                          style: const TextStyle(
-                                              fontSize: 20.0,
-                                              color:
-                                                  Color.fromARGB(255, 12, 2, 2),
-                                              fontWeight: FontWeight.w600))),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                          "ประเทศ : ${widget.cow.species!.country}",
-                                          style: const TextStyle(
-                                              fontSize: 20.0,
-                                              color:
-                                                  Color.fromARGB(255, 12, 2, 2),
-                                              fontWeight: FontWeight.w600))),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                          "ผู้ดูแล : ${widget.cow.caretaker}",
-                                          style: const TextStyle(
-                                              fontSize: 20.0,
-                                              color:
-                                                  Color.fromARGB(255, 12, 2, 2),
-                                              fontWeight: FontWeight.w600),
-                                          overflow: TextOverflow.ellipsis)),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Row(
-                                    children: const [
-                                      /* RichText(
-                                        text: TextSpan(
-                                          style: const TextStyle(
-                                              fontSize: 20.0,
-                                              color: const Color.fromARGB(
-                                                  255, 12, 2, 2),
-                                              fontWeight: FontWeight.w600),
-                                          children: <TextSpan>[
-                                            TextSpan(
-                                                text: widget.cow.breeder!.father
-                                                    .toString(),
-                                                recognizer:
-                                                    new TapGestureRecognizer()
-                                                      ..onTap = () {
-                                                        setState(() {
-                                                          cow.cow_id = widget
-                                                              .cow
-                                                              .breeder!
-                                                              .father
-                                                              .toString();
-                                                        });
-                                                      },
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          selectIndex == 0
+                              ? Container(
+                                  height: 490,
+                                  width: 370,
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 16.0),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0, vertical: 16),
+                                  decoration: BoxDecoration(
+                                      color: const Color.fromARGB(
+                                          255, 212, 248, 226),
+                                      borderRadius:
+                                          BorderRadius.circular(24.0)),
+                                  child: SingleChildScrollView(
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    child: Column(
+                                      children: <Widget>[
+                                        Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Container(
+                                              child: Text(
+                                                  "หมายเลขประจำตัวโค : ${widget.cow.cow_id}",
+                                                  style: const TextStyle(
+                                                      fontSize: 20.0,
+                                                      color: Color.fromARGB(
+                                                          255, 12, 2, 2),
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                  overflow:
+                                                      TextOverflow.ellipsis)),
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Container(
+                                            child: Text(
+                                              "ชื่อโค : ${widget.cow.namecow}",
+                                              style: const TextStyle(
+                                                  fontSize: 20.0,
+                                                  color: Color.fromARGB(
+                                                      255, 12, 2, 2),
+                                                  fontWeight: FontWeight.w600),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                                "ผู้พัฒนาพันธุ์ : ${widget.cow.farm!.name_Farm}",
                                                 style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.green)),
+                                                    fontSize: 20.0,
+                                                    color: Color.fromARGB(
+                                                        255, 12, 2, 2),
+                                                    fontWeight:
+                                                        FontWeight.w600))),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                                "พันธุ์ : ${widget.cow.species!.species_breed}",
+                                                style: const TextStyle(
+                                                    fontSize: 20.0,
+                                                    color: Color.fromARGB(
+                                                        255, 12, 2, 2),
+                                                    fontWeight:
+                                                        FontWeight.w600))),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                    "ประเทศ : ${widget.cow.species!.country}",
+                                                    style: const TextStyle(
+                                                        fontSize: 20.0,
+                                                        color: Color.fromARGB(
+                                                            255, 12, 2, 2),
+                                                        fontWeight:
+                                                            FontWeight.w600)),
+                                                Icon(Icons.flag),
+                                              ],
+                                            )),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                                "ผู้ดูแล : ${widget.cow.caretaker}",
+                                                style: const TextStyle(
+                                                    fontSize: 20.0,
+                                                    color: Color.fromARGB(
+                                                        255, 12, 2, 2),
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                                overflow:
+                                                    TextOverflow.ellipsis)),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "เลขประจำตัวพ่อ",
+                                              maxLines: 1,
+                                              softWrap: false,
+                                              style: TextStyle(
+                                                  fontSize: 20.0,
+                                                  color: Color.fromARGB(
+                                                      255, 12, 2, 2),
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            Expanded(
+                                                child: Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                      left: 10,
+                                                    ),
+                                                    child: Column(children: [
+                                                      InkWell(
+                                                        child: Align(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            child: Container(
+                                                                child: Text(
+                                                                    widget.cow.breeder!.father == "-"
+                                                                        ? "ไม่พบข้อมูล"
+                                                                        : widget
+                                                                            .cow
+                                                                            .breeder!
+                                                                            .father
+                                                                            .toString(),
+                                                                    style: const TextStyle(
+                                                                        fontSize:
+                                                                            20.0,
+                                                                        color: Color.fromARGB(
+                                                                            255,
+                                                                            4,
+                                                                            192,
+                                                                            10),
+                                                                        fontWeight: FontWeight
+                                                                            .w600),
+                                                                    overflow: TextOverflow
+                                                                        .ellipsis))),
+                                                        onTap: () async {
+                                                          if (widget
+                                                                  .cow
+                                                                  .breeder!
+                                                                  .father
+                                                                  .toString() ==
+                                                              "-") {
+                                                            return;
+                                                          } else {
+                                                            setState(() {
+                                                              cow_id = widget
+                                                                  .cow
+                                                                  .breeder!
+                                                                  .father
+                                                                  .toString();
+                                                            });
+                                                            final newbreederBull =
+                                                                await Breeder_data()
+                                                                    .fetch_Cow_bull(
+                                                                        cow_id);
+                                                            Navigator.of(
+                                                                    context)
+                                                                .push(MaterialPageRoute(
+                                                                    builder:
+                                                                        ((context) {
+                                                              return DetailCow(
+                                                                  cow:
+                                                                      newbreederBull,
+                                                                  emp: widget
+                                                                      .emp);
+                                                            })));
+                                                          }
+                                                        },
+                                                      )
+                                                    ])))
                                           ],
                                         ),
-                                      ),*/
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Text(
-                                        "เลขประจำตัวพ่อ",
-                                        maxLines: 1,
-                                        softWrap: false,
-                                        style: TextStyle(
-                                            fontSize: 20.0,
-                                            color:
-                                                Color.fromARGB(255, 12, 2, 2),
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      Expanded(
-                                          child: Container(
-                                              margin: const EdgeInsets.only(
-                                                left: 10,
-                                              ),
-                                              child: Column(children: [
-                                                InkWell(
-                                                  child: Align(
-                                                      alignment:
-                                                          Alignment.centerLeft,
-                                                      child: Container(
-                                                          child: Text(
-                                                              breeder_bull == null
-                                                                  ? "ไม่พบข้อมูล"
-                                                                  : breeder_bull
-                                                                      .namecow
-                                                                      .toString(),
-                                                              style: const TextStyle(
-                                                                  fontSize:
-                                                                      20.0,
-                                                                  color:
-                                                                      Color.fromARGB(
-                                                                          255,
-                                                                          4,
-                                                                          192,
-                                                                          10),
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600),
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis))),
-                                                  onTap: () async {
-                                                    setState(() {
-                                                      cow_id = breeder_bull
-                                                          .cow_id
-                                                          .toString();
-                                                    });
-
-                                                    final newbreederBull =
-                                                        await Breeder_data()
-                                                            .fetch_Cow_bull(
-                                                                cow_id);
-                                                    Navigator.of(context).push(
-                                                        MaterialPageRoute(
-                                                            builder:
-                                                                ((context) {
-                                                      return DetailCow(
-                                                          cow: newbreederBull,
-                                                          emp: widget.emp);
-                                                    })));
-                                                  },
-                                                )
-                                              ])))
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Text(
-                                        "เลขประจำตัวแม่",
-                                        maxLines: 1,
-                                        softWrap: false,
-                                        style: TextStyle(
-                                            fontSize: 20.0,
-                                            color:
-                                                Color.fromARGB(255, 12, 2, 2),
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      Expanded(
-                                          child: Container(
-                                              margin: const EdgeInsets.only(
-                                                left: 10,
-                                              ),
-                                              child: Column(children: [
-                                                InkWell(
-                                                  child: Align(
-                                                      alignment:
-                                                          Alignment.centerLeft,
-                                                      child: Container(
-                                                          child: Text(
-                                                              breeder_cow == null
-                                                                  ? "ไม่พบข้อมูล"
-                                                                  : breeder_cow
-                                                                      .namecow
-                                                                      .toString(),
-                                                              style: const TextStyle(
-                                                                  fontSize:
-                                                                      20.0,
-                                                                  color:
-                                                                      Color.fromARGB(
-                                                                          255,
-                                                                          4,
-                                                                          192,
-                                                                          10),
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600),
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis))),
-                                                  onTap: () async {
-                                                    setState(() {
-                                                      cow_id = breeder_cow
-                                                          .cow_id
-                                                          .toString();
-                                                    });
-                                                    final newbreederCow =
-                                                        await Breeder_data()
-                                                            .fetch_Cow_cow(
-                                                                cow_id);
-                                                    Navigator.of(context).push(
-                                                        MaterialPageRoute(
-                                                            builder:
-                                                                ((context) {
-                                                      return DetailCow(
-                                                          cow: newbreederCow,
-                                                          emp: widget.emp);
-                                                    })));
-                                                  },
-                                                )
-                                              ])))
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text("เพศ : ${widget.cow.gender} ",
-                                          style: const TextStyle(
-                                              fontSize: 20.0,
-                                              color:
-                                                  Color.fromARGB(255, 12, 2, 2),
-                                              fontWeight: FontWeight.w600))),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                          "น้ำหนัก : ${widget.cow.weight} กิโลกรัม",
-                                          style: const TextStyle(
-                                              fontSize: 20.0,
-                                              color:
-                                                  Color.fromARGB(255, 12, 2, 2),
-                                              fontWeight: FontWeight.w600))),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                          "ส่วนสูง : ${widget.cow.height} เซนติเมตร",
-                                          style: const TextStyle(
-                                              fontSize: 20.0,
-                                              color:
-                                                  Color.fromARGB(255, 12, 2, 2),
-                                              fontWeight: FontWeight.w600))),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  _birthdayCow(widget.cow),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                          "สถานะ : ${widget.cow.status}",
-                                          style: const TextStyle(
-                                              fontSize: 20.0,
-                                              color:
-                                                  Color.fromARGB(255, 12, 2, 2),
-                                              fontWeight: FontWeight.w600))),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text("สี : ${widget.cow.color}",
-                                          style: const TextStyle(
-                                              fontSize: 20.0,
-                                              color:
-                                                  Color.fromARGB(255, 12, 2, 2),
-                                              fontWeight: FontWeight.w600))),
-                                ],
-                              ),
-                            ),
-                          )
-                        : Column(
-                            children: [
-                              Container(
-                                margin:
-                                    const EdgeInsets.symmetric(vertical: 10),
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 5),
-                                width: size.width * 0.93,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30),
-                                    color:
-                                        const Color.fromARGB(255, 254, 255, 253)
-                                            .withAlpha(50)),
-                                child: Column(children: [
-                                  DropdownButtonFormField(
-                                    items: [
-                                      'พัฒนาการโค',
-                                      'ให้อาหารโค',
-                                      'การฉีดวัคซีน',
-                                      'การผสมพันธุ์โค'
-                                    ].map((String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
-                                    onChanged: (String? newValue) {
-                                      setState(() {
-                                        data_cow = newValue;
-                                      });
-                                    },
-                                    decoration: const InputDecoration(
-                                      hintText: 'ข้อมูลโค',
-                                      hintStyle: TextStyle(color: Colors.black),
-                                      icon: Icon(
-                                        FontAwesomeIcons.cow,
-                                        color: Color.fromARGB(255, 0, 0, 0),
-                                        size: 20,
-                                      ),
-                                      border: InputBorder.none,
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "เลขประจำตัวแม่",
+                                              maxLines: 1,
+                                              softWrap: false,
+                                              style: TextStyle(
+                                                  fontSize: 20.0,
+                                                  color: Color.fromARGB(
+                                                      255, 12, 2, 2),
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            Expanded(
+                                                child: Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                      left: 10,
+                                                    ),
+                                                    child: Column(children: [
+                                                      InkWell(
+                                                        child: Align(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            child: Container(
+                                                                child: Text(
+                                                                    widget.cow.breeder!.mother == "-"
+                                                                        ? "ไม่พบข้อมูล"
+                                                                        : widget
+                                                                            .cow
+                                                                            .breeder!
+                                                                            .mother
+                                                                            .toString(),
+                                                                    style: const TextStyle(
+                                                                        fontSize:
+                                                                            20.0,
+                                                                        color: Color.fromARGB(
+                                                                            255,
+                                                                            4,
+                                                                            192,
+                                                                            10),
+                                                                        fontWeight: FontWeight
+                                                                            .w600),
+                                                                    overflow: TextOverflow
+                                                                        .ellipsis))),
+                                                        onTap: () async {
+                                                          if (widget
+                                                                  .cow
+                                                                  .breeder!
+                                                                  .mother
+                                                                  .toString() ==
+                                                              "-") {
+                                                            return;
+                                                          } else {
+                                                            setState(() {
+                                                              cow_id = widget
+                                                                  .cow
+                                                                  .breeder!
+                                                                  .mother
+                                                                  .toString();
+                                                            });
+                                                            final newbreederCow =
+                                                                await Breeder_data()
+                                                                    .fetch_Cow_cow(
+                                                                        cow_id);
+                                                            Navigator.of(
+                                                                    context)
+                                                                .push(MaterialPageRoute(
+                                                                    builder:
+                                                                        ((context) {
+                                                              return DetailCow(
+                                                                  cow:
+                                                                      newbreederCow,
+                                                                  emp: widget
+                                                                      .emp);
+                                                            })));
+                                                          }
+                                                        },
+                                                      )
+                                                    ])))
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                                "เพศ : ${widget.cow.gender} ",
+                                                style: const TextStyle(
+                                                    fontSize: 20.0,
+                                                    color: Color.fromARGB(
+                                                        255, 12, 2, 2),
+                                                    fontWeight:
+                                                        FontWeight.w600))),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                                "น้ำหนักเริ่มต้น : ${widget.cow.weight} กิโลกรัม ",
+                                                style: const TextStyle(
+                                                    fontSize: 20.0,
+                                                    color: Color.fromARGB(
+                                                        255, 12, 2, 2),
+                                                    fontWeight:
+                                                        FontWeight.w600))),
+                                        if (Listprogress.isNotEmpty)
+                                          Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                  "น้ำหนักล่าสุด  : " +
+                                                      Listprogress.last.weight
+                                                          .toString() +
+                                                      " กิโลกรัม ",
+                                                  style: const TextStyle(
+                                                      fontSize: 20.0,
+                                                      color: Color.fromARGB(
+                                                          255, 12, 2, 2),
+                                                      fontWeight:
+                                                          FontWeight.w600))),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                                "ส่วนสูง : ${widget.cow.height} เซนติเมตร",
+                                                style: const TextStyle(
+                                                    fontSize: 20.0,
+                                                    color: Color.fromARGB(
+                                                        255, 12, 2, 2),
+                                                    fontWeight:
+                                                        FontWeight.w600))),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        _birthdayCow(widget.cow),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                                "สถานะ : ${widget.cow.status}",
+                                                style: const TextStyle(
+                                                    fontSize: 20.0,
+                                                    color: Color.fromARGB(
+                                                        255, 12, 2, 2),
+                                                    fontWeight:
+                                                        FontWeight.w600))),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                                "สี : ${widget.cow.color}",
+                                                style: const TextStyle(
+                                                    fontSize: 20.0,
+                                                    color: Color.fromARGB(
+                                                        255, 12, 2, 2),
+                                                    fontWeight:
+                                                        FontWeight.w600))),
+                                      ],
                                     ),
                                   ),
-                                ]),
-                              ),
-                              TextTest(data_cow!),
-                            ],
-                          ),
+                                )
+                              : Column(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 10),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20, vertical: 5),
+                                      width: size.width * 0.93,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(30),
+                                          color: const Color.fromARGB(
+                                                  255, 254, 255, 253)
+                                              .withAlpha(50)),
+                                      child: Column(children: [
+                                        DropdownButtonFormField(
+                                          items: [
+                                            'พัฒนาการโค',
+                                            'ให้อาหารโค',
+                                            'การฉีดวัคซีน',
+                                            'การผสมพันธุ์โค'
+                                          ].map((String value) {
+                                            return DropdownMenuItem<String>(
+                                              value: value,
+                                              child: Text(value),
+                                            );
+                                          }).toList(),
+                                          onChanged: (String? newValue) {
+                                            setState(() {
+                                              data_cow = newValue;
+                                            });
+                                          },
+                                          decoration: const InputDecoration(
+                                            hintText: 'ข้อมูลโค',
+                                            hintStyle:
+                                                TextStyle(color: Colors.black),
+                                            icon: Icon(
+                                              FontAwesomeIcons.cow,
+                                              color:
+                                                  Color.fromARGB(255, 0, 0, 0),
+                                              size: 20,
+                                            ),
+                                            border: InputBorder.none,
+                                          ),
+                                        ),
+                                      ]),
+                                    ),
+                                    TextTest(data_cow!),
+                                  ],
+                                ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
-              ),
-            ],
-          ),
-        ));
+              ));
   }
 
   Widget TextTest(String text) {
@@ -702,6 +751,12 @@ class _DetailCowState extends State<DetailCow> {
                     shrinkWrap: true,
                     itemCount: Listprogress.length,
                     itemBuilder: (BuildContext context, int index) {
+                      DateTime d = DateTime(
+                          Listprogress[index].progress_date!.year + 543,
+                          Listprogress[index].progress_date!.month,
+                          Listprogress[index].progress_date!.day);
+
+                      String formattedDate = DateFormat('dd-MM-yyyy').format(d);
                       return Column(
                         children: [
                           Slidable(
@@ -717,7 +772,7 @@ class _DetailCowState extends State<DetailCow> {
                                         builder: (BuildContext context) =>
                                             CupertinoAlertDialog(
                                           title: Text(
-                                              'ยืนยันการลบข้อมูล \nรหัสโค : ${Listprogress[index].cow!.cow_id}'),
+                                              'ลบข้อมูลการให้อาหารโค\nวันที่ ${formattedDate} \nรหัสโค : ${Listprogress[index].cow!.cow_id}'),
                                           content: const Text(
                                               'เช็คข้อมูลการลบข้อมูลทุกครั้ง'),
                                           actions: <CupertinoDialogAction>[
@@ -800,6 +855,12 @@ class _DetailCowState extends State<DetailCow> {
                     shrinkWrap: true,
                     itemCount: ListFeeding.length,
                     itemBuilder: (BuildContext context, int index) {
+                      DateTime d = DateTime(
+                          ListFeeding[index].record_date!.year + 543,
+                          ListFeeding[index].record_date!.month,
+                          ListFeeding[index].record_date!.day);
+
+                      String formattedDate = DateFormat('dd-MM-yyyy').format(d);
                       return Column(
                         children: [
                           Slidable(
@@ -815,7 +876,7 @@ class _DetailCowState extends State<DetailCow> {
                                         builder: (BuildContext context) =>
                                             CupertinoAlertDialog(
                                           title: Text(
-                                              'ยืนยันการลบข้อมูล \nรหัสโค : ${ListFeeding[index].cow!.cow_id}'),
+                                              'ลบข้อมูลการให้อาหารโค\nวันที่:${formattedDate}\n ช่วงเวลา: ${ListFeeding[index].time} \nรหัสโค : ${ListFeeding[index].cow!.cow_id}'),
                                           content: const Text(
                                               'เช็คข้อมูลการลบข้อมูลทุกครั้ง'),
                                           actions: <CupertinoDialogAction>[
@@ -902,6 +963,12 @@ class _DetailCowState extends State<DetailCow> {
                     shrinkWrap: true,
                     itemCount: ListVaccination.length,
                     itemBuilder: (BuildContext context, int index) {
+                      DateTime d = DateTime(
+                          ListVaccination[index].dateVaccination!.year + 543,
+                          ListVaccination[index].dateVaccination!.month,
+                          ListVaccination[index].dateVaccination!.day);
+
+                      String formattedDate = DateFormat('dd-MM-yyyy').format(d);
                       return Column(
                         children: [
                           Slidable(
@@ -917,7 +984,7 @@ class _DetailCowState extends State<DetailCow> {
                                         builder: (BuildContext context) =>
                                             CupertinoAlertDialog(
                                           title: Text(
-                                              'ยืนยันการลบข้อมูล \nรหัสโค : ${ListVaccination[index].cow!.cow_id}'),
+                                              'ลบข้อมูลการฉีดวัคซีน\nวันที่: ${formattedDate}\nชื่อวัคซีน : ${ListVaccination[index].vaccine!.name_vaccine} \nรหัสโค : ${ListVaccination[index].cow!.cow_id}'),
                                           content: const Text(
                                               'เช็คข้อมูลการลบข้อมูลทุกครั้ง'),
                                           actions: <CupertinoDialogAction>[
@@ -1006,6 +1073,19 @@ class _DetailCowState extends State<DetailCow> {
                     shrinkWrap: true,
                     itemCount: List_Cow_has_Hybridization.length,
                     itemBuilder: (BuildContext context, int index) {
+                      DateTime d = DateTime(
+                          List_Cow_has_Hybridization[index].hybridization!.date_Hybridization!.year +
+                              543,
+                          List_Cow_has_Hybridization[index]
+                              .hybridization!
+                              .date_Hybridization!
+                              .month,
+                          List_Cow_has_Hybridization[index]
+                              .hybridization!
+                              .date_Hybridization!
+                              .day);
+
+                      String formattedDate = DateFormat('dd-MM-yyyy').format(d);
                       return Column(
                         children: [
                           Slidable(
@@ -1021,7 +1101,7 @@ class _DetailCowState extends State<DetailCow> {
                                         builder: (BuildContext context) =>
                                             CupertinoAlertDialog(
                                           title: Text(
-                                              'ยืนยันการลบข้อมูล \nรหัสโค : ${List_Cow_has_Hybridization[index].cow!.cow_id}'),
+                                              'ลบข้อมูลการผสมพันธุ์\n วันที่ผสมพันธุ์ ${formattedDate} \nรหัสโค : ${List_Cow_has_Hybridization[index].cow!.cow_id}'),
                                           content: const Text(
                                               'เช็คข้อมูลการลบข้อมูลทุกครั้ง'),
                                           actions: <CupertinoDialogAction>[
@@ -1081,7 +1161,9 @@ class _DetailCowState extends State<DetailCow> {
 
                                   //title: Progress_date(widget.cow),
                                   subtitle: _subtitleCow_has_Hybridization(
-                                      List_Cow_has_Hybridization[index])
+                                      List_Cow_has_Hybridization[index],
+                                      widget.cow.gender,
+                                      gender_co[index])
                                   // isThreeLine: true,
                                   ),
                             ),
@@ -1304,7 +1386,7 @@ class _DetailCowState extends State<DetailCow> {
 
     var numD = int.parse(p.progress_date!.day.toString());
 
-    DateTime dateBirthday = DateTime(numY, numM + 1, numD);
+    DateTime dateBirthday = DateTime(numY, numM, numD);
 
     gender = cow.gender.toString();
 
@@ -1331,7 +1413,7 @@ class _DetailCowState extends State<DetailCow> {
     return Align(
         alignment: Alignment.centerLeft,
         child: Text(
-            "วันให้อาหาร : ${f.record_date!.day}/${f.record_date!.month}/${f.record_date!.year}\nช่วงเวลาให้อาหาร : ตอน${f.time}\nอาหาร : ${f.food!.food_name}\nจำนวน : ${f.amount}  (กิโลกรัม)",
+            "วันที่: ${f.record_date!.day}/${f.record_date!.month}/${f.record_date!.year}\nเวลา ${f.record_date!.hour} : ${f.record_date!.minute}\nอาหาร : ${f.food!.food_name}\nจำนวน : ${f.amount}  (กิโลกรัม) \nอาหารเสริม: ${f.food_supplement}\nช่วงเวลาให้อาหาร : ตอน${f.time}",
             style: const TextStyle(
                 fontSize: 20.0,
                 color: Color.fromARGB(255, 12, 2, 2),
@@ -1349,26 +1431,45 @@ class _DetailCowState extends State<DetailCow> {
                 fontWeight: FontWeight.w600)));
   }
 
-  _subtitleCow_has_Hybridization(Cow_has_Hybridization cH) {
-    print(cH.hybridization!.tojson_Hybridization.toString());
-
-    print(cH.hybridization!.result);
-    print(cH.hybridization!.date_of_birthday);
-    if (cH.hybridization!.result == "สำเร็จ") {
+  _subtitleCow_has_Hybridization(
+      Cow_has_Hybridization cH, String? gender, Cow gender_co) {
+    if (cH.hybridization!.result == "สำเร็จ" && widget.cow.gender == "ผู้") {
       return Align(
           alignment: Alignment.centerLeft,
           child: Text(
-              "วันที่ผสมพันธุ์ :${cH.hybridization!.date_Hybridization!.day}/${cH.hybridization!.date_Hybridization!.month}/${cH.hybridization!.date_Hybridization!.year} \nผลลัพธ์ : ${cH.hybridization!.result} \nวันที่คลอดลูก: ${cH.hybridization!.date_of_birthday!.day}/${cH.hybridization!.date_of_birthday!.month}/${cH.hybridization!.date_of_birthday!.year}   \nประเภทการผสมพันธุ์ : \n${cH.hybridization!.typebridization!.name_typebridization}",
+              "วันที่ผสมพันธุ์ :${cH.hybridization!.date_Hybridization!.day}/${cH.hybridization!.date_Hybridization!.month}/${cH.hybridization!.date_Hybridization!.year} \nผลลัพธ์ : ${cH.hybridization!.result}\nหมาเลขประจำตัวแม่พันธุ์ : \n${gender_co.cow_id} \nวันที่คลอดลูก: ${cH.hybridization!.date_of_birthday!.day}/${cH.hybridization!.date_of_birthday!.month}/${cH.hybridization!.date_of_birthday!.year}   \nประเภทการผสมพันธุ์ : \n${cH.hybridization!.typebridization!.name_typebridization}",
               /* "",*/
               style: const TextStyle(
                   fontSize: 20.0,
                   color: Color.fromARGB(255, 12, 2, 2),
                   fontWeight: FontWeight.w600)));
-    } else {
+    } else if (cH.hybridization!.result == "ไม่สำเร็จ" &&
+        widget.cow.gender == "ผู้") {
       return Align(
           alignment: Alignment.centerLeft,
           child: Text(
-              "วันที่ผสมพันธุ์ :${cH.hybridization!.date_Hybridization!.day}/${cH.hybridization!.date_Hybridization!.month}/${cH.hybridization!.date_Hybridization!.year} \nผลลัพธ์ : ${cH.hybridization!.result} \nประเภทผสมพันธุ์ :\n${cH.hybridization!.typebridization!.name_typebridization}",
+              "วันที่ผสมพันธุ์ :${cH.hybridization!.date_Hybridization!.day}/${cH.hybridization!.date_Hybridization!.month}/${cH.hybridization!.date_Hybridization!.year} \nผลลัพธ์ : ${cH.hybridization!.result}\nหมาเลขประจำตัวแม่พันธุ์ : \n${gender_co.cow_id} \nประเภทผสมพันธุ์ :\n${cH.hybridization!.typebridization!.name_typebridization}",
+              style: const TextStyle(
+                  fontSize: 20.0,
+                  color: Color.fromARGB(255, 12, 2, 2),
+                  fontWeight: FontWeight.w600)));
+    }
+    if (cH.hybridization!.result == "สำเร็จ" && widget.cow.gender == "เมีย") {
+      return Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+              "วันที่ผสมพันธุ์ :${cH.hybridization!.date_Hybridization!.day}/${cH.hybridization!.date_Hybridization!.month}/${cH.hybridization!.date_Hybridization!.year} \nผลลัพธ์ : ${cH.hybridization!.result}\nหมาเลขประจำตัวพ่อพันธุ์ : \n${gender_co.cow_id} \nประเภทผสมพันธุ์ :\n${cH.hybridization!.typebridization!.name_typebridization}",
+              /*"",*/
+              style: const TextStyle(
+                  fontSize: 20.0,
+                  color: Color.fromARGB(255, 12, 2, 2),
+                  fontWeight: FontWeight.w600)));
+    } else if (cH.hybridization!.result == "ไม่สำเร็จ" &&
+        widget.cow.gender == "เมีย") {
+      return Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+              "วันที่ผสมพันธุ์ :${cH.hybridization!.date_Hybridization!.day}/${cH.hybridization!.date_Hybridization!.month}/${cH.hybridization!.date_Hybridization!.year} \nผลลัพธ์ : ${cH.hybridization!.result}\nหมาเลขประจำตัวพ่อพันธุ์ : \n${gender_co.cow_id} \nประเภทผสมพันธุ์ :\n${cH.hybridization!.typebridization!.name_typebridization}",
               /*"",*/
               style: const TextStyle(
                   fontSize: 20.0,

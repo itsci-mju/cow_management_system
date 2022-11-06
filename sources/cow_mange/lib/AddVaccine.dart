@@ -77,11 +77,17 @@ class _AddVaccineState extends State<AddVaccine> {
 
   //  button clear
   bool _showClearButton_name_doctor = false;
+  bool _showClearButton_date_vaccine_c = false;
 
   Future clean_number() async {
     doctorname.addListener(() {
       setState(() {
         _showClearButton_name_doctor = doctorname.text.isNotEmpty;
+      });
+    });
+    date_vaccine_c.addListener(() {
+      setState(() {
+        _showClearButton_date_vaccine_c = date_vaccine_c.text.isNotEmpty;
       });
     });
   }
@@ -195,7 +201,7 @@ class _AddVaccineState extends State<AddVaccine> {
                     startDate == DateTime.now()) {
                   list_String_vaccine[i] = list_String_vaccine[i];
                 } else {
-                  String formattedDate =
+                  String formattedDate =    
                       DateFormat('dd-MM-yyyy').format(startDate);
                   setState(() {
                     list_String_vaccine[i] = list_String_vaccine[i] +
@@ -343,6 +349,7 @@ class _AddVaccineState extends State<AddVaccine> {
           : SingleChildScrollView(
               child: Form(
               key: _formKey,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               child: Column(
                 children: [
                   Container(
@@ -412,7 +419,7 @@ class _AddVaccineState extends State<AddVaccine> {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    "รหัสโค : ${widget.cow.cow_id}",
+                    "หมายเลขประจำตัวโค : ${widget.cow.cow_id}",
                     style: const TextStyle(color: Colors.red, fontSize: 20),
                   ),
                   SizedBox(height: 05),
@@ -491,9 +498,7 @@ class _AddVaccineState extends State<AddVaccine> {
                                 break;
                               }
                             }
-                            if (int_year >= 1 &&
-                                int_month >= 4 &&
-                                isFirst == true) {
+                            if (int_month >= 4 && isFirst == true) {
                               setState(() {
                                 startDate = DateTime(co.birthday!.year,
                                     co.birthday!.month + 4, co.birthday!.day);
@@ -522,9 +527,7 @@ class _AddVaccineState extends State<AddVaccine> {
                                 break;
                               }
                             }
-                            if (int_year >= 1 &&
-                                int_month >= 4 &&
-                                isFirst == true) {
+                            if (int_month >= 4 && isFirst == true) {
                               setState(() {
                                 startDate = DateTime(co.birthday!.year,
                                     co.birthday!.month + 4, co.birthday!.day);
@@ -554,9 +557,7 @@ class _AddVaccineState extends State<AddVaccine> {
                                 break;
                               }
                             }
-                            if (int_year >= 1 &&
-                                int_month >= 3 &&
-                                isFirst == true) {
+                            if (int_month >= 3 && isFirst == true) {
                               setState(() {
                                 startDate = DateTime(co.birthday!.year,
                                     co.birthday!.month + 3, co.birthday!.day);
@@ -585,9 +586,7 @@ class _AddVaccineState extends State<AddVaccine> {
                                 break;
                               }
                             }
-                            if (int_year >= 1 &&
-                                int_month >= 4 &&
-                                isFirst == true) {
+                            if (int_month >= 4 && isFirst == true) {
                               setState(() {
                                 startDate = DateTime(co.birthday!.year,
                                     co.birthday!.month + 4, co.birthday!.day);
@@ -608,7 +607,7 @@ class _AddVaccineState extends State<AddVaccine> {
                             }
                           }
                         },
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           hintText: 'ชื่อวัคซีน',
                           hintStyle: TextStyle(color: Colors.black),
                           icon: Icon(
@@ -650,7 +649,7 @@ class _AddVaccineState extends State<AddVaccine> {
                               style: TextStyle(color: Colors.black),
                             ),
                             hintText: "Date is not selected",
-                            //suffixIcon: _getClearButton_date(),
+                            suffixIcon: _getClearButton_date_vaccine_c(),
                             hintStyle: TextStyle(color: Colors.black),
                             border: InputBorder.none,
                             icon: Icon(
@@ -721,8 +720,7 @@ class _AddVaccineState extends State<AddVaccine> {
                             break;
                           }
                         }
-                        if (int_month >= 3 && isFirst == true ||
-                            int_year >= 1) {
+                        if (int_month >= 3 && isFirst == true) {
                           setState(() {
                             int_countvaccine = 2;
                           });
@@ -753,9 +751,7 @@ class _AddVaccineState extends State<AddVaccine> {
                             break;
                           }
                         }
-                        if (int_year >= 1 &&
-                            int_month >= 4 &&
-                            isFirst == true) {
+                        if (int_month >= 4 && isFirst == true) {
                           setState(() {
                             int_countvaccine = 5;
                           });
@@ -798,9 +794,7 @@ class _AddVaccineState extends State<AddVaccine> {
                             break;
                           }
                         }
-                        if (int_year >= 1 &&
-                            int_month >= 4 &&
-                            isFirst == true) {
+                        if (int_month >= 4 && isFirst == true) {
                           setState(() {
                             int_countvaccine = 2;
                           });
@@ -843,9 +837,7 @@ class _AddVaccineState extends State<AddVaccine> {
                             break;
                           }
                         }
-                        if (int_year >= 1 &&
-                            int_month >= 3 &&
-                            isFirst == true) {
+                        if (int_month >= 3 && isFirst == true) {
                           setState(() {
                             int_countvaccine = 1;
                           });
@@ -883,9 +875,7 @@ class _AddVaccineState extends State<AddVaccine> {
                             break;
                           }
                         }
-                        if (int_year >= 1 &&
-                            int_month >= 4 &&
-                            isFirst == true) {
+                        if (int_month >= 4 && isFirst == true) {
                           setState(() {
                             int_countvaccine = 1;
                           });
@@ -974,7 +964,7 @@ class _AddVaccineState extends State<AddVaccine> {
                           color: const Color.fromARGB(255, 34, 120, 37)
                               .withAlpha(50)),
                       alignment: Alignment.center,
-                      child: const Text('เพิ่มข้อมูลการพัฒนาโค',
+                      child: const Text('เพิ่มข้อมูลวัคซีนโค',
                           style: TextStyle(
                               color: Color(0xff235d3a), fontSize: 18)),
                     ),
@@ -997,6 +987,21 @@ class _AddVaccineState extends State<AddVaccine> {
         ),
         onTap: () {
           doctorname.clear();
+        });
+  }
+
+  Widget? _getClearButton_date_vaccine_c() {
+    // ถ้าเป็นค่าว่าง return null
+    if (!_showClearButton_date_vaccine_c) {
+      return null;
+    }
+    return GestureDetector(
+        child: const Icon(
+          Icons.cancel,
+          color: Colors.red,
+        ),
+        onTap: () {
+          date_vaccine_c.clear();
         });
   }
 

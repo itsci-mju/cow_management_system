@@ -129,6 +129,7 @@ class _AddHybridizationState extends State<AddHybridization> {
       body: SingleChildScrollView(
           child: Form(
         key: _formKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Column(
           children: [
             Container(
@@ -209,13 +210,13 @@ class _AddHybridizationState extends State<AddHybridization> {
                         alignment: Alignment.centerLeft,
                         child: Container(
                           child: const Text(
-                            " พ่อพันธุ์ ",
+                            " หมายเลขประจำตัวพ่อพันธุ์ ",
                             style: TextStyle(fontSize: 15),
                           ),
                         ))
                   ],
                 )),
-            if (list_bull[0] == "----")
+            if (list_bull[0] == "-")
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 10),
                 padding:
@@ -238,8 +239,10 @@ class _AddHybridizationState extends State<AddHybridization> {
                       });
                     },
                     validator: Validators.compose([
-                      Validators.required__dropdown("กรุณาเลือกพ่อพันธุ์"),
-                      Validators.required_isnull("กรุณาเลือกพ่อพันธุ์"),
+                      Validators.required__dropdown(
+                          "กรุณาเลือกหมายเลขประจำตัวพ่อพันธุ์"),
+                      Validators.required_isnull(
+                          "กรุณาเลือกหมายเลขประจำตัวพ่อพันธุ์"),
                     ]),
                     decoration: InputDecoration(
                       hintText: list_bull[0].toString(),
@@ -276,7 +279,8 @@ class _AddHybridizationState extends State<AddHybridization> {
                         id_bull_cow = newValue!;
                       });
                     },
-                    validator: Validators.required__dropdown("1"),
+                    validator: Validators.required__dropdown(
+                        "กรุณากรอกพ่อพันธุ์ให้ถูกต้อง"),
                     decoration: InputDecoration(
                       hintText: list_bull[0].toString(),
                       hintStyle: const TextStyle(color: Colors.black),
@@ -304,13 +308,13 @@ class _AddHybridizationState extends State<AddHybridization> {
                         alignment: Alignment.centerLeft,
                         child: Container(
                           child: const Text(
-                            "แม่พันธุ์ ",
+                            "หมายเลขประจำตัวแม่พันธุ์ ",
                             style: TextStyle(fontSize: 15),
                           ),
                         ))
                   ],
                 )),
-            if (list_cow[0] == "----")
+            if (list_cow[0] == "-")
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 10),
                 padding:
@@ -333,8 +337,10 @@ class _AddHybridizationState extends State<AddHybridization> {
                       });
                     },
                     validator: Validators.compose([
-                      Validators.required__dropdown("กรุณาเลือกแม่พันธุ์"),
-                      Validators.required_isnull("กรุณาเลือกแม่พันธุ์"),
+                      Validators.required__dropdown(
+                          "กรุณาเลือกหมายเลขประจำตัวแม่พันธุ์"),
+                      Validators.required_isnull(
+                          "กรุณาเลือกหมายเลขประจำตัวแม่พันธุ์"),
                     ]),
                     decoration: InputDecoration(
                       hintText: list_cow[0].toString(),
@@ -371,7 +377,8 @@ class _AddHybridizationState extends State<AddHybridization> {
                         id_cow_cow = newValue!;
                       });
                     },
-                    validator: Validators.required__dropdown("1"),
+                    validator: Validators.required__dropdown(
+                        "กรุณากรอกแม่พันธุ์ให้ถูกต้อง"),
                     decoration: InputDecoration(
                       hintText: list_cow[0].toString(),
                       hintStyle: const TextStyle(color: Colors.black),
@@ -419,7 +426,6 @@ class _AddHybridizationState extends State<AddHybridization> {
                 ),
               ]),
             ),
-            date_of_birth(text_result),
             Container(
                 margin: const EdgeInsets.symmetric(vertical: 10),
                 padding:
@@ -467,6 +473,7 @@ class _AddHybridizationState extends State<AddHybridization> {
                     }
                   },
                 )),
+            date_of_birth(text_result),
             Container(
               margin: const EdgeInsets.symmetric(vertical: 10),
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
@@ -523,12 +530,12 @@ class _AddHybridizationState extends State<AddHybridization> {
                     hyb!.result = text_result;
                     hyb!.typebridization = Typebridization.nameTypebridization(
                         name_typebridization: name_typeHybridization);
-                    if (list_cow[0].toString() != "----") {
+                    if (list_cow[0].toString() != "-") {
                       setState(() {
                         id_cow_cow = widget.cow.cow_id.toString();
                       });
                     } else {
-                      if (list_bull[0].toString() != "----") {
+                      if (list_bull[0].toString() != "-") {
                         setState(() {
                           id_bull_cow = widget.cow.cow_id.toString();
                         });
@@ -538,12 +545,12 @@ class _AddHybridizationState extends State<AddHybridization> {
                     hyb?.bull_cow = Cow.Idcow(cow_id: id_bull_cow);
                     hyb?.cow_cow = Cow.Idcow(cow_id: id_cow_cow);
                   } else {
-                    if (list_cow[0].toString() != "----") {
+                    if (list_cow[0].toString() != "-") {
                       setState(() {
                         id_cow_cow = widget.cow.cow_id.toString();
                       });
                     } else {
-                      if (list_bull[0].toString() != "----") {
+                      if (list_bull[0].toString() != "-") {
                         setState(() {
                           id_bull_cow = widget.cow.cow_id.toString();
                         });
@@ -589,7 +596,7 @@ class _AddHybridizationState extends State<AddHybridization> {
                     color:
                         const Color.fromARGB(255, 34, 120, 37).withAlpha(50)),
                 alignment: Alignment.center,
-                child: const Text('เพิ่มข้อมูลการพัฒนาโค',
+                child: const Text('เพิ่มข้อมูลการผสมพันธุ์โค',
                     style: TextStyle(color: Color(0xff235d3a), fontSize: 18)),
               ),
             ),

@@ -120,7 +120,7 @@ class _MainguestState extends State<Mainguest> {
                           style: const TextStyle(
                               color: Color.fromARGB(255, 8, 96, 12)),
                           decoration: InputDecoration(
-                            hintText: "ค้นหาโค",
+                            hintText: "ค้นหาโคด้วย ชื่อฟาร์ม และ รหัสโค",
                             floatingLabelBehavior: FloatingLabelBehavior.never,
                             filled: true,
                             fillColor: Colors.white,
@@ -208,7 +208,7 @@ class _MainguestState extends State<Mainguest> {
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                           subtitle: Text(
-                                              "สายพันธุ์ :${listcow[index].species!.species_breed}\nเพศ :${listcow[index].gender}  || ชื่อฟาร์ม :${listcow[index].farm!.name_Farm}",
+                                              "พันธุ์ :${listcow[index].species!.species_breed}\nเพศ :${listcow[index].gender}  || ชื่อฟาร์ม :${listcow[index].farm!.name_Farm}",
                                               style: TextStyle(fontSize: 17)),
                                           isThreeLine: true,
                                         )),

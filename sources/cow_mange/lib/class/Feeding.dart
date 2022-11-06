@@ -7,6 +7,7 @@ class Feeding {
   DateTime? record_date;
   double? amount;
   String? time;
+  String? food_supplement;
   Cow? cow;
   Food? food;
 
@@ -16,6 +17,7 @@ class Feeding {
       this.time,
       this.amount,
       this.cow,
+      this.food_supplement,
       this.food});
 
   Map<String, dynamic> tojson_Feeding() {
@@ -23,6 +25,7 @@ class Feeding {
       'record_date': record_date!.toIso8601String(),
       'amount': amount,
       'time': time,
+      'food_supplement': food_supplement,
       'cow': cow?.cow_id,
       'food': food?.foodid,
     };
@@ -31,6 +34,7 @@ class Feeding {
   Feeding.fromJson(Map<String, dynamic> json) {
     id_Feeding = json["id_Feeding"];
     record_date = Date.fromJson(json["record_date"]).toDateTime();
+    food_supplement = json["food_supplement"];
     amount = json["amount"];
     time = json["time"];
     cow = Cow.fromJson(json["cow"]);

@@ -1,8 +1,8 @@
 class url {
-  static const String URL = "http://172.16.1.10:8081/project_cowmanage";
+  static const String URL = "http://10.100.17.170:8081/project_cowmanage";
 
   static const String URL_IMAGE =
-      "http://172.16.1.10:8081/project_cowmanage/file/";
+      "http://10.100.17.170:8081/project_cowmanage/file/";
 
 //employee
   static const String URL_Login = "/employee/login";
@@ -102,6 +102,9 @@ class url {
   static const String URL_list_Cow_has_Hybridization_id_cow =
       "/Cow_has_Hybridization/list_id_cow";
 
+  //Cow_has_Hybridization
+  static const String URL_mating_pair = "/Cow_has_Hybridization//mating_pair";
+
   static const String URL_Cow_has_Hybridization_delete =
       "/Cow_has_Hybridization/delete";
 
@@ -126,8 +129,12 @@ class url {
   static const String URL_List_idfarm_Expendfarm =
       "/ExpendFarm/listExpendfarm_idfarm";
 
+  static const String URL_sum_price = "/ExpendFarm/sum_price";
+
 //ExpendType
   static const String URL_ListExpendTypem = "/Expendtype/list";
 
   static const String URL_GetExpendTypem = "/Expendtype/getExpendtype";
+
+  static const String URL_AddExpendType = "/Expendtype/addExpendtype";
 }

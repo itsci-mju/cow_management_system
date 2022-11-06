@@ -55,6 +55,7 @@ class _MainfarmState extends State<Mainfarm> {
 
   // query
   String query = "";
+  double price_sum = 0.00;
 
   void _incrementCounter() {
     setState(() {
@@ -170,6 +171,29 @@ class _MainfarmState extends State<Mainfarm> {
     });
   }
 
+  Future sum_price(Farm farm) async {
+    final response = await http.post(
+      Uri.parse(url.URL.toString() + url.URL_sum_price),
+      body: jsonEncode({"Farm_id_Farm": farm.id_Farm}),
+      headers: <String, String>{
+        "Accept": "application/json",
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      List? list;
+      double d = 0.0;
+      Map<String, dynamic> mapResponse = json.decode(response.body);
+
+      mapResponse = json.decode(response.body);
+
+      d = mapResponse['result'];
+
+      return d;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -184,6 +208,10 @@ class _MainfarmState extends State<Mainfarm> {
   }
 
   Future init() async {
+    final sum = await sum_price(widget.fm);
+    setState(() {
+      price_sum = sum;
+    });
     // cow
     final co = await search_cow(query, widget.fm);
     if (widget.cow != null) {
@@ -221,6 +249,7 @@ class _MainfarmState extends State<Mainfarm> {
       },
       child: Scaffold(
         key: globalKey,
+        resizeToAvoidBottomInset: false,
         drawer: MyWidget(fm: widget.fm),
         endDrawer: Drawer_Filter(
           fm: widget.fm,
@@ -229,75 +258,105 @@ class _MainfarmState extends State<Mainfarm> {
         backgroundColor: Color.fromARGB(255, 223, 224, 226),
         body: listcow == null
             ? Column(children: const <Widget>[])
-            : Container(
-                child: Column(children: <Widget>[
-                  Container(
-                    padding: const EdgeInsets.only(top: 50, left: 0, right: 20),
-                    height: 220,
-                    width: double.infinity,
-                    decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(20),
-                            bottomRight: Radius.circular(20)),
-                        gradient: LinearGradient(
-                          colors: [Colors.green, Colors.green],
-                        )),
-                    child: Column(
-                      children: [
-                        Container(
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 20),
-                                  child: Text(
-                                    "สวัสดี คุณ ",
-                                    style: TextStyle(
-                                        fontSize: 20, color: Colors.white),
-                                  ),
+            : Column(children: <Widget>[
+                Container(
+                  padding: const EdgeInsets.only(top: 50, left: 0, right: 20),
+                  height: 220,
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(20),
+                          bottomRight: Radius.circular(20)),
+                      gradient: LinearGradient(
+                        colors: [Colors.green, Colors.green],
+                      )),
+                  child: Column(
+                    children: [
+                      Container(
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(left: 20),
+                                child: Text(
+                                  "สวัสดี ${widget.fm.owner_name.toString()}",
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.white),
                                 ),
-                                Container(
-                                  height: 40,
-                                  width: 40,
-                                  decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.white),
-                                  child: const Icon(FontAwesomeIcons.bell),
-                                ),
-                              ]),
+                              ),
+                              Container(
+                                height: 40,
+                                width: 40,
+                                decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.white),
+                                child: const Icon(FontAwesomeIcons.bell),
+                              ),
+                            ]),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "ชื่อฟาร์ม : ${widget.fm.name_Farm} ",
+                            style: const TextStyle(
+                                fontSize: 20, color: Colors.white),
+                          ),
                         ),
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Container(
+                            margin: const EdgeInsets.fromLTRB(10, 30, 0, 0),
+                            child: IconButton(
+                                iconSize: 35,
+                                onPressed: () {
+                                  globalKey.currentState!.openDrawer();
+                                },
+                                icon: const Icon(FontAwesomeIcons.bars)),
+                          ),
+                          _search(_currentIndex),
+                          _fitter(_currentIndex)
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                if (_currentIndex == 2)
+                  Container(
+                    margin: EdgeInsets.only(bottom: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
                         Padding(
-                          padding: const EdgeInsets.only(left: 20),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              widget.fm.owner_name.toString(),
-                              style: const TextStyle(
-                                  fontSize: 20, color: Colors.white),
+                          padding: const EdgeInsets.fromLTRB(5, 5, 5, 0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.green),
+                            child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                "ราคารวมทั้งหมด : " +
+                                    price_sum.toString() +
+                                    " บาท",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 25),
+                              ),
                             ),
                           ),
                         ),
-                        Row(
-                          children: <Widget>[
-                            Container(
-                              margin: const EdgeInsets.fromLTRB(10, 30, 0, 0),
-                              child: IconButton(
-                                  iconSize: 35,
-                                  onPressed: () {
-                                    globalKey.currentState!.openDrawer();
-                                  },
-                                  icon: const Icon(FontAwesomeIcons.bars)),
-                            ),
-                            _search(_currentIndex),
-                            _fitter(_currentIndex)
-                          ],
-                        ),
                       ],
                     ),
+                  )
+                else
+                  SizedBox(
+                    height: 20,
                   ),
-                  mainpage(_currentIndex)
-                ]),
-              ),
+                mainpage(_currentIndex)
+              ]),
         floatingActionButton: _button_add(_currentIndex),
         bottomNavigationBar: BottomNavyBar(
           selectedIndex: _currentIndex,
@@ -347,7 +406,7 @@ class _MainfarmState extends State<Mainfarm> {
   _search(int currentIndex) {
     String textInput = "";
     if (currentIndex == 0) {
-      textInput = "ค้นหาข้อมูลโค";
+      textInput = "ค้นหาข้อมูลโคด้วย รหัสโค";
       return Expanded(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(10, 30, 0, 0),
@@ -564,96 +623,122 @@ class _MainfarmState extends State<Mainfarm> {
                 },
               )));
     } else {
-      return Expanded(
-          child: Container(
-              transform: Matrix4.translationValues(0.0, -10.0, 0.0),
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: listexpendfarm.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Card(
-                      elevation: 5,
-                      color: (Color.fromARGB(255, 255, 255, 255)),
-                      margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 10.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(0.0),
-                      ),
-                      child: ListTile(
-                        //leading: _buildLeadingTile_df(listcow[index]),
-                        trailing: PopupMenuButton(
-                          onSelected: (result) {
-                            if (result == 0) {
-                              Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: ((context) {
-                                return EditExpend(
-                                  ex: listexpendfarm[index],
-                                  fm: widget.fm,
-                                );
-                              })));
-                            } else {
-                              showCupertinoModalPopup<void>(
-                                context: context,
-                                builder: (BuildContext context) =>
-                                    CupertinoAlertDialog(
-                                  title: Text('ยืนยันการลบข้อมูลค่าใช้จ่าย  '
-                                          "\n"
-                                          "รหัสคำสั่งซื้อ : " +
-                                      listexpendfarm[index].id_list.toString()),
-                                  content: const Text(
-                                      'เช็คข้อมูลการลบข้อมูลทุกครั้ง'),
-                                  actions: <CupertinoDialogAction>[
-                                    CupertinoDialogAction(
-                                      isDefaultAction: true,
-                                      onPressed: () {
-                                        FocusScope.of(context).unfocus();
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text('No'),
-                                    ),
-                                    CupertinoDialogAction(
-                                      isDestructiveAction: true,
-                                      onPressed: () async {
-                                        final emp = Expend_data().DeleteExpend(
-                                            listexpendfarm[index].id_list);
-                                        if (emp != 0) {
-                                          Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder:
-                                                      (BuildContext context) =>
-                                                          super.widget));
-                                        }
-                                      },
-                                      child: const Text('Yes'),
-                                    )
-                                  ],
-                                ),
+      return
+
+          /*
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(5, 5, 5, 0),
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.green),
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      "ราคารวมทั้งหมด : " + price_sum.toString() + " บาท",
+                      style: TextStyle(color: Colors.white, fontSize: 25),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),*/
+
+          Expanded(
+        child: Container(
+            transform: Matrix4.translationValues(0.0, -10.0, 0.0),
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: listexpendfarm.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Card(
+                    elevation: 5,
+                    color: (Color.fromARGB(255, 255, 255, 255)),
+                    margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 10.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0.0),
+                    ),
+                    child: ListTile(
+                      //leading: _buildLeadingTile_df(listcow[index]),
+                      trailing: PopupMenuButton(
+                        onSelected: (result) {
+                          if (result == 0) {
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: ((context) {
+                              return EditExpend(
+                                ex: listexpendfarm[index],
+                                fm: widget.fm,
                               );
-                            }
-                          },
-                          iconSize: 40,
-                          itemBuilder: (BuildContext context) {
-                            return [
-                              const PopupMenuItem(
-                                value: 0,
-                                child: Text('แก้ไขค่าใช้จ่าย'),
+                            })));
+                          } else {
+                            showCupertinoModalPopup<void>(
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  CupertinoAlertDialog(
+                                title: Text('ยืนยันการลบข้อมูลค่าใช้จ่าย  '
+                                        "\n"
+                                        "รหัสคำสั่งซื้อ : " +
+                                    listexpendfarm[index].id_list.toString()),
+                                content:
+                                    const Text('เช็คข้อมูลการลบข้อมูลทุกครั้ง'),
+                                actions: <CupertinoDialogAction>[
+                                  CupertinoDialogAction(
+                                    isDefaultAction: true,
+                                    onPressed: () {
+                                      FocusScope.of(context).unfocus();
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('No'),
+                                  ),
+                                  CupertinoDialogAction(
+                                    isDestructiveAction: true,
+                                    onPressed: () async {
+                                      final emp = Expend_data().DeleteExpend(
+                                          listexpendfarm[index].id_list);
+                                      if (emp != 0) {
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        super.widget));
+                                      }
+                                    },
+                                    child: const Text('Yes'),
+                                  )
+                                ],
                               ),
-                              const PopupMenuItem(
-                                value: 1,
-                                child: Text('ลบข้อมูลค่าใช้จ่าย'),
-                              ),
-                            ];
-                          },
-                        ),
-                        title: Text(
-                            "รหัสคำสั่งซื้อ : ${listexpendfarm[index].id_list}",
-                            style: const TextStyle(fontSize: 20),
-                            overflow: TextOverflow.ellipsis),
-                        subtitle: _expenseFarm_date(listexpendfarm[index]),
-                        // isThreeLine: true,
-                      ));
-                },
-              )));
+                            );
+                          }
+                        },
+                        iconSize: 40,
+                        itemBuilder: (BuildContext context) {
+                          return [
+                            const PopupMenuItem(
+                              value: 0,
+                              child: Text('แก้ไขค่าใช้จ่าย'),
+                            ),
+                            const PopupMenuItem(
+                              value: 1,
+                              child: Text('ลบข้อมูลค่าใช้จ่าย'),
+                            ),
+                          ];
+                        },
+                      ),
+                      title: Text(
+                          "รหัสคำสั่งซื้อ : ${listexpendfarm[index].id_list}",
+                          style: const TextStyle(fontSize: 20),
+                          overflow: TextOverflow.ellipsis),
+                      subtitle: _expenseFarm_date(listexpendfarm[index]),
+                      // isThreeLine: true,
+                    ));
+              },
+            )),
+      );
     }
   }
 
@@ -687,7 +772,7 @@ class _MainfarmState extends State<Mainfarm> {
       return Padding(
         padding: const EdgeInsets.only(bottom: 10.0),
         child: FloatingActionButton.extended(
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.green,
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(builder: ((context) {
               return Register_Cow(fm: widget.fm);
@@ -699,7 +784,7 @@ class _MainfarmState extends State<Mainfarm> {
           ),
           icon: const Icon(
             FontAwesomeIcons.cow,
-            color: Colors.green,
+            color: Color.fromARGB(255, 0, 0, 0),
           ),
         ),
       );
@@ -707,7 +792,7 @@ class _MainfarmState extends State<Mainfarm> {
       return Padding(
         padding: const EdgeInsets.only(bottom: 10.0),
         child: FloatingActionButton.extended(
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.green,
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(builder: ((context) {
               return AddEmployee(fm: widget.fm);
@@ -719,7 +804,7 @@ class _MainfarmState extends State<Mainfarm> {
           ),
           icon: const Icon(
             FontAwesomeIcons.userGroup,
-            color: Colors.green,
+            color: Color.fromARGB(255, 0, 0, 0),
           ),
         ),
       );
@@ -727,7 +812,7 @@ class _MainfarmState extends State<Mainfarm> {
       return Padding(
         padding: const EdgeInsets.only(bottom: 10.0),
         child: FloatingActionButton.extended(
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.green,
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(builder: ((context) {
               return AddExpend(fm: widget.fm);
@@ -739,7 +824,7 @@ class _MainfarmState extends State<Mainfarm> {
           ),
           icon: const Icon(
             FontAwesomeIcons.moneyBill,
-            color: Colors.green,
+            color: Color.fromARGB(255, 0, 0, 0),
           ),
         ),
       );
@@ -898,7 +983,7 @@ _birthdayCow(Cow cow) {
   gender = cow.gender!;
 
   return Text(
-      "สายพันธุ์ :$nameSpecies\nเพศ :$gender  สี :$colros\nอายุ : $duration ",
+      "พันธุ์ :$nameSpecies\nเพศ :$gender  สี :$colros\nอายุ : $duration ",
       style:
           const TextStyle(fontSize: 16, color: Color.fromARGB(255, 12, 2, 2)));
 }
@@ -923,12 +1008,12 @@ _expenseFarm_date(Expendfarm expendfarm) {
   String formattedDate = formatter.format(dateBirthday);
   if (expendfarm.expendType!.expendType_name.toString() == "อาหาร") {
     return Text(
-        "ชื่อ :${expendfarm.name} ราคา : ${expendfarm.price} บาท \nจำนวน : ${expendfarm.amount} กิโลกรัม\nวันที่ซื้อ : $formattedDate\nประเภทสินค้า : ${expendfarm.expendType!.expendType_name}",
+        "ชื่อ :${expendfarm.name} ราคา : ${expendfarm.price} บาท \nปริมาณ : ${expendfarm.amount} กิโลกรัม\nวันที่ซื้อ : $formattedDate\nประเภทสินค้า : ${expendfarm.expendType!.expendType_name}",
         style: const TextStyle(
             fontSize: 16, color: Color.fromARGB(255, 12, 2, 2)));
   } else {
     return Text(
-        "ชื่อ :${expendfarm.name} ราคา : ${expendfarm.price} บาท \nจำนวน : ${expendfarm.amount} ขวด\nวันที่ซื้อ : $formattedDate\nประเภทสินค้า : ${expendfarm.expendType!.expendType_name}",
+        "ชื่อ :${expendfarm.name} ราคา : ${expendfarm.price} บาท \nปริมาณ : ${expendfarm.amount} ขวด\nวันที่ซื้อ : $formattedDate\nประเภทสินค้า : ${expendfarm.expendType!.expendType_name}",
         style: const TextStyle(
             fontSize: 16, color: Color.fromARGB(255, 12, 2, 2)));
   }
@@ -966,7 +1051,7 @@ class _Check_WeightState extends State<Check_Weight> {
 
       weight.sort();
       w = weight[weight.length - 1];
-      if (w <= 100) {
+      if (w < 100) {
         setState(() {
           doubleWeight = widget.co!.weight!.toDouble();
         });
@@ -1189,7 +1274,7 @@ class _Check_WeightState extends State<Check_Weight> {
     duration = AgeCalculator.age(dateBirthday);
 
     return Text(
-        "สายพันธุ์ :$nameSpecies\nเพศ :$gender  สี :$colros\nอายุ : $duration ",
+        "พันธุ์ :$nameSpecies\nเพศ :$gender  สี :$colros\nอายุ : $duration ",
         style: const TextStyle(
             fontSize: 16, color: Color.fromARGB(255, 12, 2, 2)));
   }

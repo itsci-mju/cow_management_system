@@ -21,11 +21,13 @@ class AddExpend extends StatefulWidget {
 class _AddExpendState extends State<AddExpend> {
   DateTime? expendFarmDate;
   Expendfarm exd_f = Expendfarm();
+  ExpendType et = ExpendType();
 
   List<ExpendType> list_exp = [];
 
   List<String> list_exp_name = [];
   String? category = "";
+  int? status = 0;
 
   Future init() async {
     final exp = await ExpendType_data().listExpendType();
@@ -39,6 +41,14 @@ class _AddExpendState extends State<AddExpend> {
     super.initState();
     init();
     clean_number();
+    DateTime d = DateTime.now();
+
+    String formattedDate = DateFormat('dd-MM-yyyy').format(d);
+
+    setState(() {
+      expendDate.text = formattedDate;
+      expendFarmDate = d;
+    });
   }
 
   //ccontroller
@@ -46,6 +56,7 @@ class _AddExpendState extends State<AddExpend> {
   final name = TextEditingController();
   final amount = TextEditingController();
   final price = TextEditingController();
+  final status_text = TextEditingController();
   //  button clear
   bool _showClearButton_expendDate = false;
   bool _showClearButton_name = false;
@@ -90,6 +101,7 @@ class _AddExpendState extends State<AddExpend> {
         child: SingleChildScrollView(
             child: Form(
           key: _formKey,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           child: Column(
             children: [
               Container(
@@ -175,7 +187,7 @@ class _AddExpendState extends State<AddExpend> {
                           "เลือกวันที่ซื้อสินค้า",
                           style: TextStyle(color: Colors.black),
                         ),
-                        hintText: "กรุณาเลือกวันที่ซื้อสินค้า",
+
                         //suffixIcon: _getClearButton_date(),
                         hintStyle: TextStyle(color: Colors.black),
                         border: InputBorder.none,
@@ -220,8 +232,10 @@ class _AddExpendState extends State<AddExpend> {
                       Validators.required_isempty(
                         "กรุณากรอก ชื่อรายการสินค้า",
                       ),
-                      Validators.minLength(1, "กรุณากรอก ราคา"),
-                      Validators.maxLength(7, "กรุณากรอก ราคา")
+                      Validators.minLength(
+                          1, " ชื่อรายการสินค้าให้มากกว่า 1 ตัวอักษร"),
+                      Validators.maxLength(50,
+                          "กรุณากรอก  ชื่อรายการสินค้าให้น้อยกว่า 50 ตัวอักษร")
                     ]),
                     decoration: InputDecoration(
                         suffixIcon: _getClearButton_name(),
@@ -249,10 +263,10 @@ class _AddExpendState extends State<AddExpend> {
                         keyboardType: TextInputType.number,
                         validator: Validators.compose([
                           Validators.required_isempty(
-                            "กรุณากรอก จำนวน",
+                            "กรุณากรอก ปริมาณ",
                           ),
-                          Validators.minLength(1, "กรุณากรอก จำนวน"),
-                          Validators.maxLength(7, "กรุณากรอก จำนวน")
+                          Validators.minLength(1, "กรุณากรอก ปริมาณ"),
+                          Validators.maxLength(7, "กรุณากรอก ปริมาณ")
                         ]),
                         inputFormatters: <TextInputFormatter>[
                           FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
@@ -261,7 +275,7 @@ class _AddExpendState extends State<AddExpend> {
                         ],
                         decoration: InputDecoration(
                           suffixIcon: _getClearButton_amount(),
-                          label: Text("จำนวน "),
+                          label: Text("ปริมาณ "),
                           hintStyle: TextStyle(color: Colors.black),
                           border: InputBorder.none,
                         ),
@@ -287,7 +301,6 @@ class _AddExpendState extends State<AddExpend> {
                         inputFormatters: <TextInputFormatter>[
                           FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
                           FilteringTextInputFormatter.deny(RegExp(r'[,]')),
-                          MaskedInputFormatter('###,###,###')
                         ],
                         decoration: InputDecoration(
                             suffixIcon: _getClearButton_price(),
@@ -341,9 +354,18 @@ class _AddExpendState extends State<AddExpend> {
                         category = newValue;
                         textalert_1 = "**";
                         if (category == "อาหาร") {
-                          textalert_2 = "ถ้าเป็นประเภทอาหารเป็นกิโลกรัม";
+                          textalert_2 = "ถ้าเป็นประเภทอาหารเป็นปริมาณกิโลกรัม";
                         } else {
-                          textalert_2 = "ถ้าเป็นประเภทวัคซีนเป็นจำนวนขวด";
+                          textalert_2 = "ถ้าเป็นประเภทวัคซีนเป็นปริมาณขวด";
+                        }
+                        if (category == "อื่นๆ") {
+                          setState(() {
+                            status = 1;
+                          });
+                        } else {
+                          setState(() {
+                            status = 0;
+                          });
                         }
                       });
                     },
@@ -362,6 +384,40 @@ class _AddExpendState extends State<AddExpend> {
                   ),
                 ]),
               ),
+              SizedBox(height: 10),
+              if (status == 1)
+                Container(
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    width: size.width * 0.93,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: Colors.lightGreen.withAlpha(50)),
+                    child: TextFormField(
+                      controller: status_text,
+                      validator: Validators.compose([
+                        Validators.required_isempty(
+                          "กรุณากรอก ชื่อประเภทอื่นๆ",
+                        ),
+                        Validators.minLength(
+                            1, " ชื่อประเภทอื่นๆให้มากกว่า 1 ตัวอักษร"),
+                        Validators.maxLength(50,
+                            "กรุณากรอก  ชื่อประเภทอื่นๆให้น้อยกว่า 50 ตัวอักษร")
+                      ]),
+                      decoration: InputDecoration(
+                          //suffixIcon: _getClearButton_price(),
+                          label: Text("ชื่อประเภทอื่นๆ"),
+                          hintStyle: TextStyle(color: Colors.black),
+                          border: InputBorder.none,
+                          icon: Icon(
+                            FontAwesomeIcons.bars,
+                            color: Color(0XFF397D54),
+                            size: 20,
+                          )),
+                    ))
+              else
+                SizedBox(),
               const SizedBox(height: 10),
               Text(
                 error_text,
@@ -382,8 +438,18 @@ class _AddExpendState extends State<AddExpend> {
                     exd_f.name = name.text;
                     exd_f.amount = int.parse(amount.text);
                     exd_f.price = double.parse(price.text);
-                    exd_f.expendType =
-                        ExpendType.expendType_name(expendType_name: category);
+                    if (status == 1) {
+                      et.expendType_name = status_text.text;
+                      final exd = Expend_data().AddExpendtype(et);
+                      if (exd != null) {
+                        exd_f.expendType = ExpendType.expendType_name(
+                            expendType_name: status_text.text);
+                      }
+                    } else {
+                      exd_f.expendType =
+                          ExpendType.expendType_name(expendType_name: category);
+                    }
+
                     exd_f.farm = Farm.Newid_farm(id_Farm: widget.fm!.id_Farm);
 
                     final exd = Expend_data().AddExpend(exd_f);

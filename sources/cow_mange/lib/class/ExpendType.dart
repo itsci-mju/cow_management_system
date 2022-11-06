@@ -6,7 +6,6 @@ class ExpendType {
 
   Map<String, dynamic> toJsonExpendType() {
     return <String, dynamic>{
-      'idExpendType': idExpendType,
       'expendType_name': expendType_name,
     };
   }

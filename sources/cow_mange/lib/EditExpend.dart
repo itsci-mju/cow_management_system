@@ -66,6 +66,7 @@ class _EditExpendState extends State<EditExpend> {
 
       expend = expT;
       list_exp_name = exp;
+      list_exp_name.remove("อื่นๆ");
     });
   }
 
@@ -96,6 +97,7 @@ class _EditExpendState extends State<EditExpend> {
         child: SingleChildScrollView(
             child: Form(
           key: _formKey,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           child: Column(
             children: [
               Container(

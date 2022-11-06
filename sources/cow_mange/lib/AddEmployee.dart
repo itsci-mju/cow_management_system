@@ -81,6 +81,8 @@ class _AddEmployeeState extends State<AddEmployee> {
   bool _showClearButton_email = false;
   bool _showClearButton_tel = false;
 
+  bool _isObscure = true;
+
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -90,6 +92,7 @@ class _AddEmployeeState extends State<AddEmployee> {
         child: SingleChildScrollView(
             child: Form(
           key: _formKey,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           child: Column(
             children: [
               Container(
@@ -282,6 +285,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                           color: Colors.lightGreen.withAlpha(50)),
                       child: TextFormField(
                         controller: password,
+                        obscureText: _isObscure,
                         validator: Validators.compose([
                           Validators.required_isempty("กรุณากรอก รหัสผ่าน"),
                           Validators.text_eng_only(
@@ -289,7 +293,16 @@ class _AddEmployeeState extends State<AddEmployee> {
                         ]),
                         decoration: InputDecoration(
                           label: Text("รหัสผู้ใช้"),
-                          suffixIcon: _getClearButton_password(),
+                          suffixIcon: IconButton(
+                              color: Colors.green,
+                              icon: Icon(_isObscure
+                                  ? Icons.visibility
+                                  : Icons.visibility_off),
+                              onPressed: () {
+                                setState(() {
+                                  _isObscure = !_isObscure;
+                                });
+                              }),
                           hintStyle: TextStyle(color: Colors.black),
                           border: InputBorder.none,
                         ),

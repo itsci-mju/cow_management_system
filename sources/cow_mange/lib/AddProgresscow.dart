@@ -103,6 +103,15 @@ class _AddProgressState extends State<AddProgress> {
     setState(() {
       cow = widget.cow;
     });
+    final listPg =
+        await Progress_data().listMainprogress(cow!.cow_id.toString());
+    listprogress = listPg;
+    if (listprogress.isNotEmpty) {
+      setState(() {
+        height.text = listprogress.last.height.toString();
+        weight.text = listprogress.last.weight.toString();
+      });
+    }
   }
 
   @override
@@ -126,6 +135,7 @@ class _AddProgressState extends State<AddProgress> {
       body: SingleChildScrollView(
           child: Form(
         key: _formKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Column(
           children: [
             Container(

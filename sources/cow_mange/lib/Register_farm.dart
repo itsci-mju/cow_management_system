@@ -15,6 +15,7 @@ import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:cow_mange/class/Cow.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -126,6 +127,8 @@ class _Register_farmState extends State<Register_farm> {
   bool _showClearButton_zip_code = false;
   bool _showClearButton_farmname = false;
 
+  bool _isObscure = true;
+
 //////////////////////////////////////
 
   //farm infomation
@@ -229,6 +232,7 @@ class _Register_farmState extends State<Register_farm> {
       body: SingleChildScrollView(
           child: Form(
         key: _formKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Column(
           children: [
             Container(
@@ -440,13 +444,23 @@ class _Register_farmState extends State<Register_farm> {
                         color: Colors.lightGreen.withAlpha(50)),
                     child: TextFormField(
                       controller: password,
+                      obscureText: _isObscure,
                       validator: Validators.compose([
                         Validators.required_isempty("กรุณากรอก Password"),
                         Validators.text_eng_only("กรุณาชื่อรหัสผ่านให้ถูกต้อง"),
                       ]),
                       decoration: InputDecoration(
                         label: Text("รหัสผู้ใช้"),
-                        suffixIcon: _getClearButton_password(),
+                        suffixIcon: IconButton(
+                            color: Colors.green,
+                            icon: Icon(_isObscure
+                                ? Icons.visibility
+                                : Icons.visibility_off),
+                            onPressed: () {
+                              setState(() {
+                                _isObscure = !_isObscure;
+                              });
+                            }),
                         hintStyle: TextStyle(color: Colors.black),
                         border: InputBorder.none,
                       ),
@@ -529,12 +543,28 @@ class _Register_farmState extends State<Register_farm> {
                       size: 20,
                     ),
                   ),
-                  Text(
-                    "ที่อยู่ * ถ้าไม่มีให้ใส่ -",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
+                  Row(
+                    children: <Widget>[
+                      RichText(
+                          text: TextSpan(children: [
+                        TextSpan(
+                          text: 'ที่อยู่',
+                          style: GoogleFonts.mitr(
+                            textStyle:
+                                TextStyle(color: Colors.black, fontSize: 16),
+                          ),
+                        )
+                      ])),
+                      RichText(
+                          text: TextSpan(children: [
+                        TextSpan(
+                            text: '* ถ้าไม่มีให้ใส่ -',
+                            style: GoogleFonts.mitr(
+                              textStyle:
+                                  TextStyle(color: Colors.red, fontSize: 16),
+                            ))
+                      ])),
+                    ],
                   ),
                 ],
               ),

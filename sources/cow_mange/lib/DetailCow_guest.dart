@@ -68,7 +68,7 @@ class _DetailCow_guestState extends State<DetailCow_guest> {
                   children: [
                     Container(
                       child: Text(
-                        "รหัสประจำตัวโค : ${widget.cow.cow_id}",
+                        "หมายเลขประจำตัวโค : ${widget.cow.cow_id}",
                         style: const TextStyle(
                             fontSize: 28.0,
                             color: Color.fromARGB(255, 253, 253, 253),
@@ -141,7 +141,7 @@ class _DetailCow_guestState extends State<DetailCow_guest> {
                                     alignment: Alignment.centerLeft,
                                     child: Container(
                                         child: Text(
-                                            "รหัสประจำตัวโค : ${widget.cow.cow_id}",
+                                            "หมายเลขประจำตัวโค : ${widget.cow.cow_id}",
                                             style: const TextStyle(
                                                 fontSize: 20.0,
                                                 color: Color.fromARGB(
@@ -181,7 +181,7 @@ class _DetailCow_guestState extends State<DetailCow_guest> {
                                   Align(
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                          "สายพันธุ์ : ${widget.cow.species!.species_breed}",
+                                          "พันธุ์ : ${widget.cow.species!.species_breed}",
                                           style: const TextStyle(
                                               fontSize: 20.0,
                                               color:

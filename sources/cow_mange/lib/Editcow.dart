@@ -175,7 +175,7 @@ class _EditCowState extends State<EditCow> {
 
       list = map['result'];
       listcow = [];
-      listcow.add("----");
+      listcow.add("-");
       for (dynamic l in list!) {
         listcow.add(l['cow_id']);
       }
@@ -216,7 +216,7 @@ class _EditCowState extends State<EditCow> {
       mapResponse = json.decode(response.body);
       list = map['result'];
       listbull = [];
-      listbull.add("----");
+      listbull.add("-");
       for (dynamic l in list!) {
         listbull.add(l['cow_id']);
       }
@@ -469,6 +469,7 @@ class _EditCowState extends State<EditCow> {
           ? null
           : Form(
               key: _formKey,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               child: SingleChildScrollView(
                 child: Column(
                   children: [
@@ -550,7 +551,7 @@ class _EditCowState extends State<EditCow> {
                             child: TextFormField(
                                 controller: econ_cowid,
                                 decoration: InputDecoration(
-                                    label: const Text("รหัสประจำตัวโค"),
+                                    label: const Text("หมายเลขประจำตัวโค"),
                                     suffixIcon: _getClearButton_econ_cowid(),
                                     hintStyle:
                                         const TextStyle(color: Colors.black),
@@ -582,7 +583,7 @@ class _EditCowState extends State<EditCow> {
                             child: TextFormField(
                                 controller: econ_cowid,
                                 decoration: InputDecoration(
-                                    label: const Text("รหัสประจำตัวโค"),
+                                    label: const Text("หมายเลขประจำตัวโค"),
                                     suffixIcon: _getClearButton_econ_cowid(),
                                     hintStyle:
                                         const TextStyle(color: Colors.black),
@@ -1056,7 +1057,7 @@ class _EditCowState extends State<EditCow> {
                                 alignment: Alignment.centerLeft,
                                 child: Container(
                                   child: const Text(
-                                    "แม่พันธุ์ ",
+                                    "หมายเลขประจำตัวแม่พันธุ์ ",
                                   ),
                                 ))
                           ],
@@ -1110,7 +1111,7 @@ class _EditCowState extends State<EditCow> {
                                 alignment: Alignment.centerLeft,
                                 child: Container(
                                   child: const Text(
-                                    "พ่อพันธุ์ ",
+                                    "หมายเลขประจำตัวพ่อพันธุ์ ",
                                   ),
                                 ))
                           ],

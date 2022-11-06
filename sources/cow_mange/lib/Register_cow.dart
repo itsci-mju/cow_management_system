@@ -281,6 +281,7 @@ class _Register_CowState extends State<Register_Cow> {
     super.initState();
     init();
     clean_number();
+    DateTime d = DateTime.now();
   }
 
   PlatformFile? pickedFile;
@@ -399,6 +400,7 @@ class _Register_CowState extends State<Register_Cow> {
             ))
           : Form(
               key: _formKey,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               child: SingleChildScrollView(
                   child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -481,7 +483,7 @@ class _Register_CowState extends State<Register_Cow> {
                       child: TextFormField(
                         controller: cow_id,
                         decoration: InputDecoration(
-                            label: const Text("รหัสประจำตัวโค"),
+                            label: const Text("หมายเลขประจำตัวโค"),
                             hintStyle: const TextStyle(color: Colors.black),
                             border: InputBorder.none,
                             suffixIcon: _getClearButton_idcow(),
@@ -870,7 +872,7 @@ class _Register_CowState extends State<Register_Cow> {
                             });
                           },
                           decoration: const InputDecoration(
-                            hintText: 'สายพันธุ์',
+                            hintText: 'พันธุ์',
                             hintStyle: TextStyle(color: Colors.black),
                             icon: Icon(
                               FontAwesomeIcons.cow,
@@ -879,8 +881,8 @@ class _Register_CowState extends State<Register_Cow> {
                             ),
                             border: InputBorder.none,
                           ),
-                          validator: Validators.required_isnull(
-                              "กรุณากรอก สายพันธุ์โค")),
+                          validator:
+                              Validators.required_isnull("กรุณากรอก พันธุ์โค")),
                     ]),
                   ),
                   Container(
@@ -941,7 +943,7 @@ class _Register_CowState extends State<Register_Cow> {
                               alignment: Alignment.centerLeft,
                               child: Container(
                                 child: const Text(
-                                  "แม่พันธุ์ ",
+                                  "หมายเลขประจำตัวแม่พันธุ์ ",
                                 ),
                               ))
                         ],
@@ -969,7 +971,7 @@ class _Register_CowState extends State<Register_Cow> {
                             });
                           },
                           decoration: const InputDecoration(
-                            hintText: 'แม่พันธุ์',
+                            hintText: 'หมายเลขประจำตัวแม่พันธุ์',
                             hintStyle: TextStyle(color: Colors.black),
                             icon: Icon(
                               FontAwesomeIcons.cow,
@@ -979,7 +981,7 @@ class _Register_CowState extends State<Register_Cow> {
                             border: InputBorder.none,
                           ),
                           validator: Validators.required_isnull(
-                              "กรุณาเลือกแม่พันธุ์")),
+                              "กรุณาเลือกหมายเลขประจำตัวแม่พันธุ์")),
                     ]),
                   ),
                   Container(
@@ -996,7 +998,7 @@ class _Register_CowState extends State<Register_Cow> {
                               alignment: Alignment.centerLeft,
                               child: Container(
                                 child: const Text(
-                                  "พ่อพันธุ์ ",
+                                  "หมายเลขประจำตัวพ่อพันธุ์ ",
                                 ),
                               ))
                         ],
@@ -1023,7 +1025,7 @@ class _Register_CowState extends State<Register_Cow> {
                             });
                           },
                           decoration: const InputDecoration(
-                            hintText: 'พ่อพันธุ์',
+                            hintText: 'หมายเลขประจำตัวพ่อพันธุ์',
                             hintStyle: TextStyle(color: Colors.black),
                             icon: Icon(
                               FontAwesomeIcons.cow,
@@ -1033,7 +1035,7 @@ class _Register_CowState extends State<Register_Cow> {
                             border: InputBorder.none,
                           ),
                           validator: Validators.required_isnull(
-                              "กรุณาเลือกพ่อพันธุ์โค")),
+                              "กรุณาเลือกหมายเลขประจำตัวพ่อพันธุ์โค")),
                     ]),
                   ),
                   Text(
@@ -1104,10 +1106,10 @@ class _Register_CowState extends State<Register_Cow> {
                         co?.species!.country = country;
                         co?.species!.species_breed = species;
 
-                        if (widget.fm! != null) {
+                        if (widget.fm != null) {
                           co?.farm =
                               Farm.Newid_farm(id_Farm: widget.fm!.id_Farm);
-                        } else if (widget.emp! != null) {
+                        } else if (widget.emp != null) {
                           co?.farm = Farm.Newid_farm(
                               id_Farm: widget.emp!.farm!.id_Farm);
                         }
@@ -1127,11 +1129,10 @@ class _Register_CowState extends State<Register_Cow> {
                             idBreeder: bd!.idBreeder.toString());
 
                         final cow2 = await registercow(co!);
-                        if (widget.fm! != null) {
+                        if (widget.fm != null) {
                           final lc =
                               await Cow_data().listMaincow_farm(widget.fm!);
                           if (cow2 != null) {
-                            print(1);
                             Navigator.of(context)
                                 .push(MaterialPageRoute(builder: ((context) {
                               return Mainfarm(
@@ -1144,10 +1145,9 @@ class _Register_CowState extends State<Register_Cow> {
                               texterror = "กรุณากรอกข้อมูลให้ครบถ้วน";
                             });
                           }
-                        } else if (widget.emp! != null) {
+                        } else if (widget.emp != null) {
                           final lc = await Cow_data().listMaincow(widget.emp!);
                           if (cow2 != null) {
-                            print(1);
                             Navigator.of(context)
                                 .push(MaterialPageRoute(builder: ((context) {
                               return MainpageEmployee(

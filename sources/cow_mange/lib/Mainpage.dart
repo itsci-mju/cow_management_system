@@ -140,6 +140,7 @@ class MainpageEmployeeState extends State<MainpageEmployee> {
         emp: widget.emp!,
         cow: listcow,
       ),
+      backgroundColor: Color.fromARGB(255, 223, 224, 226),
       body: listcow == null
           ? Column(children: const <Widget>[])
           : Column(children: <Widget>[
@@ -160,10 +161,10 @@ class MainpageEmployeeState extends State<MainpageEmployee> {
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Padding(
+                            Padding(
                               padding: EdgeInsets.only(left: 20),
                               child: Text(
-                                "สวัสดี ",
+                                "สวัสดี ${widget.emp!.firstname} ${widget.emp!.lastname}",
                                 style: TextStyle(
                                     fontSize: 20, color: Colors.white),
                               ),
@@ -182,7 +183,7 @@ class MainpageEmployeeState extends State<MainpageEmployee> {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "${widget.emp!.firstname} ${widget.emp!.lastname}",
+                          "ชื่อฟาร์ม : ${widget.emp!.farm!.name_Farm} ",
                           style: const TextStyle(
                               fontSize: 20, color: Colors.white),
                         ),
@@ -212,7 +213,7 @@ class MainpageEmployeeState extends State<MainpageEmployee> {
                                     color: Color.fromARGB(255, 2, 50, 14),
                                   ),
                                 ),
-                                hintText: "ค้นหาข้อมูลโค",
+                                hintText: "ค้นหาข้อมูลโคด้วย รหัสโค",
                                 floatingLabelBehavior:
                                     FloatingLabelBehavior.never,
                                 filled: true,
@@ -268,7 +269,7 @@ class MainpageEmployeeState extends State<MainpageEmployee> {
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 10.0),
         child: FloatingActionButton.extended(
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.green,
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(builder: ((context) {
               return Register_Cow(
@@ -277,12 +278,12 @@ class MainpageEmployeeState extends State<MainpageEmployee> {
             })));
           },
           label: const Text(
-            "เพิ่มข้อมูล",
+            " เพิ่มข้อมูล",
             style: TextStyle(color: Colors.black),
           ),
           icon: const Icon(
             FontAwesomeIcons.cow,
-            color: Colors.green,
+            color: Color.fromARGB(255, 0, 0, 0),
           ),
         ),
       ),
@@ -359,7 +360,7 @@ class MainpageEmployeeState extends State<MainpageEmployee> {
     duration = AgeCalculator.age(dateBirthday);
 
     return Text(
-        "สายพันธุ์ :$nameSpecies\nเพศ :$gender  สี :$colros\nอายุ : $duration ",
+        "พันธุ์ :$nameSpecies\nเพศ :$gender  สี :$colros\nอายุ : $duration ",
         style: const TextStyle(
             fontSize: 16, color: Color.fromARGB(255, 12, 2, 2)));
   }
@@ -397,7 +398,7 @@ class _Check_WeightState extends State<Check_Weight> {
 
       weight.sort();
       w = weight[weight.length - 1];
-      if (w <= 100) {
+      if (w < 100) {
         setState(() {
           doubleWeight = widget.co!.weight!.toDouble();
         });
@@ -422,12 +423,11 @@ class _Check_WeightState extends State<Check_Weight> {
   @override
   Widget build(BuildContext context) {
     return Card(
-        color: (Color.fromARGB(255, 197, 236, 197)),
+        elevation: 5,
+        color: (Color.fromARGB(255, 255, 255, 255)),
+        margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 10.0),
         shape: RoundedRectangleBorder(
-          //<-- SEE HERE
-          side: BorderSide(
-            color: Colors.green,
-          ),
+          borderRadius: BorderRadius.circular(0.0),
         ),
         child: ListTile(
           leading: _buildLeadingTile(widget.co!),
@@ -587,7 +587,7 @@ class _Check_WeightState extends State<Check_Weight> {
     duration = AgeCalculator.age(dateBirthday);
 
     return Text(
-        "สายพันธุ์ :$nameSpecies\nเพศ :$gender  สี :$colros\nอายุ : $duration ",
+        "พันธุ์ :$nameSpecies\nเพศ :$gender  สี :$colros\nอายุ : $duration ",
         style: const TextStyle(
             fontSize: 16, color: Color.fromARGB(255, 12, 2, 2)));
   }

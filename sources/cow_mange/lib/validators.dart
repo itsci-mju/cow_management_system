@@ -23,7 +23,7 @@ class Validators {
 
   static FormFieldValidator<String> required__dropdown(String errorMessage) {
     return (value) {
-      if (value == "----") {
+      if (value == "-") {
         return errorMessage;
       }
       return null;

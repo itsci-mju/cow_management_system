@@ -13,6 +13,7 @@ import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:filter_list/filter_list.dart';
 import 'package:flutter/material.dart';
 import 'package:cow_mange/url/URL.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -118,7 +119,7 @@ class _Drawer_FilterState extends State<Drawer_Filter> {
         },
         height: 360,
         borderRadius: 20,
-        headlineText: "เลือกสายพันธุ์  ",
+        headlineText: "เลือกพันธุ์  ",
         backgroundColor: Colors.green,
         onApplyButtonClick: (list) {
           setState(() {
@@ -155,7 +156,8 @@ class _Drawer_FilterState extends State<Drawer_Filter> {
                   top: 10,
                   bottom: 10,
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                 child: Row(
                   children: [
                     SizedBox(
@@ -224,7 +226,7 @@ class _Drawer_FilterState extends State<Drawer_Filter> {
             child: Row(
               children: const [
                 Text(
-                  "สายพันธุ์โค",
+                  "พันธุ์โค",
                   style: TextStyle(fontSize: 16),
                 ),
               ],
@@ -238,7 +240,8 @@ class _Drawer_FilterState extends State<Drawer_Filter> {
                   top: 10,
                   bottom: 10,
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                 child: Row(
                   children: [
                     ElevatedButton(
@@ -246,8 +249,9 @@ class _Drawer_FilterState extends State<Drawer_Filter> {
                         openFilterDialog();
                       },
                       style: ElevatedButton.styleFrom(
-                          minimumSize: const Size(50, 50), backgroundColor: Colors.green),
-                      child: const Text("เลือกสายพันธุ์โค"),
+                          minimumSize: const Size(50, 50),
+                          backgroundColor: Colors.green),
+                      child: const Text("เลือกพันธุ์โค"),
                     ),
                   ],
                 ),
@@ -258,7 +262,8 @@ class _Drawer_FilterState extends State<Drawer_Filter> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                 child: Row(
                   children: [
                     ft.species == null
@@ -288,9 +293,26 @@ class _Drawer_FilterState extends State<Drawer_Filter> {
               ),
             ],
           ),
-          const Text(
-            "อายุ",
-            style: TextStyle(fontSize: 16),
+          Row(
+            children: <Widget>[
+              RichText(
+                  text: TextSpan(children: [
+                TextSpan(
+                  text: 'อายุ',
+                  style: GoogleFonts.mitr(
+                    textStyle: TextStyle(color: Colors.black, fontSize: 16),
+                  ),
+                )
+              ])),
+              RichText(
+                  text: TextSpan(children: [
+                TextSpan(
+                    text: '(คิดเป็นเดือน)',
+                    style: GoogleFonts.mitr(
+                      textStyle: TextStyle(color: Colors.red, fontSize: 16),
+                    ))
+              ])),
+            ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -343,7 +365,8 @@ class _Drawer_FilterState extends State<Drawer_Filter> {
                   top: 10,
                   bottom: 10,
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                 child: Row(
                   children: [
                     SizedBox(
@@ -404,6 +427,8 @@ class _Drawer_FilterState extends State<Drawer_Filter> {
                       ft.species = null;
                       Age1.text = "";
                       Age2.text = "";
+                      gender1 = "";
+                      gender2 = "";
                     });
                     if (widget.emp != null) {
                       final listcow = await listMaincow(widget.emp!);
@@ -425,7 +450,8 @@ class _Drawer_FilterState extends State<Drawer_Filter> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(50, 50), backgroundColor: Colors.green),
+                      minimumSize: const Size(50, 50),
+                      backgroundColor: Colors.green),
                   child: const Text("ล้าง"),
                 ),
                 ElevatedButton(
@@ -480,7 +506,8 @@ class _Drawer_FilterState extends State<Drawer_Filter> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(50, 50), backgroundColor: Colors.green),
+                      minimumSize: const Size(50, 50),
+                      backgroundColor: Colors.green),
                   child: const Text("ตกลง"),
                 ),
               ],

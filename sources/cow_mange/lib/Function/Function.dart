@@ -90,6 +90,29 @@ class Fitter_data {
 }
 
 class Cow_data {
+  Future mating_pair(cowId) async {
+    final response = await http.post(
+      Uri.parse(url.URL.toString() + url.URL_mating_pair.toString()),
+      body: jsonEncode({
+        "cow": cowId,
+      }),
+      headers: <String, String>{
+        "Accept": "application/json",
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    String? stringResponse;
+    List? list;
+    Map<String, dynamic> mapResponse = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      mapResponse = json.decode(response.body);
+      list = mapResponse['result'];
+      return list!.map((e) => Cow.fromJson(e)).toList();
+    }
+  }
+
   //List id
   List<String> listcow = [];
   List<String> listbull = [];
@@ -151,7 +174,7 @@ class Cow_data {
       Map<String, dynamic> map = json.decode(response.body);
       mapResponse = json.decode(response.body);
       list = map['result'];
-      listcow.add("----");
+      listcow.add("-");
       for (dynamic l in list!) {
         listcow.add(l['cow_id']);
       }
@@ -177,7 +200,7 @@ class Cow_data {
       Map<String, dynamic> map = json.decode(response.body);
       mapResponse = json.decode(response.body);
       list = map['result'];
-      listcow.add("----");
+      listcow.add("-");
       for (dynamic l in list!) {
         listcow.add(l['cow_id']);
       }
@@ -205,7 +228,7 @@ class Cow_data {
       mapResponse = json.decode(response.body);
 
       list = map['result'];
-      listbull.add("----");
+      listbull.add("-");
       for (dynamic l in list!) {
         listbull.add(l['cow_id']);
       }
@@ -233,7 +256,7 @@ class Cow_data {
       mapResponse = json.decode(response.body);
 
       list = map['result'];
-      listbull.add("----");
+      listbull.add("-");
       for (dynamic l in list!) {
         listbull.add(l['cow_id']);
       }
@@ -853,6 +876,31 @@ class Expend_data {
     }
   }
 
+  Future AddExpendtype(ExpendType expendType) async {
+    final JsonaddExpend = expendType.toJsonExpendType();
+
+    final response = await http.post(
+      Uri.parse(url.URL.toString() + url.URL_AddExpendType.toString()),
+      body: jsonEncode(JsonaddExpend),
+      headers: <String, String>{
+        "Accept": "application/json",
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    String? stringResponse;
+    List? list;
+    Map<String, dynamic> mapResponse = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      dynamic expendType = mapResponse['result'];
+
+      return ExpendType.fromJson(expendType);
+    } else {
+      throw Exception('Failed to load album');
+    }
+  }
+
   Future EditExpendfarm(Expendfarm expendfarm) async {
     final JsonaddExpend = expendfarm.toJson_edit_Expendfarm();
     final response = await http.post(
@@ -945,7 +993,10 @@ class ExpendType_data {
 
       for (dynamic l in list!) {
         list_exp_name.add(l['ExpendType_name']);
+        list_exp_name.remove('อื่นๆ');
       }
+      list_exp_name.add("อื่นๆ");
+
       return list_exp_name;
     }
   }

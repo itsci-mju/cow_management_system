@@ -39,6 +39,7 @@ class _AddFeedingcowState extends State<AddFeedingcow> {
 
   //food
   String name_food = "";
+  String food_supplement = "";
 
   DateTime? birthday;
   TimeOfDay? timebirthday;
@@ -47,6 +48,7 @@ class _AddFeedingcowState extends State<AddFeedingcow> {
   List<String> listcow_id = [];
   //list namefood
   List<String> list_food = [];
+  List<String> list_food_supplement = [];
 
   //feeding
   Feeding? fd = Feeding();
@@ -87,17 +89,14 @@ class _AddFeedingcowState extends State<AddFeedingcow> {
 
   //  button clear
   bool _showClearButton_date_fedding = false;
-  bool _showClearButton_count = false;
+
+  //var
+  var half = 0.0;
 
   Future clean_number() async {
     date_fedding.addListener(() {
       setState(() {
         _showClearButton_date_fedding = date_fedding.text.isNotEmpty;
-      });
-    });
-    count_c.addListener(() {
-      setState(() {
-        _showClearButton_count = count_c.text.isNotEmpty;
       });
     });
   }
@@ -129,6 +128,7 @@ class _AddFeedingcowState extends State<AddFeedingcow> {
   Future init() async {
     //final co = await fetchCow(widget.emp!.farm!.id_Farm);
     final f = await listfood();
+
     // final listcow = await listMaincow(widget.emp!);
     final list_Pg =
         await Progress_data().listMainprogress(widget.cow!.cow_id.toString());
@@ -138,6 +138,7 @@ class _AddFeedingcowState extends State<AddFeedingcow> {
     setState(() {
       //  listcow_id = co;
       list_food = f;
+
       cow = widget.cow;
       Listprogress = list_Pg;
       Listfeeding = list_fd;
@@ -221,6 +222,7 @@ class _AddFeedingcowState extends State<AddFeedingcow> {
           ? SingleChildScrollView(
               child: Form(
               key: _formKey,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               child: Column(
                 children: [
                   Container(
@@ -329,6 +331,9 @@ class _AddFeedingcowState extends State<AddFeedingcow> {
                           color: Colors.lightGreen.withAlpha(50)),
                       child: TextFormField(
                         controller: date_fedding,
+                        readOnly: true,
+                        validator: Validators.required_isempty(
+                            "กรุณาเลือกวันให้อาหาร"),
                         decoration: InputDecoration(
                             label: Text(
                               "เลือกวันให้อาหาร",
@@ -343,7 +348,6 @@ class _AddFeedingcowState extends State<AddFeedingcow> {
                               color: Color(0XFF397D54),
                               size: 20,
                             )),
-                        onTap: () async {},
                       )),
                   Container(
                       margin: const EdgeInsets.symmetric(horizontal: 30),
@@ -380,12 +384,11 @@ class _AddFeedingcowState extends State<AddFeedingcow> {
                         inputFormatters: <TextInputFormatter>[
                           FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
                           FilteringTextInputFormatter.deny(RegExp(r'[,]')),
-                          MaskedInputFormatter('##.##')
+                          MaskedInputFormatter('#.#')
                         ],
                         decoration: InputDecoration(
                             label: Text("จำนวน (กิโลกรัม)"),
                             hintStyle: TextStyle(color: Colors.black),
-                            suffixIcon: _getClearButton_count(),
                             border: InputBorder.none,
                             icon: Icon(
                               FontAwesomeIcons.weightHanging,
@@ -518,6 +521,47 @@ class _AddFeedingcowState extends State<AddFeedingcow> {
                     ]),
                   ),
                   Container(
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    width: size.width * 0.93,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: Colors.lightGreen.withAlpha(50)),
+                    child: Column(children: [
+                      DropdownButtonFormField(
+                        isExpanded: true,
+                        items: [
+                          '-',
+                          'ร็อคโก้ ',
+                          'แร่ธาตุก้อน SK ',
+                        ].map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            food_supplement = newValue!;
+                          });
+                        },
+                        validator:
+                            Validators.required_isnull("กรุณาเลือกอาหารเสริม"),
+                        decoration: const InputDecoration(
+                          hintText: 'ชื่ออาหารเสริม',
+                          hintStyle: TextStyle(color: Colors.black),
+                          icon: Icon(
+                            FontAwesomeIcons.bowlFood,
+                            color: Color(0XFF397D54),
+                            size: 20,
+                          ),
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ]),
+                  ),
+                  Container(
                       margin: const EdgeInsets.symmetric(vertical: 10),
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 5),
@@ -575,9 +619,7 @@ class _AddFeedingcowState extends State<AddFeedingcow> {
                               date_fedding.text = formattedDate;
                               text_date = s;
                             });
-                          } else {
-                            date_fedding.text = "กรุณาเลือกวันเกิดโค";
-                          }
+                          } else {}
                         },
                       )),
                   Container(
@@ -617,10 +659,10 @@ class _AddFeedingcowState extends State<AddFeedingcow> {
                           FilteringTextInputFormatter.deny(RegExp(r'[,]')),
                           MaskedInputFormatter('##.##')
                         ],
+                        enabled: false,
                         decoration: InputDecoration(
                             label: Text("จำนวน (กิโลกรัม)"),
                             hintStyle: TextStyle(color: Colors.black),
-                            suffixIcon: _getClearButton_count(),
                             border: InputBorder.none,
                             icon: Icon(
                               FontAwesomeIcons.weightHanging,
@@ -687,10 +729,11 @@ class _AddFeedingcowState extends State<AddFeedingcow> {
                                 morning == true &&
                                 Listfeeding[i].time == "เช้า") {
                               DateTime date = DateTime(
-                                text_date!.year + 543,
-                                text_date!.month,
-                                text_date!.day,
-                              );
+                                  text_date!.year + 543,
+                                  text_date!.month,
+                                  text_date!.day,
+                                  date_time_input.hour,
+                                  date_time_input.minute);
                               setState(() {
                                 error_text_2 = "***";
                                 error_text = "วันที่ " +
@@ -710,10 +753,11 @@ class _AddFeedingcowState extends State<AddFeedingcow> {
                                 afternoon == true &&
                                 Listfeeding[i].time == "เย็น")) {
                               DateTime date = DateTime(
-                                text_date!.year + 543,
-                                text_date!.month,
-                                text_date!.day,
-                              );
+                                  text_date!.year + 543,
+                                  text_date!.month,
+                                  text_date!.day,
+                                  date_time_input.hour,
+                                  date_time_input.minute);
                               setState(() {
                                 error_text_2 = "***";
                                 error_text = "วันที่ " +
@@ -735,7 +779,9 @@ class _AddFeedingcowState extends State<AddFeedingcow> {
                               error_text = "";
                               error_text3 = "";
                             });
-                            fd?.record_date = birthday;
+                            fd?.record_date = text_date;
+                            fd?.food_supplement = food_supplement;
+
                             fd?.amount = double.parse(count_c.text);
                             fd?.cow = Cow.Idcow(cow_id: widget.cow!.cow_id);
                             if (morning == true && afternoon == false) {
@@ -805,27 +851,14 @@ class _AddFeedingcowState extends State<AddFeedingcow> {
         });
   }
 
-  Widget? _getClearButton_count() {
-    if (!_showClearButton_count) {
-      return null;
-    }
-    return GestureDetector(
-        child: const Icon(
-          Icons.cancel,
-          color: Colors.red,
-        ),
-        onTap: () {
-          count_c.clear();
-        });
-  }
-
   _amount_feeding(double one, String nameFood) {
-    var half = 0.0;
-
     if (nameFood == "อาหารข้น") {
       //สูตรคำนวณ
       one *= 0.01;
-      half = one / 2;
+      setState(() {
+        half = one / 2;
+        count_c.text = half.toString();
+      });
       return Container(
         margin: const EdgeInsets.only(left: 40),
         child: Row(children: [
@@ -838,7 +871,10 @@ class _AddFeedingcowState extends State<AddFeedingcow> {
     } else if (nameFood == "หญ้า") {
       //สูตรคำนวณ
       one *= 0.04;
-      half = one / 2;
+      setState(() {
+        half = one / 2;
+        count_c.text = half.toString();
+      });
       return Container(
         margin: const EdgeInsets.only(left: 40),
         child: Row(children: [
@@ -851,7 +887,10 @@ class _AddFeedingcowState extends State<AddFeedingcow> {
     } else if (nameFood == "ฟาง") {
       //สูตรคำนวณ
       one *= 0.03;
-      half = one / 2;
+      setState(() {
+        half = one / 2;
+        count_c.text = half.toString();
+      });
       return Container(
         margin: const EdgeInsets.only(left: 40),
         child: Row(children: [

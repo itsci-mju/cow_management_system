@@ -1,4 +1,3 @@
-
 import 'package:cow_mange/class/Species.dart';
 
 class Fitter {
